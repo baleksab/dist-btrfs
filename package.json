@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/gui",
+    "packages/server"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "dev:gui": "pnpm --filter gui dev:electron"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": "eslint --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2"
+  }
+}
