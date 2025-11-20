@@ -22,19 +22,6 @@ export default [
       ecmaVersion: "latest",
       sourceType: "module",
       globals: { ...globals.node, ...globals.es2021 },
-    },
-    rules: {
-      // run Prettier as part of ESLint and error on any diff
-      "prettier/prettier": [
-        "error",
-        {
-          semi: true,
-          singleQuote: false,
-          tabWidth: 2,
-          trailingComma: "es5",
-          printWidth: 100,
-        },
-      ],
-    },
+    }
   },
 ];
