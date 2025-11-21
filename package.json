@@ -8,12 +8,13 @@
   "scripts": {
     "setup": "husky init",
     "dev:server": "pnpm --filter server dev",
-    "dev:gui": "pnpm --filter gui dev:electron"
+    "dev:gui": "pnpm --filter gui dev:electron",
+    "type-check": "pnpm -r run type-check"
   },
   "lint-staged": {
     "*.ts": [
       "eslint --max-warnings=0 --fix",
-      "tsc --noEmit"
+      "pnpm type-check"
     ]
   },
   "devDependencies": {
@@ -25,8 +26,6 @@
     "@stylistic/eslint-plugin": "5.6.1",
     "eslint-plugin-unused-imports": "4.3.0",
     "@typescript-eslint/parser": "8.47.0",
-    "@typescript-eslint/eslint-plugin": "8.47.0",
-    "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "@typescript-eslint/eslint-plugin": "8.47.0"
   }
 }

@@ -1,10 +1,13 @@
 {
   "name": "@dist-btrfs/server",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts"
+    "preflight": "tsx src/preflight.ts",
+    "serve": "tsx src/server.ts",
+    "dev": "pnpm preflight && pnpm serve",
+    "type-check": "tsc --project tsconfig.json --noEmit && :"
   },
   "dependencies": {
     "express": "5.1.0",
@@ -13,6 +16,8 @@
   "devDependencies": {
     "@types/express": "5.0.5",
     "@types/node": "24.10.0",
-    "@types/dockerode": "3.3.47"
+    "@types/dockerode": "3.3.47",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
   }
 }
