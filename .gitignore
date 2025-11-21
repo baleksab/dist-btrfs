@@ -1,2 +1,83 @@
+# -------------------------
+# Node / pnpm
+# -------------------------
 node_modules/
+.pnpm-store/
+pnpm-lock.yaml
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -------------------------
+# Build output
+# -------------------------
 dist/
+dist-*/
+build/
+out/
+coverage/
+
+# For Electron
+release/
+*.asar
+
+# Vite / React
+*.local
+*.cache
+.vite/
+
+# Turbo / Nx (ako ikad koristiš)
+.turbo/
+.nx/
+
+# -------------------------
+# TypeScript
+# -------------------------
+*.tsbuildinfo
+*.d.ts.map
+*.ts.map
+
+# Ako generišeš tipove u posebnim folderima:
+typings/
+types/
+dist-types/
+
+# -------------------------
+# Mac / OS
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Environment / secrets
+# -------------------------
+.env
+.env.*
+!.env.example
+
+# -------------------------
+# Husky / lint / editor
+# -------------------------
+.husky/_/
+*.swp
+*.swo
+.idea/
+.vscode/**
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# -------------------------
+# Electron packaging
+# -------------------------
+*.tgz
+*.deb
+*.rpm
+*.zip
+*.AppImage
+
+# -------------------------
+# Misc
+# -------------------------
+*.tmp
+*.temp
