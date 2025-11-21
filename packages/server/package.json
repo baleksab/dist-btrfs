@@ -7,12 +7,14 @@
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "5.1.0",
+    "dockerode": "4.0.9"
   },
   "devDependencies": {
-    "@types/express": "^5.0.5",
-    "@types/node": "^24.10.0",
-    "tsx": "^4.20.6",
-    "typescript": "~5.9.3"
+    "@types/express": "5.0.5",
+    "@types/node": "24.10.0",
+    "@types/dockerode": "3.3.47",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
   }
 }

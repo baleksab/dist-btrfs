@@ -1,11 +1,11 @@
 import js from "@eslint/js";
 import globals from "globals";
-import prettier from "eslint-config-prettier";
-import eslintPluginPrettier from "eslint-plugin-prettier";
+import stylisticJs from "@stylistic/eslint-plugin-js";
+import unusedImports from "eslint-plugin-unused-imports";
+import tsParser from "@typescript-eslint/parser";
 
 export default [
   js.configs.recommended,
-  prettier,
   {
     files: ["**/*.{js,ts}"],
     ignores: [
@@ -15,13 +15,22 @@ export default [
       "packages/**/dist",
       "packages/**/node_modules",
     ],
-    plugins: {
-      prettier: eslintPluginPrettier,
-    },
     languageOptions: {
+      parser: tsParser,
       ecmaVersion: "latest",
       sourceType: "module",
       globals: { ...globals.node, ...globals.es2021 },
+    },
+    plugins: {
+      "@stylistic/js": stylisticJs,
+      "unused-imports": unusedImports
+    },
+    rules: {
+      "@stylistic/js/indent": ["error", 2],
+      "@stylistic/js/semi": ["error", "always"],
+      "@stylistic/js/quotes": ["error", "double"],
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": "error"
     }
   },
 ];
