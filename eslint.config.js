@@ -1,6 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
-import stylisticJs from "@stylistic/eslint-plugin-js";
+import stylistic from "@stylistic/eslint-plugin";
 import unusedImports from "eslint-plugin-unused-imports";
 import tsParser from "@typescript-eslint/parser";
 
@@ -22,13 +22,13 @@ export default [
       globals: { ...globals.node, ...globals.es2021 },
     },
     plugins: {
-      "@stylistic/js": stylisticJs,
+      "stylistic": stylistic,
       "unused-imports": unusedImports
     },
     rules: {
-      "@stylistic/js/indent": ["error", 2],
-      "@stylistic/js/semi": ["error", "always"],
-      "@stylistic/js/quotes": ["error", "double"],
+      "stylistic/indent": ["error", 2],
+      "stylistic/semi": ["error", "always"],
+      "stylistic/quotes": ["error", "double"],
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": "error"
     }
