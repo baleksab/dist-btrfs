@@ -7,16 +7,22 @@
     "preflight": "tsx src/preflight.ts",
     "serve": "tsx src/server.ts",
     "dev": "pnpm preflight && pnpm serve",
-    "type-check": "tsc --project tsconfig.json --noEmit && :"
+    "type-check": "tsc --project tsconfig.json --noEmit && :",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "express": "5.1.0",
-    "dockerode": "4.0.9"
+    "better-sqlite3": "12.4.6",
+    "dockerode": "4.0.9",
+    "drizzle-orm": "0.44.7",
+    "express": "5.1.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "7.6.13",
+    "@types/dockerode": "3.3.47",
     "@types/express": "5.0.5",
     "@types/node": "24.10.0",
-    "@types/dockerode": "3.3.47",
+    "drizzle-kit": "0.31.7",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   }
