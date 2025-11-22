@@ -102,6 +102,9 @@ importers:
       dockerode:
         specifier: 4.0.9
         version: 4.0.9
+      dotenv:
+        specifier: 17.2.3
+        version: 17.2.3
       drizzle-orm:
         specifier: 0.44.7
         version: 0.44.7(@types/better-sqlite3@7.6.13)(better-sqlite3@12.4.6)
@@ -1290,6 +1293,10 @@ packages:
   dockerode@4.0.9:
     resolution: {integrity: sha512-iND4mcOWhPaCNh54WmK/KoSb35AFqPAUWFMffTQcp52uQt36b5uNwEJTSXntJZBbeGad72Crbi/hvDIv6us/6Q==}
     engines: {node: '>= 8.0'}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
 
   drizzle-kit@0.31.7:
     resolution: {integrity: sha512-hOzRGSdyKIU4FcTSFYGKdXEjFsncVwHZ43gY3WU5Bz9j5Iadp6Rh6hxLSQ1IWXpKLBKt/d5y1cpSPcV+FcoQ1A==}
@@ -3663,6 +3670,8 @@ snapshots:
       uuid: 10.0.0
     transitivePeerDependencies:
       - supports-color
+
+  dotenv@17.2.3: {}
 
   drizzle-kit@0.31.7:
     dependencies:
