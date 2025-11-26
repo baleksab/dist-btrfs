@@ -7,13 +7,12 @@
   "scripts": {
     "dev": "vite",
     "dev:electron": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && pnpm exec electron .\"",
-    "build:electron": "tsc -p electron.tsconfig.json",
-    "build": "pnpm run build:web && pnpm run build:electron",
     "type-check": "tsc --project tsconfig.json --noEmit && :"
   },
   "dependencies": {
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "electron-devtools-installer": "4.0.0"
   },
   "devDependencies": {
     "@types/node": "24.6.0",
@@ -22,7 +21,7 @@
     "@vitejs/plugin-react": "5.0.4",
     "babel-plugin-react-compiler": "1.0.0",
     "concurrently": "9.2.1",
-    "electron": "39.0.0",
+    "electron": "39.2.4",
     "globals": "16.4.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.45.0",

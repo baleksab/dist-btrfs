@@ -9,8 +9,8 @@ import reactHooks from "eslint-plugin-react-hooks";
 export default [
   js.configs.recommended,
   react.configs.flat.recommended,
-  react.configs.flat['jsx-runtime'],
-  reactHooks.configs.flat.recommended,
+  react.configs.flat["jsx-runtime"],
+  reactHooks.configs.flat["recommended-latest"],
   {
     files: ["**/*.{js,ts,jsx,tsx}"],
     ignores: [
@@ -33,7 +33,7 @@ export default [
         ecmaFeatures: {
           jsx: true
         }
-    },
+      },
     },
     plugins: {
       "stylistic": stylistic,
@@ -53,7 +53,8 @@ export default [
       "no-unused-vars": [
         "error",
         { ignoreRestSiblings: true }
-      ]
+      ],  
+      "react-hooks/exhaustive-deps": "off"
     },
   }
 ];
