@@ -1,5 +1,11 @@
+import { useEffect } from "react";
+
 const App = () => {
-  return <p>Test</p>
+  const test = () => console.log(123);
+
+  useEffect(() => console.log(123))
+
+  return <p>Test 23 12 </p>;
 };
 
 export default App;
