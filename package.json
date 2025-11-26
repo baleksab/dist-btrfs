@@ -9,6 +9,8 @@
     "setup": "husky init",
     "dev:server": "pnpm --filter @dist-btrfs/server dev",
     "dev:gui": "pnpm --filter @dist-btrfs/gui dev:electron",
+    "build:gui": "pnpm --filter @dist-btrfs/gui build:electron",
+    "start:gui": "pnpm --filter @dist-btrfs/gui start:electron",
     "type-check": "pnpm -r run type-check"
   },
   "lint-staged": {

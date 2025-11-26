@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "vite",
     "dev:electron": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && pnpm exec electron .\"",
+    "build": "vite build",
+    "build:electron": "pnpm build && tsc --project electron.config.json",
+    "start:electron": "cross-env NODE_ENV=production pnpm exec electron dist/electron.js",
     "type-check": "tsc --project tsconfig.json --noEmit && :"
   },
   "dependencies": {
@@ -26,6 +29,7 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.45.0",
     "vite": "7.1.7",
-    "wait-on": "9.0.1"
+    "wait-on": "9.0.1",
+    "cross-env": "10.1.0"
   }
 }
