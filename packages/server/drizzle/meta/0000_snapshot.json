@@ -1,89 +1,42 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f05ed586-e133-4f0a-b6e7-e540d0c954ca",
+  "id": "8e43f31c-5841-47d0-81e1-a262ef2d822c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "containers": {
-      "name": "containers",
+    "remote_servers": {
+      "name": "remote_servers",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
+        "uid": {
+          "name": "uid",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "ip_address": {
+          "name": "ip_address",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "image": {
-          "name": "image",
+        "username": {
+          "name": "username",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "is_enabled": {
-          "name": "is_enabled",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
-        },
-        "is_primary": {
-          "name": "is_primary",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "btrfs_volume_path": {
-          "name": "btrfs_volume_path",
+        "password": {
+          "name": "password",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(strftime('%s','now'))"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(strftime('%s','now'))"
+          "autoincrement": false
         }
       },
-      "indexes": {
-        "containers_name_unique": {
-          "name": "containers_name_unique",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},

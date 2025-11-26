@@ -1,14 +1,16 @@
+import "./routes"; // this is needed to register all routes
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { config } from "./config";
 import { swaggerSpec } from "./swagger";
-import containerRoutes from "./routes/container.routes";
+import { router } from "./utils";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/containers", containerRoutes);
+app.use(router);
+
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/health", (_, res) => {

@@ -30,7 +30,12 @@ export default [
       "stylistic/semi": ["error", "always"],
       "stylistic/quotes": ["error", "double"],
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": "error",
+      "unused-imports/no-unused-vars": ["error", {
+        "ignoreRestSiblings": true,
+      }],
+      "no-unused-vars": ["error", {
+        "ignoreRestSiblings": true,
+      }],
     }
   },
 ];

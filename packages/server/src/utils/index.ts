@@ -1,2 +1,3 @@
-export * from "./checkForDocker";
-export * from "./getPlatform";
+export * from "./isPlatformSupported";
+export * from "./cryptography";
+export * from "./createRoute";
