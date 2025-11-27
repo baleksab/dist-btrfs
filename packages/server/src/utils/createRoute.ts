@@ -11,6 +11,7 @@ type CreateRouteOptions = {
   method: HttpMethod;
   path: string;
   dto?: z.ZodTypeAny;
+  response?: z.ZodTypeAny;
   handler: any;
   summary?: string;
   tags?: string[];
@@ -21,6 +22,7 @@ export const createRoute = ({
   path,
   dto,
   handler,
+  response,
   summary = "",
   tags = [],
 }: CreateRouteOptions) => {
@@ -41,8 +43,16 @@ export const createRoute = ({
       }
       : undefined,
     responses: {
-      200: { description: "Success" },
-      201: { description: "Created" },
+      200: {
+        description: "Success",
+        content: response
+          ? {
+            "application/json": {
+              schema: response,
+            },
+          }
+          : undefined,
+      },
       400: { description: "Bad request" },
       500: { description: "Server error" },
     },

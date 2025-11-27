@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
 import { encrypt } from "../utils";
 import { createNewServer as createNewServerRepository } from "../repositories";
-import type { CreateNewServerDto } from "../dtos";
+import type { CreateNewServerRequest } from "../dtos";
 
-export const createNewServer = async (data: CreateNewServerDto) => {
+export const createNewServer = async (data: CreateNewServerRequest) => {
   const uid = randomUUID();
 
   const server = await createNewServerRepository({

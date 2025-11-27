@@ -16,10 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   CreateNewServerRequest,
-} from '../models/index';
-import {
-    CreateNewServerRequestFromJSON,
-    CreateNewServerRequestToJSON,
+  CreateNewServerResponse,
 } from '../models/index';
 
 export interface ServersPostRequest {
@@ -34,7 +31,7 @@ export class RemoteServersApi extends runtime.BaseAPI {
     /**
      * Create new remote server
      */
-    async serversPostRaw(requestParameters: ServersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async serversPostRaw(requestParameters: ServersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateNewServerResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -49,17 +46,18 @@ export class RemoteServersApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CreateNewServerRequestToJSON(requestParameters['createNewServerRequest']),
+            body: requestParameters['createNewServerRequest'],
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response);
     }
 
     /**
      * Create new remote server
      */
-    async serversPost(requestParameters: ServersPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.serversPostRaw(requestParameters, initOverrides);
+    async serversPost(requestParameters: ServersPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateNewServerResponse> {
+        const response = await this.serversPostRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

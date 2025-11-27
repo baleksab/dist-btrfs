@@ -1,9 +1,9 @@
-import { CreateNewServerDto } from "../dtos";
+import { CreateNewServerRequest } from "../dtos";
 import { createNewServer as createNewServerService } from "../services";
 import { Request, Response } from "express";
 
 export const createNewServer = async (
-  dto: CreateNewServerDto,
+  dto: CreateNewServerRequest,
   _: Request,
   res: Response
 ) => {

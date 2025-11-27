@@ -1,12 +1,13 @@
 import { createNewServer } from "../controllers";
-import { createNewServerDto } from "../dtos";
+import { createNewServerRequest, createNewServerResponse } from "../dtos";
 import { createRoute } from "../utils";
 
 createRoute({
   method: "post",
   path: "/servers",
-  dto: createNewServerDto,
+  dto: createNewServerRequest,
   handler: createNewServer,
+  response: createNewServerResponse,
   summary: "Create new remote server",
   tags: ["RemoteServers"],
 });

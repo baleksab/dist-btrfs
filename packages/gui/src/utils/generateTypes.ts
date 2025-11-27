@@ -7,6 +7,7 @@ const cmd = `
     -g typescript-fetch \
     -o src/generated-types \
     --global-property=apiDocs=false,modelDocs=false \
+    --additional-properties=withoutRuntimeChecks=true \
 `;
 
 exec(cmd);

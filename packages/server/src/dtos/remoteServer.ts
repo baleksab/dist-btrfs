@@ -3,10 +3,17 @@ import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
-export const createNewServerDto = z.object({
+export const createNewServerRequest = z.object({
   ipAddress: z.string().min(3),
   username: z.string().min(1),
   password: z.string().min(1),
 }).openapi("CreateNewServerRequest");
 
-export type CreateNewServerDto = z.infer<typeof createNewServerDto>;
+export type CreateNewServerRequest = z.infer<typeof createNewServerRequest>;
+
+export const createNewServerResponse = z.object({
+  ipAddress: z.string(),
+  uid: z.string()
+}).openapi("CreateNewServerResponse");
+
+export type CreateNewServerResponse = z.infer<typeof createNewServerResponse>;

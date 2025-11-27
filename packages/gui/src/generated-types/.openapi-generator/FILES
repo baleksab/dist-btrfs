@@ -1,7 +1,5 @@
-.openapi-generator-ignore
 apis/RemoteServersApi.ts
 apis/index.ts
 index.ts
-models/CreateNewServerRequest.ts
 models/index.ts
 runtime.ts
