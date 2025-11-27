@@ -47,6 +47,9 @@ importers:
 
   packages/gui:
     dependencies:
+      axios:
+        specifier: 1.13.2
+        version: 1.13.2
       electron-devtools-installer:
         specifier: 4.0.0
         version: 4.0.0

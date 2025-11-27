@@ -10,7 +10,7 @@ export const createNewServer = async (data: NewRemoteServer) => {
 
 
 export const getAllServers = async () => {
-  const [servers] = await database.select().from(remoteServers);
+  const servers = await database.select().from(remoteServers);
 
   return servers;
 };

@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { encrypt } from "../utils";
-import { createNewServer as createNewServerRepository } from "../repositories";
+import { createNewServer as createNewServerRepository, getAllServers as getAllServersRepository } from "../repositories";
 import type { CreateNewServerRequest } from "../dtos";
 
 export const createNewServer = async (data: CreateNewServerRequest) => {
@@ -17,4 +17,12 @@ export const createNewServer = async (data: CreateNewServerRequest) => {
   const { username, password, ...sanitizedServer} = server;
 
   return sanitizedServer;
+};
+
+export const getAllServers = async () => {
+  const servers = await getAllServersRepository();
+
+  const sanitizedServers = servers.map(({username, password, ...sanitizedServer}) => sanitizedServer);
+  
+  return sanitizedServers;
 };

@@ -1,5 +1,5 @@
-import { createNewServer } from "../controllers";
-import { createNewServerRequest, createNewServerResponse } from "../dtos";
+import { createNewServer, getAllServers } from "../controllers";
+import { createNewServerRequest, createNewServerResponse, getAllServersResponse } from "../dtos";
 import { createRoute } from "../utils";
 
 createRoute({
@@ -10,4 +10,12 @@ createRoute({
   response: createNewServerResponse,
   summary: "Create new remote server",
   tags: ["RemoteServers"],
+});
+
+createRoute({
+  method: "get",
+  path: "/servers",
+  handler: getAllServers,
+  response: getAllServersResponse,
+  tags: ["RemoteServers"]
 });

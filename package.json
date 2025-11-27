@@ -14,8 +14,8 @@
     "type-check": "pnpm -r run type-check"
   },
   "lint-staged": {
-    "*.ts": [
-      "eslint --max-warnings=0 --fix",
+    "*.(ts|tsx)": [
+      "eslint --no-warn-ignored --max-warnings=0 --fix --ignore-pattern 'packages/**/generated-types/**'",
       "pnpm type-check"
     ]
   },

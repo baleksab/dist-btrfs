@@ -19,6 +19,7 @@ export default [
       "dist-electron",
       "packages/**/dist",
       "packages/**/node_modules",
+      "packages/**/generated-types/**"
     ],
     languageOptions: {
       parser: tsParser,
