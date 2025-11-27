@@ -8,6 +8,7 @@ const cmd = `
     --global-property=apiDocs=false,modelDocs=false \
     --additional-properties=withoutRuntimeChecks=true \
     --global-property=gitPushCommand=false \
+    --skip-validate-spec
 `;
 
 exec(cmd);

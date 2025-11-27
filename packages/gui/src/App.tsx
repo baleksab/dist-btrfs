@@ -1,12 +1,15 @@
-import { useEffect } from "react";
-import { getAllRemoteServers } from "./apis";
+import { useRemoteServers } from "./hooks";
 
 const App = () => {
-  useEffect(() => {
-    getAllRemoteServers().then(data => console.log(data.data?.[0]?.ipAddress));
-  });
+  const { data, isPending } = useRemoteServers();
 
-  return <p>Test</p>;
+  if (isPending) {
+    return <p>Loading...</p>;
+  }
+
+  return <ul>
+    {data?.map(server => <li key={server.uid}>{server.uid} - {server.ipAddress}</li>)}
+  </ul>;
 };
 
 export default App;

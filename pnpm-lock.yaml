@@ -47,6 +47,12 @@ importers:
 
   packages/gui:
     dependencies:
+      '@lukemorales/query-key-factory':
+        specifier: 1.2.0
+        version: 1.2.0(@tanstack/query-core@5.90.11)
+      '@tanstack/react-query':
+        specifier: 5.90.11
+        version: 5.90.11(react@19.1.1)
       axios:
         specifier: 1.13.2
         version: 1.13.2
@@ -691,6 +697,12 @@ packages:
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
 
+  '@lukemorales/query-key-factory@1.2.0':
+    resolution: {integrity: sha512-ilUedLpJdpOCMKgxoncRkYEFF7C+K//IK/QWXHs0G6HjmZunT9XcrpWHNc5RjrBBqPhdxYNa7aUoEhjonwl4eQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@tanstack/query-core': ^4.0.0
+
   '@nestjs/axios@4.0.1':
     resolution: {integrity: sha512-68pFJgu+/AZbWkGu65Z3r55bTsCPlgyKaV4BSG8yUAD72q1PPuyVRgUwFv6BxdnibTUHlyxm06FmYWNC+bjN7A==}
     peerDependencies:
@@ -918,6 +930,14 @@ packages:
   '@szmarczak/http-timer@4.0.6':
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
+
+  '@tanstack/query-core@5.90.11':
+    resolution: {integrity: sha512-f9z/nXhCgWDF4lHqgIE30jxLe4sYv15QodfdPDKYAk7nAEjNcndy4dHz3ezhdUaR23BpWa4I2EH4/DZ0//Uf8A==}
+
+  '@tanstack/react-query@5.90.11':
+    resolution: {integrity: sha512-3uyzz01D1fkTLXuxF3JfoJoHQMU2fxsfJwE+6N5hHy0dVNoZOvwKP8Z2k7k1KDeD54N20apcJnG75TBAStIrBA==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tokenizer/inflate@0.3.1':
     resolution: {integrity: sha512-4oeoZEBQdLdt5WmP/hx1KZ6D3/Oid/0cUb2nk4F0pTDAWy+KCH3/EnAkZF/bvckWo8I33EqBm01lIPgmgc8rCA==}
@@ -3798,6 +3818,10 @@ snapshots:
 
   '@lukeed/csprng@1.1.0': {}
 
+  '@lukemorales/query-key-factory@1.2.0(@tanstack/query-core@5.90.11)':
+    dependencies:
+      '@tanstack/query-core': 5.90.11
+
   '@nestjs/axios@4.0.1(@nestjs/common@11.1.9(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.2)(rxjs@7.8.2)':
     dependencies:
       '@nestjs/common': 11.1.9(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -3992,6 +4016,13 @@ snapshots:
   '@szmarczak/http-timer@4.0.6':
     dependencies:
       defer-to-connect: 2.0.1
+
+  '@tanstack/query-core@5.90.11': {}
+
+  '@tanstack/react-query@5.90.11(react@19.1.1)':
+    dependencies:
+      '@tanstack/query-core': 5.90.11
+      react: 19.1.1
 
   '@tokenizer/inflate@0.3.1':
     dependencies:

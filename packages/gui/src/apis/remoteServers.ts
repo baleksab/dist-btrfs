@@ -7,6 +7,8 @@ export const createRemoteServer = (request: CreateNewServerRequest) => {
   return remoteServersApi.serversPost(request);
 };
 
-export const getAllRemoteServers = () => {
-  return remoteServersApi.serversGet();
+export const getAllRemoteServers = async () => {
+  const { data } = await remoteServersApi.serversGet();
+
+  return data;
 };
