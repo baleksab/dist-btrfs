@@ -121,7 +121,7 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async serversGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllServersResponse>> {
+        async serversGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetAllServersResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.serversGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.serversGet']?.[localVarOperationServerIndex]?.url;
@@ -155,7 +155,7 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversGet(options?: RawAxiosRequestConfig): AxiosPromise<GetAllServersResponse> {
+        serversGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<GetAllServersResponse>> {
             return localVarFp.serversGet(options).then((request) => request(axios, basePath));
         },
         /**

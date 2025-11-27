@@ -18,9 +18,9 @@ export const createNewServerResponse = z.object({
 
 export type CreateNewServerResponse = z.infer<typeof createNewServerResponse>;
 
-export const getAllServersResponse = z.object({
+export const getAllServersResponse = z.array(z.object({
   ipAddress: z.string(),
   uid: z.string()
-}).openapi("GetAllServersResponse");
+}).openapi("GetAllServersResponse"));
 
 export type GetAllServersResponse = z.infer<typeof getAllServersResponse>;

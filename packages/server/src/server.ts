@@ -1,6 +1,7 @@
 import "./routes"; // this is needed to register all routes
 import express from "express";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 import { config } from "./config";
 import { swaggerSpec } from "./swagger";
 import { router } from "./utils";
@@ -8,15 +9,14 @@ import { router } from "./utils";
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-app.use(router);
-
+app.use("/api", router);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-router.get("/openapi", (_, res) => {
+app.use("/specifications", (_, res) => {
   res.json(swaggerSpec);
 });
-
 
 app.get("/health", (_, res) => {
   res.json({ status: "ok" });

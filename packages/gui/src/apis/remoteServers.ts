@@ -1,7 +1,7 @@
-import axios from "axios";
+import { axiosInstance } from "./axiosInstance";
 import { RemoteServersApi, type CreateNewServerRequest } from "../generated-types";
 
-const remoteServersApi = new RemoteServersApi(undefined, undefined, axios);
+const remoteServersApi = new RemoteServersApi(undefined, undefined, axiosInstance);
 
 export const createRemoteServer = (request: CreateNewServerRequest) => {
   return remoteServersApi.serversPost(request);

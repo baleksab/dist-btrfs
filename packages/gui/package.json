@@ -11,7 +11,7 @@
     "build:electron": "pnpm build && tsc --project electron.config.json",
     "start:electron": "cross-env NODE_ENV=production pnpm exec electron dist/electron.js",
     "type-check": "tsc --project tsconfig.json --noEmit && :",
-    "generate:types": "tsx src/utils/generateTypes.ts"
+    "generate:types": "tsx scripts/generateTypes.ts"
   },
   "dependencies": {
     "react": "19.1.1",

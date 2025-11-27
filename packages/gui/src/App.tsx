@@ -1,11 +1,12 @@
 import { useEffect } from "react";
+import { getAllRemoteServers } from "./apis";
 
 const App = () => {
-  const test = () => console.log(123);
+  useEffect(() => {
+    getAllRemoteServers().then(data => console.log(data.data?.[0]?.ipAddress));
+  });
 
-  useEffect(() => console.log(123), [test]);
-
-  return <p>Test 23 12 </p>;
+  return <p>Test</p>;
 };
 
 export default App;
