@@ -13,6 +13,11 @@ app.use(router);
 
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+router.get("/openapi", (_, res) => {
+  res.json(swaggerSpec);
+});
+
+
 app.get("/health", (_, res) => {
   res.json({ status: "ok" });
 });

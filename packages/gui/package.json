@@ -10,7 +10,8 @@
     "build": "vite build",
     "build:electron": "pnpm build && tsc --project electron.config.json",
     "start:electron": "cross-env NODE_ENV=production pnpm exec electron dist/electron.js",
-    "type-check": "tsc --project tsconfig.json --noEmit && :"
+    "type-check": "tsc --project tsconfig.json --noEmit && :",
+    "generate:types": "tsx src/utils/generateTypes.ts"
   },
   "dependencies": {
     "react": "19.1.1",
@@ -30,6 +31,8 @@
     "typescript-eslint": "8.45.0",
     "vite": "7.1.7",
     "wait-on": "9.0.1",
-    "cross-env": "10.1.0"
+    "cross-env": "10.1.0",
+    "@openapitools/openapi-generator-cli": "2.25.2",
+    "tsx": "4.20.6"
   }
 }
