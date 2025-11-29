@@ -1,15 +1,22 @@
-import { useRemoteServers } from "./hooks";
+import { AppShell } from "@mantine/core";
+import { IconHome, IconUsers, IconSettings } from "@tabler/icons-react";
+import { Sidebar } from "./components";
 
 const App = () => {
-  const { data, isPending } = useRemoteServers();
+  const menuItems = [
+    { label: "Home", icon: <IconHome size={18} /> },
+    { label: "Users", icon: <IconUsers size={18} /> },
+    { label: "Settings", icon: <IconSettings size={18} /> },
+    { label: "Reports" },
+    { label: "Analytics" },
+  ];
 
-  if (isPending) {
-    return <p>Loading...</p>;
-  }
-
-  return <ul>
-    {data?.map(server => <li key={server.uid}>{server.uid} - {server.ipAddress}</li>)}
-  </ul>;
+  return (
+    <AppShell navbar={{ width: 260, breakpoint: "sm" }} padding="md">
+      <Sidebar items={menuItems}/>
+      <div>test</div>
+    </AppShell>
+  );
 };
 
 export default App;

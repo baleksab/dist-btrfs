@@ -51,10 +51,7 @@ export default [
         "error",
         { ignoreRestSiblings: true }
       ],
-      "no-unused-vars": [
-        "error",
-        { ignoreRestSiblings: true }
-      ],  
+      "no-unused-vars": "off",
       "react-hooks/exhaustive-deps": "off"
     },
   }
