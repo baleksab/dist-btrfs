@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 1440,
+    height: 900,
   });
 
   const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
