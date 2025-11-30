@@ -1,3 +1,27 @@
 {
-  "sidebar.title": "dist-btrfs"
+  "components.addServerModal.title": "Add Server",
+  "components.addServerModal.name": "Name of the server",
+  "components.addServerModal.cancel": "Cancel",
+  "components.addServerModal.submit": "Add Server",
+  "components.addServerModal.hostname": "Hostname",
+  "components.addServerModal.ipAddress": "IP Address",
+  "components.addServerModal.port": "Port",
+  "components.addServerModal.username": "Username",
+  "components.addServerModal.password": "Password",
+  "components.addServerModal.sshKeyPath": "SSH Key Path",
+  "components.addServerModal.sshKeyPassphrase": "SSH Key Passphrase",
+  "components.addServerModal.isPrimary": "Primary Server",
+  "components.addServerModal.dataPath": "Data Path",
+  "components.addServerModal.snapshotsPath": "Snapshots Path",
+  "components.addServerModal.receivePath": "Receive Path",
+  "components.addServerModal.tempPath": "Temp Path",
+  "components.addServerModal.restorePath": "Restore Path",
+  "components.serverCard.ip": "IP address",
+  "components.serverCard.port": "Port",
+  "components.serverCard.primary": "Primary",
+  "components.sidebar.title": "dist-btrfs",
+  "components.sidebar.navItem.servers": "Servers",
+  "pages.serversPage.title": "Servers",
+  "pages.serversPage.addServer": "Add Server",
+  "pages.serversPage.noServers": "No servers added yet"
 }

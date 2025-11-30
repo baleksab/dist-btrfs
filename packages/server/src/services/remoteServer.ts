@@ -9,7 +9,7 @@ export const createNewServer = async (data: CreateNewServerRequest) => {
   const server = await createNewServerRepository({
     ...data,
     uid,
-    ipAddress: data.ipAddress,
+    isPrimary: data.isPrimary ? 1 : 0,
     username: encrypt(data.username),
     password: encrypt(data.password),
   });

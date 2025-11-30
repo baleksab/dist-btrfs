@@ -24,17 +24,25 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
 export interface CreateNewServerRequest {
+    'name': string;
     'ipAddress': string;
+    'port'?: number;
     'username': string;
     'password': string;
+    'isPrimary'?: boolean;
 }
 export interface CreateNewServerResponse {
-    'ipAddress': string;
     'uid': string;
+    'ipAddress': string;
+    'port'?: number;
+    'isPrimary'?: boolean;
 }
 export interface GetAllServersResponse {
-    'ipAddress': string;
     'uid': string;
+    'name': string;
+    'ipAddress': string;
+    'port'?: number;
+    'isPrimary'?: boolean;
 }
 
 /**

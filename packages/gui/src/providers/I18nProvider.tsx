@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { IntlProvider } from "react-intl";
 
 import en from "../../locales/en.json";
@@ -14,7 +14,7 @@ export const I18nProvider = ({
 }: {
   locale: Locale;
   children: ReactNode;
-}) => {
+}) => {  
   return (
     <IntlProvider locale={locale} messages={messages[locale]}>
       {children}

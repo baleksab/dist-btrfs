@@ -1,3 +1,27 @@
 {
-  "sidebar.title": "dist-btrfs"
+  "components.addServerModal.title": "Dodaj server",
+  "components.addServerModal.name": "Naziv servera",
+  "components.addServerModal.cancel": "Otkaži",
+  "components.addServerModal.submit": "Dodaj server",
+  "components.addServerModal.hostname": "Hostname",
+  "components.addServerModal.ipAddress": "IP adresa",
+  "components.addServerModal.port": "Port",
+  "components.addServerModal.username": "Korisničko ime",
+  "components.addServerModal.password": "Lozinka",
+  "components.addServerModal.sshKeyPath": "Putanja do SSH ključa",
+  "components.addServerModal.sshKeyPassphrase": "SSH lozinka (passphrase)",
+  "components.addServerModal.isPrimary": "Primarni server",
+  "components.addServerModal.dataPath": "Putanja podataka",
+  "components.addServerModal.snapshotsPath": "Putanja snapshot-ova",
+  "components.addServerModal.receivePath": "Putanja za prijem",
+  "components.addServerModal.tempPath": "Privremena putanja",
+  "components.addServerModal.restorePath": "Putanja za vraćanje",
+  "components.serverCard.ip": "IP adresa",
+  "components.serverCard.port": "Port",
+  "components.serverCard.primary": "Primarni",
+  "components.sidebar.title": "dist-btrfs",
+  "components.sidebar.navItem.servers": "Serveri",
+  "pages.serversPage.title": "Serveri",
+  "pages.serversPage.addServer": "Dodaj server",
+  "pages.serversPage.noServers": "Nema dodatih servera"
 }
