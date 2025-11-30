@@ -1,1 +1,1 @@
-export * from "./remoteServer";
+export * from "./remoteServer.service";
