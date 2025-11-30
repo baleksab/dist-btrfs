@@ -2,7 +2,6 @@ import { axiosInstance } from "./axiosInstance";
 import {
   RemoteServersApi,
   type CreateNewServerRequest,
-  type DeleteServerRequest,
   type UpdateServerRequest
 } from "../generated-types";
 
@@ -20,8 +19,8 @@ export const getAllRemoteServers = async () => {
   return data;
 };
 
-export const deleteRemoteServer = (request: DeleteServerRequest) => {
-  return remoteServersApi.serversDelete(request);
+export const deleteRemoteServer = ({ uid }: { uid: string }) => {
+  return remoteServersApi.serversUidDelete(uid);
 };
 
 export const updateRemoteServer = async ({

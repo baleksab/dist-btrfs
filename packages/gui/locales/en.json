@@ -1,8 +1,10 @@
 {
-  "components.addServerModal.title": "Add Server",
+  "components.addServerModal.addTitle": "Add Server",
+  "components.addServerModal.updateTitle": "Update Server",
   "components.addServerModal.name": "Name of the server",
   "components.addServerModal.cancel": "Cancel",
-  "components.addServerModal.submit": "Add Server",
+  "components.addServerModal.submitAdd": "Add Server",
+  "components.addServerModal.submitUpdate": "Update Server",
   "components.addServerModal.hostname": "Hostname",
   "components.addServerModal.ipAddress": "IP Address",
   "components.addServerModal.port": "Port",

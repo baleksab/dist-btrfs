@@ -41,14 +41,6 @@ export const getAllServersResponse = z.array(
 
 export type GetAllServersResponse = z.infer<typeof getAllServersResponse>;
 
-export const deleteServerRequest = z
-  .object({
-    uid: z.string()
-  })
-  .openapi("DeleteServerRequest");
-
-export type DeleteServerRequest = z.infer<typeof deleteServerRequest>;
-
 export const updateServerRequest = createNewServerRequest.partial().openapi("UpdateServerRequest");
 
 export type UpdateServerRequest = z.infer<typeof updateServerRequest>;

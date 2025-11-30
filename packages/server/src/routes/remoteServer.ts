@@ -3,7 +3,6 @@ import { RemoteServerController } from "../controllers";
 import {
   createNewServerRequest,
   createNewServerResponse,
-  deleteServerRequest,
   getAllServersResponse,
   updateServerRequest
 } from "../dtos";
@@ -30,10 +29,10 @@ createRoute({
 
 createRoute({
   method: "delete",
-  path: "/servers",
-  dto: deleteServerRequest,
+  path: "/servers/:uid",
   handler: controller.delete.bind(controller),
-  tags: ["RemoteServers"]
+  tags: ["RemoteServers"],
+  params: z.object({ uid: z.string() })
 });
 
 createRoute({
