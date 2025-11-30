@@ -1,9 +1,11 @@
+import z from "zod";
 import { RemoteServerController } from "../controllers";
 import {
   createNewServerRequest,
   createNewServerResponse,
   deleteServerRequest,
-  getAllServersResponse
+  getAllServersResponse,
+  updateServerRequest
 } from "../dtos";
 import { createRoute } from "../utils";
 
@@ -31,5 +33,14 @@ createRoute({
   path: "/servers",
   dto: deleteServerRequest,
   handler: controller.delete.bind(controller),
+  tags: ["RemoteServers"]
+});
+
+createRoute({
+  method: "put",
+  path: "/servers/:uid",
+  params: z.object({ uid: z.string() }),
+  dto: updateServerRequest,
+  handler: controller.update.bind(controller),
   tags: ["RemoteServers"]
 });

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateNewServerRequest, DeleteServerRequest } from "../dtos";
+import { CreateNewServerRequest, DeleteServerRequest, UpdateServerRequest } from "../dtos";
 import { RemoteServerService } from "../services";
 
 export class RemoteServerController {
@@ -19,5 +19,12 @@ export class RemoteServerController {
 
   async delete(dto: DeleteServerRequest) {
     await this.service.delete(dto);
+  }
+
+  async update(dto: UpdateServerRequest, req: Request, res: Response) {
+    const uid = req.params.uid;
+    const response = await this.service.update(uid, dto);
+
+    return res.status(200).json(response);
   }
 }

@@ -48,3 +48,7 @@ export const deleteServerRequest = z
   .openapi("DeleteServerRequest");
 
 export type DeleteServerRequest = z.infer<typeof deleteServerRequest>;
+
+export const updateServerRequest = createNewServerRequest.partial().openapi("UpdateServerRequest");
+
+export type UpdateServerRequest = z.infer<typeof updateServerRequest>;

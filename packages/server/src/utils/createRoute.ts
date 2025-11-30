@@ -15,6 +15,7 @@ type CreateRouteOptions = {
   handler: any;
   summary?: string;
   tags?: string[];
+  params?: z.ZodObject<Record<string, z.ZodTypeAny>>;
 };
 
 export const createRoute = ({
@@ -24,24 +25,24 @@ export const createRoute = ({
   handler,
   response,
   summary = "",
-  tags = []
+  tags = [],
+  params
 }: CreateRouteOptions) => {
   registry.registerPath({
     method,
     path,
     summary,
     tags,
-    request: dto
-      ? {
-          body: {
+    request: {
+      params: params ? params : undefined,
+      body: dto
+        ? {
             content: {
-              "application/json": {
-                schema: dto
-              }
+              "application/json": { schema: dto }
             }
           }
-        }
-      : undefined,
+        : undefined
+    },
     responses: {
       200: {
         description: "Success",
@@ -62,7 +63,8 @@ export const createRoute = ({
     console.log(req.body);
     try {
       const validatedBody = dto ? dto.parse(req.body) : req.body;
-      const result = await handler(validatedBody, req, res);
+      const validatedParams = params ? params.parse(req.params) : req.params;
+      const result = await handler({ params: validatedParams, body: validatedBody }, req, res);
       if (!res.headersSent) {
         res.json(result);
       }

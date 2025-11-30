@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { database, remoteServers, NewRemoteServer } from "../db";
+import { database, remoteServers, NewRemoteServer, UpdateRemoteServer } from "../db";
 
 export class RemoteServerRepository {
   async create(data: NewRemoteServer) {
@@ -13,5 +13,9 @@ export class RemoteServerRepository {
 
   delete(uid: string) {
     return database.delete(remoteServers).where(eq(remoteServers.uid, uid));
+  }
+
+  update(uid: string, data: UpdateRemoteServer) {
+    return database.update(remoteServers).set(data).where(eq(remoteServers.uid, uid));
   }
 }
