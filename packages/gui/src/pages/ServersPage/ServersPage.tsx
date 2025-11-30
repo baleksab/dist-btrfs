@@ -35,15 +35,19 @@ export const ServersPage = () => {
           </Text>
         ) : (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" mt="md">
-            {servers?.map((server) => (
-              <ServerCard
-                key={server.uid}
-                name={server.name}
-                ipAddress={server.ipAddress}
-                port={server.port}
-                isPrimary={server.isPrimary}
-              />
-            ))}
+            {servers
+              ?.slice()
+              ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
+              ?.map((server) => (
+                <ServerCard
+                  uid={server.uid}
+                  key={server.uid}
+                  name={server.name}
+                  ipAddress={server.ipAddress}
+                  port={server.port}
+                  isPrimary={server.isPrimary}
+                />
+              ))}
           </SimpleGrid>
         )}
       </div>

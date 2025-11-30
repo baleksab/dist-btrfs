@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateNewServerRequest } from "../dtos";
+import { CreateNewServerRequest, DeleteServerRequest } from "../dtos";
 import { RemoteServerService } from "../services";
 
 export class RemoteServerController {
@@ -7,11 +7,17 @@ export class RemoteServerController {
 
   async create(dto: CreateNewServerRequest, _req: Request, res: Response) {
     const server = await this.service.create(dto);
+
     return res.status(200).json(server);
   }
 
-  async getAll(_dto: never, _req: Request, res: Response) {
+  async getAll(_dto: unknown, _req: Request, res: Response) {
     const servers = await this.service.getAll();
+
     return res.status(200).json(servers);
+  }
+
+  async delete(dto: DeleteServerRequest) {
+    await this.service.delete(dto);
   }
 }

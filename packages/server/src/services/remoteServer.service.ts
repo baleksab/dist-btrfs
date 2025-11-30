@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { encrypt } from "../utils";
 import { RemoteServerRepository } from "../repositories";
-import type { CreateNewServerRequest } from "../dtos";
+import type { CreateNewServerRequest, DeleteServerRequest } from "../dtos";
 
 export class RemoteServerService {
   private repo = new RemoteServerRepository();
@@ -24,5 +24,9 @@ export class RemoteServerService {
   async getAll() {
     const servers = await this.repo.findAll();
     return servers.map(({ username, password, ...rest }) => rest);
+  }
+
+  delete({ uid }: DeleteServerRequest) {
+    return this.repo.delete(uid);
   }
 }

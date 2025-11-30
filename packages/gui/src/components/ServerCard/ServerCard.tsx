@@ -1,8 +1,12 @@
-import { Card, Text, Group, Badge, Stack } from "@mantine/core";
+import { Card, Text, Group, Badge, Stack, ActionIcon } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
+import { IconTrash } from "@tabler/icons-react";
+import type { MouseEvent } from "react";
+import { useDeleteRemoteServer } from "../../hooks";
 
 export interface ServerCardProps {
+  uid: string;
   name: string;
   ipAddress: string;
   port?: number;
@@ -10,8 +14,15 @@ export interface ServerCardProps {
   onClick?: () => void;
 }
 
-export const ServerCard = ({ name, ipAddress, port, isPrimary, onClick }: ServerCardProps) => {
+export const ServerCard = ({ uid, name, ipAddress, port, isPrimary, onClick }: ServerCardProps) => {
   const { formatMessage } = useIntl();
+
+  const { mutateAsync: deleteServerAsync, isPending: isDeletingServer } = useDeleteRemoteServer();
+
+  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    await deleteServerAsync({ uid });
+  };
 
   return (
     <Card
@@ -49,6 +60,19 @@ export const ServerCard = ({ name, ipAddress, port, isPrimary, onClick }: Server
           <Text size="sm">{port ?? 22}</Text>
         </Group>
       </Stack>
+
+      <Group gap={6} justify="flex-end">
+        <ActionIcon
+          variant="subtle"
+          color="red"
+          size="sm"
+          onClick={handleDelete}
+          disabled={isPrimary}
+          loading={isDeletingServer}
+        >
+          <IconTrash size={16} />
+        </ActionIcon>
+      </Group>
     </Card>
   );
 };

@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { database, remoteServers, NewRemoteServer } from "../db";
 
 export class RemoteServerRepository {
@@ -6,7 +7,11 @@ export class RemoteServerRepository {
     return server;
   }
 
-  async findAll() {
+  findAll() {
     return database.select().from(remoteServers);
+  }
+
+  delete(uid: string) {
+    return database.delete(remoteServers).where(eq(remoteServers.uid, uid));
   }
 }

@@ -1,5 +1,10 @@
 import { RemoteServerController } from "../controllers";
-import { createNewServerRequest, createNewServerResponse, getAllServersResponse } from "../dtos";
+import {
+  createNewServerRequest,
+  createNewServerResponse,
+  deleteServerRequest,
+  getAllServersResponse
+} from "../dtos";
 import { createRoute } from "../utils";
 
 const controller = new RemoteServerController();
@@ -10,7 +15,6 @@ createRoute({
   dto: createNewServerRequest,
   handler: controller.create.bind(controller),
   response: createNewServerResponse,
-  summary: "Create new remote server",
   tags: ["RemoteServers"]
 });
 
@@ -19,5 +23,13 @@ createRoute({
   path: "/servers",
   handler: controller.getAll.bind(controller),
   response: getAllServersResponse,
+  tags: ["RemoteServers"]
+});
+
+createRoute({
+  method: "delete",
+  path: "/servers",
+  dto: deleteServerRequest,
+  handler: controller.delete.bind(controller),
   tags: ["RemoteServers"]
 });
