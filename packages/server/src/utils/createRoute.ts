@@ -28,9 +28,11 @@ export const createRoute = ({
   tags = [],
   params
 }: CreateRouteOptions) => {
+  const openApiPath = path.replace(/:([A-Za-z0-9_]+)/g, "{$1}");
+
   registry.registerPath({
     method,
-    path,
+    path: openApiPath,
     summary,
     tags,
     request: {
@@ -63,8 +65,8 @@ export const createRoute = ({
     console.log(req.body);
     try {
       const validatedBody = dto ? dto.parse(req.body) : req.body;
-      const validatedParams = params ? params.parse(req.params) : req.params;
-      const result = await handler({ params: validatedParams, body: validatedBody }, req, res);
+
+      const result = await handler(validatedBody, req, res);
       if (!res.headersSent) {
         res.json(result);
       }

@@ -3,26 +3,66 @@ import { useForm } from "@tanstack/react-form";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import styles from "./AddServerModal.module.scss";
-import type { CreateNewServerRequest } from "../../generated-types";
+import type {
+  CreateNewServerRequest,
+  GetAllServersResponse,
+  UpdateServerRequest
+} from "../../generated-types";
 import { useCreateRemoteServer } from "../../hooks";
+import { useUpdateRemoteServer } from "../../hooks/useUpdateRemoteServer";
+import { useEffect } from "react";
 
-export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: () => void }) => {
+type AddServerModalProps = {
+  opened: boolean;
+  onClose: () => void;
+  server?: GetAllServersResponse;
+};
+
+export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps) => {
   const { formatMessage } = useIntl();
-  const { mutateAsync, isPending } = useCreateRemoteServer();
+
+  const { mutateAsync: createServerAsync, isPending: isCreatingServer } = useCreateRemoteServer();
+  const { mutateAsync: updateServerAsync, isPending: isUpdatingServer } = useUpdateRemoteServer();
+
+  const isPending = isCreatingServer || isUpdatingServer;
 
   const form = useForm({
     defaultValues: {
       port: 22,
       isPrimary: false
-    } as CreateNewServerRequest,
+    } as CreateNewServerRequest | UpdateServerRequest,
     onSubmit: async ({ value }) => {
-      await mutateAsync(value);
+      if (server) {
+        updateServerAsync({
+          uid: server.uid,
+          request: { ...value, isPrimary: Boolean(value.isPrimary) } as UpdateServerRequest
+        });
+      } else {
+        await createServerAsync(value as CreateNewServerRequest);
+      }
       onClose();
     }
   });
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    form.reset({
+      ...(server ? server : { port: 22, isPrimary: false })
+    });
+  }, [server, open]);
+
   return (
-    <Modal opened={opened} onClose={onClose} centered title={formatMessage(translations.title)}>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      centered
+      title={
+        server ? formatMessage(translations.updateTitle) : formatMessage(translations.addTitle)
+      }
+    >
       <form
         className={styles.wrapper}
         onSubmit={(e) => {
@@ -65,7 +105,7 @@ export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: 
           <form.Field name="username">
             {(field) => (
               <TextInput
-                required
+                required={!server}
                 label={formatMessage(translations.username)}
                 value={field.state.value ?? ""}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -76,6 +116,7 @@ export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: 
           <form.Field name="password">
             {(field) => (
               <TextInput
+                required={!server}
                 type="password"
                 label={formatMessage(translations.password)}
                 value={field.state.value ?? ""}
@@ -91,6 +132,7 @@ export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: 
                 checked={field.state.value ?? false}
                 onChange={(e) => field.handleChange(e.target.checked)}
                 className={styles.switch}
+                disabled={server?.isPrimary}
               />
             )}
           </form.Field>
@@ -101,7 +143,9 @@ export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: 
             {formatMessage(translations.cancel)}
           </Button>
           <Button type="submit" loading={isPending}>
-            {formatMessage(translations.submit)}
+            {server
+              ? formatMessage(translations.submitUpdate)
+              : formatMessage(translations.submitAdd)}
           </Button>
         </div>
       </form>

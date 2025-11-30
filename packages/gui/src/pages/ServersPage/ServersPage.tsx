@@ -6,11 +6,26 @@ import { AddServerModal } from "../../components/AddServerModal";
 import styles from "./ServersPage.module.scss";
 import { useRemoteServers } from "../../hooks";
 import { ServerCard } from "../../components/ServerCard";
+import type { GetAllServersResponse } from "../../generated-types";
 
 export const ServersPage = () => {
   const { formatMessage } = useIntl();
-  const { data: servers, isPending } = useRemoteServers();
   const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
+  const [serverToBeEdited, setServerToBeEdited] = useState<GetAllServersResponse | undefined>(
+    undefined
+  );
+
+  const handleClose = () => {
+    setServerToBeEdited(undefined);
+    setAddServerModalOpen(false);
+  };
+
+  const handleEdit = (server: GetAllServersResponse) => {
+    setServerToBeEdited(server);
+    setAddServerModalOpen(true);
+  };
+
+  const { data: servers, isPending } = useRemoteServers();
 
   if (isPending) {
     return <LoadingOverlay />;
@@ -39,14 +54,7 @@ export const ServersPage = () => {
               ?.slice()
               ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
               ?.map((server) => (
-                <ServerCard
-                  uid={server.uid}
-                  key={server.uid}
-                  name={server.name}
-                  ipAddress={server.ipAddress}
-                  port={server.port}
-                  isPrimary={server.isPrimary}
-                />
+                <ServerCard key={server.uid} server={server} onEdit={handleEdit} />
               ))}
           </SimpleGrid>
         )}
@@ -54,7 +62,8 @@ export const ServersPage = () => {
       <AddServerModal
         key={isAddServerModalOpen ? "open" : "closed"}
         opened={isAddServerModalOpen}
-        onClose={() => setAddServerModalOpen(false)}
+        server={serverToBeEdited}
+        onClose={handleClose}
       />
     </>
   );

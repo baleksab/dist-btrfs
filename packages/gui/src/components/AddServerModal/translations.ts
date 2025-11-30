@@ -1,9 +1,13 @@
 import { defineMessages } from "react-intl";
 
 export const translations = defineMessages({
-  title: {
-    id: "components.addServerModal.title",
+  addTitle: {
+    id: "components.addServerModal.addTitle",
     defaultMessage: "Add Server"
+  },
+  updateTitle: {
+    id: "components.addServerModal.updateTitle",
+    defaultMessage: "Update Server"
   },
   name: {
     id: "components.addServerModal.name",
@@ -13,11 +17,14 @@ export const translations = defineMessages({
     id: "components.addServerModal.cancel",
     defaultMessage: "Cancel"
   },
-  submit: {
-    id: "components.addServerModal.submit",
+  submitAdd: {
+    id: "components.addServerModal.submitAdd",
     defaultMessage: "Add Server"
   },
-
+  submitUpdate: {
+    id: "components.addServerModal.submitUpdate",
+    defaultMessage: "Update Server"
+  },
   hostname: {
     id: "components.addServerModal.hostname",
     defaultMessage: "Hostname"

@@ -18,6 +18,7 @@ export class RemoteServerService {
     });
 
     const { username, password, ...sanitized } = server;
+
     return sanitized;
   }
 
@@ -30,7 +31,11 @@ export class RemoteServerService {
     return this.repo.delete(uid);
   }
 
-  update(uid: string, { isPrimary, ...data }: UpdateServerRequest) {
-    return this.repo.update(uid, { isPrimary: isPrimary ? 1 : 0, ...data });
+  async update(uid: string, data: UpdateServerRequest) {
+    const server = await this.repo.update(uid, { ...data, isPrimary: data.isPrimary ? 1 : 0 });
+
+    const { username, password, ...sanitized } = server;
+
+    return sanitized;
   }
 }
