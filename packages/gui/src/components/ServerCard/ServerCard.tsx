@@ -11,10 +11,9 @@ export interface ServerCardProps {
   ipAddress: string;
   port?: number;
   isPrimary?: boolean;
-  onClick?: () => void;
 }
 
-export const ServerCard = ({ uid, name, ipAddress, port, isPrimary, onClick }: ServerCardProps) => {
+export const ServerCard = ({ uid, name, ipAddress, port, isPrimary }: ServerCardProps) => {
   const { formatMessage } = useIntl();
 
   const { mutateAsync: deleteServerAsync, isPending: isDeletingServer } = useDeleteRemoteServer();
@@ -25,14 +24,7 @@ export const ServerCard = ({ uid, name, ipAddress, port, isPrimary, onClick }: S
   };
 
   return (
-    <Card
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-      onClick={onClick}
-      style={{ cursor: onClick ? "pointer" : "default" }}
-    >
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Group justify="space-between" mb="sm">
         <Text fw={600} size="lg">
           {name}
