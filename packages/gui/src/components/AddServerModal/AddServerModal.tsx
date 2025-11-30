@@ -6,34 +6,23 @@ import styles from "./AddServerModal.module.scss";
 import type { CreateNewServerRequest } from "../../generated-types";
 import { useCreateRemoteServer } from "../../hooks";
 
-export const AddServerModal = ({
-  opened,
-  onClose,
-}: {
-  opened: boolean;
-  onClose: () => void;
-}) => {
+export const AddServerModal = ({ opened, onClose }: { opened: boolean; onClose: () => void }) => {
   const { formatMessage } = useIntl();
   const { mutateAsync, isPending } = useCreateRemoteServer();
 
   const form = useForm({
     defaultValues: {
       port: 22,
-      isPrimary: false,
+      isPrimary: false
     } as CreateNewServerRequest,
     onSubmit: async ({ value }) => {
       await mutateAsync(value);
       onClose();
-    },
+    }
   });
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      centered
-      title={formatMessage(translations.title)}
-    >
+    <Modal opened={opened} onClose={onClose} centered title={formatMessage(translations.title)}>
       <form
         className={styles.wrapper}
         onSubmit={(e) => {
@@ -111,7 +100,9 @@ export const AddServerModal = ({
           <Button variant="default" onClick={onClose}>
             {formatMessage(translations.cancel)}
           </Button>
-          <Button type="submit" loading={isPending}>{formatMessage(translations.submit)}</Button>
+          <Button type="submit" loading={isPending}>
+            {formatMessage(translations.submit)}
+          </Button>
         </div>
       </form>
     </Modal>

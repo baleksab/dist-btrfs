@@ -24,7 +24,7 @@ export const createRoute = ({
   handler,
   response,
   summary = "",
-  tags = [],
+  tags = []
 }: CreateRouteOptions) => {
   registry.registerPath({
     method,
@@ -33,29 +33,29 @@ export const createRoute = ({
     tags,
     request: dto
       ? {
-        body: {
-          content: {
-            "application/json": {
-              schema: dto,
-            },
-          },
-        },
-      }
+          body: {
+            content: {
+              "application/json": {
+                schema: dto
+              }
+            }
+          }
+        }
       : undefined,
     responses: {
       200: {
         description: "Success",
         content: response
           ? {
-            "application/json": {
-              schema: response,
-            },
-          }
-          : undefined,
+              "application/json": {
+                schema: response
+              }
+            }
+          : undefined
       },
       400: { description: "Bad request" },
-      500: { description: "Server error" },
-    },
+      500: { description: "Server error" }
+    }
   });
 
   router[method](path, async (req, res, next) => {

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 1440,
-    height: 900,
+    height: 900
   });
 
   const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
@@ -15,10 +15,7 @@ const createWindow = () => {
     win.loadURL("http://localhost:5173");
     installExtension(REACT_DEVELOPER_TOOLS);
   } else {
-    const indexPath = path.join(
-      path.dirname(fileURLToPath(import.meta.url)),
-      "index.html"
-    );
+    const indexPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "index.html");
     win.loadFile(indexPath);
   }
 };

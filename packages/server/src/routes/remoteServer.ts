@@ -9,7 +9,7 @@ createRoute({
   handler: createNewServer,
   response: createNewServerResponse,
   summary: "Create new remote server",
-  tags: ["RemoteServers"],
+  tags: ["RemoteServers"]
 });
 
 createRoute({

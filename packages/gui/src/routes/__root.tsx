@@ -4,10 +4,7 @@ import { Sidebar } from "../components";
 
 const RootLayout = () => {
   return (
-    <AppShell
-      navbar={{ width: 240, breakpoint: "sm" }}
-      padding="md"
-    >
+    <AppShell navbar={{ width: 240, breakpoint: "sm" }} padding="md">
       <Sidebar />
       <AppShell.Main>
         <Outlet />
@@ -17,5 +14,5 @@ const RootLayout = () => {
 };
 
 export const Route = createRootRoute({
-  component: RootLayout,
+  component: RootLayout
 });

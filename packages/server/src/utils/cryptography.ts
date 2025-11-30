@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { config } from "../config";
 
 const ALGO = "aes-256-gcm";
-const KEY = Buffer.from(config.encryptionKey, "hex"); 
+const KEY = Buffer.from(config.encryptionKey, "hex");
 
 export const encrypt = (text: string) => {
   const iv = crypto.randomBytes(16);
@@ -16,7 +16,7 @@ export const encrypt = (text: string) => {
   return `${iv.toString("hex")}:${tag}:${encrypted}`;
 };
 
-export const decrypt = (text: string) =>  {
+export const decrypt = (text: string) => {
   const [ivHex, tagHex, encData] = text.split(":");
 
   const iv = Buffer.from(ivHex, "hex");

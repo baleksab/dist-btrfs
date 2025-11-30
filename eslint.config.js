@@ -1,18 +1,25 @@
 import js from "@eslint/js";
 import globals from "globals";
-import stylistic from "@stylistic/eslint-plugin";
 import unusedImports from "eslint-plugin-unused-imports";
 import tsParser from "@typescript-eslint/parser";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 
 export default [
   js.configs.recommended,
   react.configs.flat.recommended,
   react.configs.flat["jsx-runtime"],
   reactHooks.configs.flat["recommended-latest"],
+  prettierConfig,
   {
     files: ["**/*.{js,ts,jsx,tsx}"],
+    settings: {
+      react: {
+        version: "detect"
+      }
+    },
     ignores: [
       "node_modules",
       "dist",
@@ -28,31 +35,26 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.es2021,
+        ...globals.es2021
       },
       parserOptions: {
         ecmaFeatures: {
           jsx: true
         }
-      },
+      }
     },
     plugins: {
-      "stylistic": stylistic,
       "unused-imports": unusedImports,
       react,
-      "react-hooks": reactHooks
+      "react-hooks": reactHooks,
+      prettier
     },
     rules: {
-      "stylistic/indent": ["error", 2],
-      "stylistic/semi": ["error", "always"],
-      "stylistic/quotes": ["error", "double"],
+      "prettier/prettier": "error",
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "error",
-        { ignoreRestSiblings: true }
-      ],
+      "unused-imports/no-unused-vars": ["error", { ignoreRestSiblings: true }],
       "no-unused-vars": "off",
       "react-hooks/exhaustive-deps": "off"
-    },
+    }
   }
 ];

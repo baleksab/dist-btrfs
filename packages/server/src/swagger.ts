@@ -9,8 +9,8 @@ const generateOpenAPIDocument = () => {
     info: {
       title: "Btrfs Backup System API",
       version: "1.0.0",
-      description: "API documentation",
-    },
+      description: "API documentation"
+    }
   });
 };
 

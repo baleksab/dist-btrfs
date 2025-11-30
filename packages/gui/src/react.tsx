@@ -15,9 +15,7 @@ if (!root) {
 const queryclient = new QueryClient();
 
 const App = () => {
-  const [locale, setLocale] = useState<Locale>(
-    (localStorage.getItem("locale") as Locale) || "en"
-  );
+  const [locale, setLocale] = useState<Locale>((localStorage.getItem("locale") as Locale) || "en");
 
   return (
     <LocaleContext.Provider value={{ locale, setLocale }}>

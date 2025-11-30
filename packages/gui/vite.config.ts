@@ -7,12 +7,12 @@ export default defineConfig({
   plugins: [
     tanstackRouter({
       target: "react",
-      autoCodeSplitting: true,
+      autoCodeSplitting: true
     }),
     react({
       babel: {
-        plugins: ["babel-plugin-react-compiler"],
+        plugins: ["babel-plugin-react-compiler"]
       }
     })
-  ],
+  ]
 });

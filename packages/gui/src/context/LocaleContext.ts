@@ -7,5 +7,5 @@ export const LocaleContext = createContext<{
   setLocale: (loc: Locale) => void;
 }>({
   locale: "en",
-  setLocale: noop,
+  setLocale: noop
 });

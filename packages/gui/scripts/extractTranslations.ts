@@ -61,10 +61,7 @@ const ensureOutput = () => {
   for (const file of files) {
     const mod = await dynamicImport(file);
 
-    const rootObject =
-      mod.default ??
-      mod.descriptors ??
-      Object.values(mod)[0];
+    const rootObject = mod.default ?? mod.descriptors ?? Object.values(mod)[0];
 
     const extracted = extractDefaultTranslations(rootObject);
     Object.assign(merged, extracted);

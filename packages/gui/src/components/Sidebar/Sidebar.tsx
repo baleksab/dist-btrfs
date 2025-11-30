@@ -1,11 +1,4 @@
-import {
-  AppShell,
-  NavLink,
-  ThemeIcon,
-  Text,
-  Stack,
-  Box,
-} from "@mantine/core";
+import { AppShell, NavLink, ThemeIcon, Text, Stack, Box } from "@mantine/core";
 import { IconServer } from "@tabler/icons-react";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
@@ -31,8 +24,8 @@ export const Sidebar = () => {
                 <IconServer size={16} />
               </ThemeIcon>
             }
-            active={matches.some(match => match.routeId === "/")}
-            onClick={() => navigate({to: "/"})}
+            active={matches.some((match) => match.routeId === "/")}
+            onClick={() => navigate({ to: "/" })}
           />
         </Stack>
         <Box mt="lg">

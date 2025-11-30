@@ -5,11 +5,11 @@ export const useCreateRemoteServer = () => {
   const queryClient = useQueryClient();
 
   const { mutateAsync, isPending, isError } = useMutation({
-    mutationFn: createRemoteServer, 
-    onSuccess: () => { 
-      queryClient.refetchQueries(remoteServersKeys.list); 
+    mutationFn: createRemoteServer,
+    onSuccess: () => {
+      queryClient.refetchQueries(remoteServersKeys.list);
     }
   });
 
-  return { mutateAsync, isPending, isError}; 
+  return { mutateAsync, isPending, isError };
 };

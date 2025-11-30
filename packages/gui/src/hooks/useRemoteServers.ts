@@ -6,6 +6,6 @@ export const useRemoteServers = () => {
     queryFn: getAllRemoteServers,
     queryKey: remoteServersKeys.list.queryKey
   });
-  
+
   return { data, isPending, error };
 };

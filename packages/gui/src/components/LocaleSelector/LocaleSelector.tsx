@@ -5,7 +5,7 @@ import { use } from "react";
 
 const availableLocales: { value: Locale; label: string }[] = [
   { value: "en", label: "English" },
-  { value: "sr", label: "Srpski" },
+  { value: "sr", label: "Srpski" }
 ];
 
 export const LocaleSelector = () => {
@@ -15,18 +15,12 @@ export const LocaleSelector = () => {
     if (!newLocale) {
       return;
     }
-    
+
     setLocale(newLocale as Locale);
     localStorage.setItem("locale", newLocale);
   };
 
   return (
-    <Select
-      size="sm"
-      radius="md"
-      value={locale}
-      onChange={handleChange}
-      data={availableLocales}
-    />
+    <Select size="sm" radius="md" value={locale} onChange={handleChange} data={availableLocales} />
   );
 };
