@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 import { decrypt, encrypt } from "../utils";
 import { RemoteServerRepository } from "../repositories";
-import type { CreateNewServerRequest, UpdateServerRequest } from "../dtos";
-import { SshService } from "./ssh.servce";
+import type { CreateNewServerRequest, HealthCheckRequest, UpdateServerRequest } from "../dtos";
+import { SshService } from "./ssh.service";
 import { UpdateRemoteServer } from "../db";
 
 export class RemoteServerService {
@@ -53,6 +53,10 @@ export class RemoteServerService {
     const { username, password, ...sanitized } = server;
 
     return sanitized;
+  }
+
+  async healthCheck(data: HealthCheckRequest) {
+    return this.sshService.checkServer({ uid: "", ...data });
   }
 
   async healthCheckAll() {

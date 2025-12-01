@@ -1,54 +1,48 @@
 import { Client } from "ssh2";
 import { RemoteServer } from "../db/types";
 
+type SshCredentials = Pick<RemoteServer, "uid" | "ipAddress" | "port" | "username" | "password">;
+
 export class SshService {
-  private createConnection(server: RemoteServer): Client {
+  private createConnection(credentials: SshCredentials): Client {
     const connection = new Client();
 
     connection.connect({
-      host: server.ipAddress,
-      port: server.port || 22,
-      username: server.username,
-      password: server.password,
+      host: credentials.ipAddress,
+      port: credentials.port || 22,
+      username: credentials.username,
+      password: credentials.password,
       readyTimeout: 5000
     });
 
     return connection;
   }
 
-  async checkServer(server: RemoteServer): Promise<{ uid: string; online: boolean }> {
+  async checkServer(credentials: SshCredentials): Promise<{ uid: string; online: boolean }> {
     return new Promise((resolve) => {
-      const connection = this.createConnection(server);
-      const port = server.port ?? 22;
+      const connection = this.createConnection(credentials);
 
       connection
         .on("ready", () => {
           connection.end();
-          resolve({ uid: server.uid, online: true });
+          resolve({ uid: credentials.uid, online: true });
         })
         .on("error", () => {
-          resolve({ uid: server.uid, online: false });
-        })
-        .connect({
-          host: server.ipAddress,
-          port,
-          username: server.username,
-          password: server.password,
-          readyTimeout: 5000
+          resolve({ uid: credentials.uid, online: false });
         });
     });
   }
 
-  async checkAllServers(servers: RemoteServer[]) {
-    return Promise.all(servers.map((srv) => this.checkServer(srv)));
+  async checkAllServers(credentials: SshCredentials[]) {
+    return Promise.all(credentials.map((creds) => this.checkServer(creds)));
   }
 
   async execCommand(
-    server: RemoteServer,
+    credentials: SshCredentials,
     cmd: string
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
-      const connection = this.createConnection(server);
+      const connection = this.createConnection(credentials);
 
       connection.on("ready", () => {
         connection.exec(cmd, (err, stream) => {

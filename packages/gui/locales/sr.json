@@ -18,11 +18,19 @@
   "components.addServerModal.receivePath": "Putanja za prijem",
   "components.addServerModal.tempPath": "Privremena putanja",
   "components.addServerModal.restorePath": "Putanja za obnovu",
+  "components.addServerModal.verifyConnection": "Proveri",
+  "components.addServerModal.verifyTooltip": "Prvo popunite IP adresu, port, korisničko ime i lozinku",
+
   "components.serverCard.ip": "IP adresa",
   "components.serverCard.port": "Port",
   "components.serverCard.primary": "Primarni",
+  "components.serverCard.online": "Online",
+  "components.serverCard.offline": "Offline",
+
   "components.sidebar.title": "dist-btrfs",
   "components.sidebar.navItem.servers": "Serveri",
+  "components.sidebar.navItem.snapshots": "Snapshotovi",
+
   "pages.serversPage.title": "Serveri",
   "pages.serversPage.addServer": "Dodaj server",
   "pages.serversPage.noServers": "Nema dodatih servera"

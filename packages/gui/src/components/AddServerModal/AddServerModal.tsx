@@ -1,5 +1,15 @@
-import { Modal, TextInput, NumberInput, Switch, Button } from "@mantine/core";
-import { useForm } from "@tanstack/react-form";
+import {
+  Modal,
+  TextInput,
+  NumberInput,
+  Button,
+  Group,
+  Stack,
+  Switch,
+  Tooltip,
+  ThemeIcon
+} from "@mantine/core";
+import { useForm, useStore } from "@tanstack/react-form";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import styles from "./AddServerModal.module.scss";
@@ -8,9 +18,9 @@ import type {
   GetAllServersResponse,
   UpdateServerRequest
 } from "../../generated-types";
-import { useCreateRemoteServer } from "../../hooks";
-import { useUpdateRemoteServer } from "../../hooks/useUpdateRemoteServer";
-import { useEffect } from "react";
+import { useCreateRemoteServer, useUpdateRemoteServer, useValidateConnection } from "../../hooks";
+import { isFormComplete } from "../../utils";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 type AddServerModalProps = {
   opened: boolean;
@@ -24,12 +34,14 @@ export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps)
   const { mutateAsync: createServerAsync, isPending: isCreatingServer } = useCreateRemoteServer();
   const { mutateAsync: updateServerAsync, isPending: isUpdatingServer } = useUpdateRemoteServer();
 
+  const { validateConnectionAsync, validationResult, isValidatingConnection, validationError } =
+    useValidateConnection();
+
   const isPending = isCreatingServer || isUpdatingServer;
 
   const form = useForm({
     defaultValues: {
-      port: 22,
-      isPrimary: false
+      ...(server ? server : { port: 22, isPrimary: false })
     } as CreateNewServerRequest | UpdateServerRequest,
     onSubmit: async ({ value }) => {
       if (server) {
@@ -44,15 +56,13 @@ export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps)
     }
   });
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
+  const formState = useStore(form.store);
 
-    form.reset({
-      ...(server ? server : { port: 22, isPrimary: false })
-    });
-  }, [server, open]);
+  const disableVerifyButton =
+    !formState.values.ipAddress ||
+    !formState.values.port ||
+    !formState.values.username ||
+    !formState.values.password;
 
   return (
     <Modal
@@ -70,7 +80,7 @@ export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps)
           form.handleSubmit();
         }}
       >
-        <div className={styles.column}>
+        <Stack>
           <form.Field name="name">
             {(field) => (
               <TextInput
@@ -125,29 +135,69 @@ export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps)
               />
             )}
           </form.Field>
-          <form.Field name="isPrimary">
-            {(field) => (
-              <Switch
-                label={formatMessage(translations.isPrimary)}
-                checked={field.state.value ?? false}
-                onChange={(e) => field.handleChange(e.target.checked)}
-                className={styles.switch}
-                disabled={server?.isPrimary}
-              />
+          <Group justify="space-between">
+            <form.Field name="isPrimary">
+              {(field) => (
+                <Switch
+                  label={formatMessage(translations.isPrimary)}
+                  checked={field.state.value ?? false}
+                  onChange={(e) => field.handleChange(e.target.checked)}
+                  className={styles.switch}
+                  disabled={server?.isPrimary}
+                />
+              )}
+            </form.Field>
+            {validationResult?.online === true && (
+              <ThemeIcon color="green" variant="light" radius="xl" size="lg">
+                <IconCheck size={18} />
+              </ThemeIcon>
             )}
-          </form.Field>
-        </div>
+            {(validationResult?.online === false || validationError) && (
+              <ThemeIcon color="red" variant="light" radius="xl" size="lg">
+                <IconX size={18} />
+              </ThemeIcon>
+            )}
+          </Group>
+        </Stack>
 
-        <div className={styles.actions}>
-          <Button variant="default" onClick={onClose}>
-            {formatMessage(translations.cancel)}
-          </Button>
-          <Button type="submit" loading={isPending}>
-            {server
-              ? formatMessage(translations.submitUpdate)
-              : formatMessage(translations.submitAdd)}
-          </Button>
-        </div>
+        <Group justify="space-between" mt={12}>
+          <Tooltip
+            label={formatMessage(translations.verifyTooltip)}
+            color="gray"
+            position="top"
+            disabled={!disableVerifyButton}
+          >
+            <Button
+              variant="light"
+              onClick={() =>
+                validateConnectionAsync({
+                  ipAddress: form.getFieldValue("ipAddress") || "",
+                  port: form.getFieldValue("port"),
+                  username: form.getFieldValue("username") || "",
+                  password: form.getFieldValue("password") || ""
+                })
+              }
+              loading={isValidatingConnection}
+              disabled={isPending || disableVerifyButton}
+            >
+              {formatMessage(translations.verifyConnection)}
+            </Button>
+          </Tooltip>
+          <Group justify="space-between">
+            <Button variant="default" onClick={onClose}>
+              {formatMessage(translations.cancel)}
+            </Button>
+            <Button
+              type="submit"
+              loading={isPending}
+              disabled={isPending || isValidatingConnection || !isFormComplete(formState)}
+            >
+              {server
+                ? formatMessage(translations.submitUpdate)
+                : formatMessage(translations.submitAdd)}
+            </Button>
+          </Group>
+        </Group>
       </form>
     </Modal>
   );

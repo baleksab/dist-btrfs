@@ -3,6 +3,10 @@ import { database, remoteServers, NewRemoteServer, UpdateRemoteServer } from "..
 
 export class RemoteServerRepository {
   async create(data: NewRemoteServer) {
+    if (data.isPrimary) {
+      await database.update(remoteServers).set({ isPrimary: 0 });
+    }
+
     const [server] = await database.insert(remoteServers).values(data).returning();
 
     return server;
@@ -17,6 +21,10 @@ export class RemoteServerRepository {
   }
 
   async update(uid: string, data: UpdateRemoteServer) {
+    if (data.isPrimary) {
+      await database.update(remoteServers).set({ isPrimary: 0 });
+    }
+
     const [server] = await database
       .update(remoteServers)
       .set(data)

@@ -76,5 +76,13 @@ export const translations = defineMessages({
   restorePath: {
     id: "components.addServerModal.restorePath",
     defaultMessage: "Restore Path"
+  },
+  verifyConnection: {
+    id: "components.addServerModal.verifyConnection",
+    defaultMessage: "Verify"
+  },
+  verifyTooltip: {
+    id: "components.addServerModal.verifyTooltip",
+    defaultMessage: "Fill in IP address, port, username and password first"
   }
 });

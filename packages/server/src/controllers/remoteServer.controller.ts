@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateNewServerRequest, UpdateServerRequest } from "../dtos";
+import { CreateNewServerRequest, HealthCheckRequest, UpdateServerRequest } from "../dtos";
 import { RemoteServerService } from "../services";
 
 export class RemoteServerController {
@@ -29,8 +29,14 @@ export class RemoteServerController {
     return res.status(200).json(response);
   }
 
-  async healthCheckAll(_dto: unknown, _req: unknown, res: Response) {
+  async healthCheckAll(_dto: unknown, _req: Request, res: Response) {
     const response = await this.service.healthCheckAll();
+
+    return res.status(200).json(response);
+  }
+
+  async healthCheck(dto: HealthCheckRequest, _req: Request, res: Response) {
+    const response = await this.service.healthCheck(dto);
 
     return res.status(200).json(response);
   }

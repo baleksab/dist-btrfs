@@ -23,6 +23,12 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface BtrfsSubvolumesResponse {
+    'id': number;
+    'gen': string;
+    'topLevel': string;
+    'path': string;
+}
 export interface CreateNewServerRequest {
     'name': string;
     'ipAddress': string;
@@ -44,7 +50,13 @@ export interface GetAllServersResponse {
     'port'?: number;
     'isPrimary'?: boolean;
 }
-export interface GetHealthCheckAllResponseInner {
+export interface HealthCheckRequest {
+    'ipAddress': string;
+    'port'?: number;
+    'username': string;
+    'password': string;
+}
+export interface HealthCheckResponse {
     'uid': string;
     'online'?: boolean;
 }
@@ -56,6 +68,100 @@ export interface UpdateServerRequest {
     'password'?: string;
     'isPrimary'?: boolean;
 }
+
+/**
+ * BtrfsApi - axios parameter creator
+ */
+export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/btrfs/subvolumes`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * BtrfsApi - functional programming interface
+ */
+export const BtrfsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BtrfsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSubvolumesResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * BtrfsApi - factory interface
+ */
+export const BtrfsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BtrfsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumesResponse> {
+            return localVarFp.apiBtrfsSubvolumesGet(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * BtrfsApi - object-oriented interface
+ */
+export class BtrfsApi extends BaseAPI {
+    /**
+     * 
+     * @summary 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesGet(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * RemoteServersApi - axios parameter creator
@@ -228,6 +334,40 @@ export const RemoteServersApiAxiosParamCreator = function (configuration?: Confi
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary 
+         * @param {HealthCheckRequest} [healthCheckRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiServersValidatePost: async (healthCheckRequest?: HealthCheckRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/servers/validate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(healthCheckRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -255,7 +395,7 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiServersHealthCheckGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetHealthCheckAllResponseInner>>> {
+        async apiServersHealthCheckGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<HealthCheckResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersHealthCheckGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersHealthCheckGet']?.[localVarOperationServerIndex]?.url;
@@ -301,6 +441,19 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersUidPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary 
+         * @param {HealthCheckRequest} [healthCheckRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiServersValidatePost(healthCheckRequest?: HealthCheckRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HealthCheckResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersValidatePost(healthCheckRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersValidatePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -325,7 +478,7 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiServersHealthCheckGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<GetHealthCheckAllResponseInner>> {
+        apiServersHealthCheckGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<HealthCheckResponse>> {
             return localVarFp.apiServersHealthCheckGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -358,6 +511,16 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          */
         apiServersUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.apiServersUidPut(uid, updateServerRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {HealthCheckRequest} [healthCheckRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiServersValidatePost(healthCheckRequest?: HealthCheckRequest, options?: RawAxiosRequestConfig): AxiosPromise<HealthCheckResponse> {
+            return localVarFp.apiServersValidatePost(healthCheckRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -418,6 +581,17 @@ export class RemoteServersApi extends BaseAPI {
      */
     public apiServersUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig) {
         return RemoteServersApiFp(this.configuration).apiServersUidPut(uid, updateServerRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {HealthCheckRequest} [healthCheckRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiServersValidatePost(healthCheckRequest?: HealthCheckRequest, options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersValidatePost(healthCheckRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

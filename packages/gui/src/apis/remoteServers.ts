@@ -2,6 +2,7 @@ import { axiosInstance } from "./axiosInstance";
 import {
   RemoteServersApi,
   type CreateNewServerRequest,
+  type HealthCheckRequest,
   type UpdateServerRequest
 } from "../generated-types";
 
@@ -37,6 +38,13 @@ export const updateRemoteServer = async ({
 
 export const getHealthChecks = async () => {
   const { data } = await remoteServersApi.apiServersHealthCheckGet();
+
+  return data;
+};
+
+export const validateConnection = async (request: HealthCheckRequest) => {
+  console.log(request);
+  const { data } = await remoteServersApi.apiServersValidatePost(request);
 
   return data;
 };

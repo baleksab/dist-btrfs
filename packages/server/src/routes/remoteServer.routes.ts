@@ -5,7 +5,9 @@ import {
   createNewServerResponse,
   getAllServersResponse,
   updateServerRequest,
-  getHealthCheckAllResponse
+  healthCheckAllResponse,
+  healthCheckResponse,
+  healthCheckRequest
 } from "../dtos";
 import { createRoute } from "../utils";
 
@@ -48,7 +50,16 @@ createRoute({
 createRoute({
   method: "get",
   path: "/servers/healthCheck",
-  response: getHealthCheckAllResponse,
+  response: healthCheckAllResponse,
   handler: controller.healthCheckAll.bind(controller),
+  tags: ["RemoteServers"]
+});
+
+createRoute({
+  method: "post",
+  path: "/servers/validate",
+  dto: healthCheckRequest,
+  response: healthCheckResponse,
+  handler: controller.healthCheck.bind(controller),
   tags: ["RemoteServers"]
 });

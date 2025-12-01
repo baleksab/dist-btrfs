@@ -45,13 +45,28 @@ export const updateServerRequest = createNewServerRequest.partial().openapi("Upd
 
 export type UpdateServerRequest = z.infer<typeof updateServerRequest>;
 
-export const getHealthCheckAllResponse = z
-  .array(
-    z.object({
-      uid: z.string(),
-      online: z.boolean().default(false)
-    })
-  )
-  .openapi("GetHealthCheckAllResponse");
+export const healthCheckResponse = z
+  .object({
+    uid: z.string(),
+    online: z.boolean().default(false)
+  })
+  .openapi("HealthCheckResponse");
 
-export type GetHealthCheckAllResponse = z.infer<typeof getHealthCheckAllResponse>;
+export type HealthCheckResponse = z.infer<typeof healthCheckResponse>;
+
+export const healthCheckAllResponse = z
+  .array(healthCheckResponse)
+  .openapi("HealthCheckAllResponse");
+
+export type HealthCheckAllResponse = z.infer<typeof healthCheckAllResponse>;
+
+export const healthCheckRequest = z
+  .object({
+    ipAddress: z.string().min(3),
+    port: z.number().int().min(1).max(65535).default(22),
+    username: z.string().min(1),
+    password: z.string().min(1)
+  })
+  .openapi("HealthCheckRequest");
+
+export type HealthCheckRequest = z.infer<typeof healthCheckRequest>;

@@ -1,5 +1,5 @@
 import { RemoteServerService } from "./remoteServer.service";
-import { SshService } from "./ssh.servce";
+import { SshService } from "./ssh.service";
 
 export type BtrfsSubvolume = {
   id: number;
