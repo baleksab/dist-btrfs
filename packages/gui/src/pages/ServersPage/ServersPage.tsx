@@ -29,7 +29,7 @@ export const ServersPage = () => {
   const { data: healthChecks } = useHealthChecks();
 
   if (isPending) {
-    return <LoadingOverlay />;
+    return <LoadingOverlay visible />;
   }
 
   return (

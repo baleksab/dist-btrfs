@@ -4,9 +4,9 @@ import { Sidebar } from "../components";
 
 const RootLayout = () => {
   return (
-    <AppShell navbar={{ width: 240, breakpoint: "sm" }} padding="md">
+    <AppShell navbar={{ width: 240, breakpoint: "xs" }} padding="md">
       <Sidebar />
-      <AppShell.Main>
+      <AppShell.Main pos="relative">
         <Outlet />
       </AppShell.Main>
     </AppShell>
