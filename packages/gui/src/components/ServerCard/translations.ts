@@ -12,5 +12,13 @@ export const translations = defineMessages({
   serverCardPrimary: {
     id: "components.serverCard.primary",
     defaultMessage: "Primary"
+  },
+  online: {
+    id: "components.serverCard.online",
+    defaultMessage: "Online"
+  },
+  offline: {
+    id: "components.serverCard.offline",
+    defaultMessage: "Offline"
   }
 });

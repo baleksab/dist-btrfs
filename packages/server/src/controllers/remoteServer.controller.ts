@@ -28,4 +28,10 @@ export class RemoteServerController {
 
     return res.status(200).json(response);
   }
+
+  async healthCheckAll(_dto: unknown, _req: unknown, res: Response) {
+    const response = await this.service.healthCheckAll();
+
+    return res.status(200).json(response);
+  }
 }

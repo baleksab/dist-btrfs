@@ -2,5 +2,5 @@ import axios from "axios";
 import { config } from "../config";
 
 export const axiosInstance = axios.create({
-  baseURL: `${config.serverUrl}/api`
+  baseURL: `${config.serverUrl}/`
 });

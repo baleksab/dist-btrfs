@@ -44,3 +44,14 @@ export type GetAllServersResponse = z.infer<typeof getAllServersResponse>;
 export const updateServerRequest = createNewServerRequest.partial().openapi("UpdateServerRequest");
 
 export type UpdateServerRequest = z.infer<typeof updateServerRequest>;
+
+export const getHealthCheckAllResponse = z
+  .array(
+    z.object({
+      uid: z.string(),
+      online: z.boolean().default(false)
+    })
+  )
+  .openapi("GetHealthCheckAllResponse");
+
+export type GetHealthCheckAllResponse = z.infer<typeof getHealthCheckAllResponse>;

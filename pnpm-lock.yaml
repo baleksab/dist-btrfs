@@ -168,6 +168,9 @@ importers:
       express:
         specifier: 5.1.0
         version: 5.1.0
+      ssh2:
+        specifier: 1.17.0
+        version: 1.17.0
       swagger-ui-express:
         specifier: 5.0.1
         version: 5.0.1(express@5.1.0)
@@ -190,6 +193,9 @@ importers:
       '@types/node':
         specifier: 24.10.0
         version: 24.10.0
+      '@types/ssh2':
+        specifier: 1.15.5
+        version: 1.15.5
       '@types/swagger-ui-express':
         specifier: 4.1.8
         version: 4.1.8

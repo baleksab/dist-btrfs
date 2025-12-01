@@ -44,6 +44,10 @@ export interface GetAllServersResponse {
     'port'?: number;
     'isPrimary'?: boolean;
 }
+export interface GetHealthCheckAllResponseInner {
+    'uid': string;
+    'online'?: boolean;
+}
 export interface UpdateServerRequest {
     'name'?: string;
     'ipAddress'?: string;
@@ -64,8 +68,38 @@ export const RemoteServersApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/servers`;
+        apiServersGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/servers`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiServersHealthCheckGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/servers/healthCheck`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -95,8 +129,8 @@ export const RemoteServersApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversPost: async (createNewServerRequest?: CreateNewServerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/servers`;
+        apiServersPost: async (createNewServerRequest?: CreateNewServerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/servers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -129,10 +163,10 @@ export const RemoteServersApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversUidDelete: async (uid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiServersUidDelete: async (uid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'uid' is not null or undefined
-            assertParamExists('serversUidDelete', 'uid', uid)
-            const localVarPath = `/servers/{uid}`
+            assertParamExists('apiServersUidDelete', 'uid', uid)
+            const localVarPath = `/api/servers/{uid}`
                 .replace(`{${"uid"}}`, encodeURIComponent(String(uid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -164,10 +198,10 @@ export const RemoteServersApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversUidPut: async (uid: string, updateServerRequest?: UpdateServerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiServersUidPut: async (uid: string, updateServerRequest?: UpdateServerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'uid' is not null or undefined
-            assertParamExists('serversUidPut', 'uid', uid)
-            const localVarPath = `/servers/{uid}`
+            assertParamExists('apiServersUidPut', 'uid', uid)
+            const localVarPath = `/api/servers/{uid}`
                 .replace(`{${"uid"}}`, encodeURIComponent(String(uid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -209,10 +243,22 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async serversGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetAllServersResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.serversGet(options);
+        async apiServersGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetAllServersResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.serversGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiServersHealthCheckGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetHealthCheckAllResponseInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersHealthCheckGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersHealthCheckGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -222,10 +268,10 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async serversPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateNewServerResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.serversPost(createNewServerRequest, options);
+        async apiServersPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateNewServerResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersPost(createNewServerRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.serversPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -235,10 +281,10 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async serversUidDelete(uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.serversUidDelete(uid, options);
+        async apiServersUidDelete(uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersUidDelete(uid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.serversUidDelete']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersUidDelete']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -249,10 +295,10 @@ export const RemoteServersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async serversUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.serversUidPut(uid, updateServerRequest, options);
+        async apiServersUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiServersUidPut(uid, updateServerRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.serversUidPut']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RemoteServersApi.apiServersUidPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -270,8 +316,17 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<GetAllServersResponse>> {
-            return localVarFp.serversGet(options).then((request) => request(axios, basePath));
+        apiServersGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<GetAllServersResponse>> {
+            return localVarFp.apiServersGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiServersHealthCheckGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<GetHealthCheckAllResponseInner>> {
+            return localVarFp.apiServersHealthCheckGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -280,8 +335,8 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CreateNewServerResponse> {
-            return localVarFp.serversPost(createNewServerRequest, options).then((request) => request(axios, basePath));
+        apiServersPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CreateNewServerResponse> {
+            return localVarFp.apiServersPost(createNewServerRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -290,8 +345,8 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversUidDelete(uid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.serversUidDelete(uid, options).then((request) => request(axios, basePath));
+        apiServersUidDelete(uid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiServersUidDelete(uid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -301,8 +356,8 @@ export const RemoteServersApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        serversUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.serversUidPut(uid, updateServerRequest, options).then((request) => request(axios, basePath));
+        apiServersUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiServersUidPut(uid, updateServerRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -317,8 +372,18 @@ export class RemoteServersApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public serversGet(options?: RawAxiosRequestConfig) {
-        return RemoteServersApiFp(this.configuration).serversGet(options).then((request) => request(this.axios, this.basePath));
+    public apiServersGet(options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiServersHealthCheckGet(options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersHealthCheckGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -328,8 +393,8 @@ export class RemoteServersApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public serversPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig) {
-        return RemoteServersApiFp(this.configuration).serversPost(createNewServerRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiServersPost(createNewServerRequest?: CreateNewServerRequest, options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersPost(createNewServerRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -339,8 +404,8 @@ export class RemoteServersApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public serversUidDelete(uid: string, options?: RawAxiosRequestConfig) {
-        return RemoteServersApiFp(this.configuration).serversUidDelete(uid, options).then((request) => request(this.axios, this.basePath));
+    public apiServersUidDelete(uid: string, options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersUidDelete(uid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -351,8 +416,8 @@ export class RemoteServersApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public serversUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig) {
-        return RemoteServersApiFp(this.configuration).serversUidPut(uid, updateServerRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiServersUidPut(uid: string, updateServerRequest?: UpdateServerRequest, options?: RawAxiosRequestConfig) {
+        return RemoteServersApiFp(this.configuration).apiServersUidPut(uid, updateServerRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -4,7 +4,8 @@ import {
   createNewServerRequest,
   createNewServerResponse,
   getAllServersResponse,
-  updateServerRequest
+  updateServerRequest,
+  getHealthCheckAllResponse
 } from "../dtos";
 import { createRoute } from "../utils";
 
@@ -41,5 +42,13 @@ createRoute({
   params: z.object({ uid: z.string() }),
   dto: updateServerRequest,
   handler: controller.update.bind(controller),
+  tags: ["RemoteServers"]
+});
+
+createRoute({
+  method: "get",
+  path: "/servers/healthCheck",
+  response: getHealthCheckAllResponse,
+  handler: controller.healthCheckAll.bind(controller),
   tags: ["RemoteServers"]
 });

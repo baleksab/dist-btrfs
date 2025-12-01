@@ -32,7 +32,7 @@ export const createRoute = ({
 
   registry.registerPath({
     method,
-    path: openApiPath,
+    path: `/api${openApiPath}`,
     summary,
     tags,
     request: {

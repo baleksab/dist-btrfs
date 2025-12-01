@@ -9,9 +9,10 @@ import type { GetAllServersResponse } from "../../generated-types";
 export interface ServerCardProps {
   server: GetAllServersResponse;
   onEdit?: (server: GetAllServersResponse) => void;
+  isOnline?: boolean;
 }
 
-export const ServerCard = ({ server, onEdit }: ServerCardProps) => {
+export const ServerCard = ({ server, isOnline, onEdit }: ServerCardProps) => {
   const { formatMessage } = useIntl();
 
   const { mutateAsync: deleteServerAsync, isPending: isDeletingServer } = useDeleteRemoteServer();
@@ -27,7 +28,6 @@ export const ServerCard = ({ server, onEdit }: ServerCardProps) => {
         <Text fw={600} size="lg">
           {server.name}
         </Text>
-
         {server.isPrimary && (
           <Badge color="blue" variant="light">
             {formatMessage(translations.serverCardPrimary)}
@@ -51,20 +51,25 @@ export const ServerCard = ({ server, onEdit }: ServerCardProps) => {
         </Group>
       </Stack>
 
-      <Group gap={6} justify="flex-end">
-        <ActionIcon variant="subtle" color="yellow" size="sm" onClick={() => onEdit?.(server)}>
-          <IconPencil size={16} />
-        </ActionIcon>
-        <ActionIcon
-          variant="subtle"
-          color="red"
-          size="sm"
-          onClick={handleDelete}
-          disabled={server.isPrimary}
-          loading={isDeletingServer}
-        >
-          <IconTrash size={16} />
-        </ActionIcon>
+      <Group gap={6} justify="space-between" mt="lg">
+        <Badge color={isOnline ? "green" : "red"} variant="dot">
+          {isOnline ? formatMessage(translations.online) : formatMessage(translations.offline)}
+        </Badge>
+        <Group gap={6} justify="flex-end">
+          <ActionIcon variant="subtle" color="yellow" size="sm" onClick={() => onEdit?.(server)}>
+            <IconPencil size={16} />
+          </ActionIcon>
+          <ActionIcon
+            variant="subtle"
+            color="red"
+            size="sm"
+            onClick={handleDelete}
+            disabled={server.isPrimary}
+            loading={isDeletingServer}
+          >
+            <IconTrash size={16} />
+          </ActionIcon>
+        </Group>
       </Group>
     </Card>
   );

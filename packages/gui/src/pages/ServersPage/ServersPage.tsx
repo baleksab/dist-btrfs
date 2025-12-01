@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { AddServerModal } from "../../components/AddServerModal";
 import styles from "./ServersPage.module.scss";
-import { useRemoteServers } from "../../hooks";
+import { useHealthChecks, useRemoteServers } from "../../hooks";
 import { ServerCard } from "../../components/ServerCard";
 import type { GetAllServersResponse } from "../../generated-types";
 
@@ -26,6 +26,7 @@ export const ServersPage = () => {
   };
 
   const { data: servers, isPending } = useRemoteServers();
+  const { data: healthChecks } = useHealthChecks();
 
   if (isPending) {
     return <LoadingOverlay />;
@@ -54,7 +55,14 @@ export const ServersPage = () => {
               ?.slice()
               ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
               ?.map((server) => (
-                <ServerCard key={server.uid} server={server} onEdit={handleEdit} />
+                <ServerCard
+                  key={server.uid}
+                  server={server}
+                  onEdit={handleEdit}
+                  isOnline={healthChecks?.some(
+                    (status) => status.uid === server.uid && status.online
+                  )}
+                />
               ))}
           </SimpleGrid>
         )}
