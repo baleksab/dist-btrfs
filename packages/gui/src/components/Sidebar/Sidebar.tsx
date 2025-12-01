@@ -1,5 +1,5 @@
 import { AppShell, NavLink, ThemeIcon, Text, Stack, Box } from "@mantine/core";
-import { IconServer } from "@tabler/icons-react";
+import { IconBook, IconServer } from "@tabler/icons-react";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { LocaleSelector } from "../LocaleSelector";
@@ -26,6 +26,16 @@ export const Sidebar = () => {
             }
             active={matches.some((match) => match.routeId === "/")}
             onClick={() => navigate({ to: "/" })}
+          />
+          <NavLink
+            label={formatMessage(translations.snapshotsNavItem)}
+            leftSection={
+              <ThemeIcon variant="light" size="sm">
+                <IconBook size={16} />
+              </ThemeIcon>
+            }
+            active={matches.some((match) => match.routeId === "/snapshots")}
+            onClick={() => navigate({ to: "/snapshots" })}
           />
         </Stack>
         <Box mt="lg">

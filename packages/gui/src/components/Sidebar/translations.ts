@@ -8,5 +8,9 @@ export const translations = defineMessages({
   serversNavItem: {
     id: "components.sidebar.navItem.servers",
     defaultMessage: "Servers"
+  },
+  snapshotsNavItem: {
+    id: "components.sidebar.navItem.snapshots",
+    defaultMessage: "Snapshots"
   }
 });
