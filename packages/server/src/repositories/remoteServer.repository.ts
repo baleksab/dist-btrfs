@@ -25,4 +25,13 @@ export class RemoteServerRepository {
 
     return server;
   }
+
+  async findPrimary() {
+    const [server] = await database
+      .select()
+      .from(remoteServers)
+      .where(eq(remoteServers.isPrimary, 1));
+
+    return server;
+  }
 }

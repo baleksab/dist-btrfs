@@ -58,12 +58,24 @@ export class RemoteServerService {
   async healthCheckAll() {
     const servers = await this.remoteServerRepository.findAll();
 
-    const decryptedServer = servers.map((server) => ({
+    const decryptedServers = servers.map((server) => ({
       ...server,
       username: decrypt(server.username),
       password: decrypt(server.password)
     }));
 
-    return this.sshService.checkAllServers(decryptedServer);
+    return this.sshService.checkAllServers(decryptedServers);
+  }
+
+  async getPrimaryServerUnsanitized() {
+    const server = await this.remoteServerRepository.findPrimary();
+
+    const decryptedServer = {
+      ...server,
+      username: decrypt(server.username),
+      password: decrypt(server.password)
+    };
+
+    return decryptedServer;
   }
 }
