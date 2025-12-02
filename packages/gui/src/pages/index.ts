@@ -1,1 +1,3 @@
 export * from "./ServersPage";
+export * from "./SnapshotsPage";
+export * from "./ConfigurationPage";

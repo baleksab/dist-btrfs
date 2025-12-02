@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SnapshotsRouteImport } from './routes/snapshots'
+import { Route as ConfigurationRouteImport } from './routes/configuration'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SnapshotsRoute = SnapshotsRouteImport.update({
   id: '/snapshots',
   path: '/snapshots',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfigurationRoute = ConfigurationRouteImport.update({
+  id: '/configuration',
+  path: '/configuration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuration': typeof ConfigurationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuration': typeof ConfigurationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuration': typeof ConfigurationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/snapshots'
+  fullPaths: '/' | '/configuration' | '/snapshots'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/snapshots'
-  id: '__root__' | '/' | '/snapshots'
+  to: '/' | '/configuration' | '/snapshots'
+  id: '__root__' | '/' | '/configuration' | '/snapshots'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfigurationRoute: typeof ConfigurationRoute
   SnapshotsRoute: typeof SnapshotsRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/snapshots'
       fullPath: '/snapshots'
       preLoaderRoute: typeof SnapshotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuration': {
+      id: '/configuration'
+      path: '/configuration'
+      fullPath: '/configuration'
+      preLoaderRoute: typeof ConfigurationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfigurationRoute: ConfigurationRoute,
   SnapshotsRoute: SnapshotsRoute,
 }
 export const routeTree = rootRouteImport

@@ -12,5 +12,9 @@ export const translations = defineMessages({
   snapshotsNavItem: {
     id: "components.sidebar.navItem.snapshots",
     defaultMessage: "Snapshots"
+  },
+  configurationNavItem: {
+    id: "components.sidebar.navItem.configuration",
+    defaultMessage: "Configuration"
   }
 });
