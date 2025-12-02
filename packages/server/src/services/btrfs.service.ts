@@ -29,9 +29,16 @@ export class BtrfsService {
 
     for (const line of lines) {
       const match = line.match(regex);
-      if (!match) continue;
+
+      if (!match) {
+        continue;
+      }
 
       const [, id, gen, topLevel, relPath] = match;
+
+      if (relPath.includes("/snapshots/")) {
+        continue;
+      }
 
       const absPath = relPath === "root" ? "/" : "/" + relPath.replace(/^root\//, "");
 

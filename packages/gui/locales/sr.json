@@ -24,14 +24,31 @@
   "components.serverCard.ip": "IP adresa",
   "components.serverCard.port": "Port",
   "components.serverCard.primary": "Primarni",
+  "components.serverCard.secondary": "Sekundarni",
   "components.serverCard.online": "Online",
   "components.serverCard.offline": "Offline",
 
   "components.sidebar.title": "dist-btrfs",
   "components.sidebar.navItem.servers": "Serveri",
   "components.sidebar.navItem.snapshots": "Snapshotovi",
+  "components.sidebar.navItem.configuration": "Konfiguracija",
 
   "pages.serversPage.title": "Serveri",
   "pages.serversPage.addServer": "Dodaj server",
-  "pages.serversPage.noServers": "Nema dodatih servera"
+  "pages.serversPage.noServers": "Nema dodatih servera",
+
+  "pages.snapshotsPage.title": "Primarni server – snapshotovi",
+  "pages.snapshotsPage.createSnapshot": "Kreiraj snapshot",
+  "pages.snapshotsPage.subvolumesLabel": "Izabrani podvolumen",
+  "pages.snapshotsPage.loadingSubvolumes": "Učitavanje podvolumena...",
+  "pages.snapshotsPage.loadingSnapshots": "Učitavanje snapshotova...",
+  "pages.snapshotsPage.loading": "Učitavanje...",
+  "pages.snapshotsPage.noSnapshots": "Nema pronađenih snapshotova za ovaj podvolumen.",
+  "pages.snapshotsPage.column.name": "Naziv",
+  "pages.snapshotsPage.column.createdAt": "Kreirano",
+  "pages.snapshotsPage.column.size": "Veličina",
+  "pages.snapshotsPage.column.path": "Putanja",
+  "pages.snapshotsPage.column.actions": "Akcije",
+  "pages.snapshotsPage.action.restore": "Obnovi",
+  "pages.snapshotsPage.action.delete": "Obriši"
 }

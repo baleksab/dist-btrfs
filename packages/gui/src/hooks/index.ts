@@ -6,3 +6,4 @@ export * from "./useValidateConnection";
 export * from "./useUpdateRemoteServer";
 export * from "./useSubvolumes";
 export * from "./useCreateSnapshot";
+export * from "./useSnapshots";

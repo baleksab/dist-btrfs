@@ -38,7 +38,7 @@ export const Sidebar = () => {
             onClick={() => navigate({ to: "/snapshots" })}
           />
           <NavLink
-            label={formatMessage(translations.snapshotsNavItem)}
+            label={formatMessage(translations.configurationNavItem)}
             leftSection={
               <ThemeIcon variant="light" size="sm">
                 <IconManualGearbox size={16} />

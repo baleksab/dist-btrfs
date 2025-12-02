@@ -8,3 +8,9 @@ export const createSnapshot = async (subvolume: string) => {
 
   return data;
 };
+
+export const getSnapshots = async (subvolume: string) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeGet(subvolume);
+
+  return data;
+};
