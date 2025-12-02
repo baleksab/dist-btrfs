@@ -23,6 +23,12 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface BtrfsSnapshotResponse {
+    'name': string;
+    'path': string;
+    'createdAt'?: string;
+    'sizeBytes'?: number;
+}
 export interface BtrfsSubvolumesResponseInner {
     'id': number;
     'gen': string;
@@ -592,6 +598,175 @@ export class RemoteServersApi extends BaseAPI {
      */
     public apiServersValidatePost(healthCheckRequest?: HealthCheckRequest, options?: RawAxiosRequestConfig) {
         return RemoteServersApiFp(this.configuration).apiServersValidatePost(healthCheckRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * SnapshotsApi - axios parameter creator
+ */
+export const SnapshotsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeGet: async (subvolume: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeGet', 'subvolume', subvolume)
+            const localVarPath = `/api/snapshots/{subvolume}`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumePost: async (subvolume: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumePost', 'subvolume', subvolume)
+            const localVarPath = `/api/snapshots/{subvolume}`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * SnapshotsApi - functional programming interface
+ */
+export const SnapshotsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = SnapshotsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSnapshotResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeGet(subvolume, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSnapshotsSubvolumePost(subvolume: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSnapshotResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumePost(subvolume, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * SnapshotsApi - factory interface
+ */
+export const SnapshotsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = SnapshotsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSnapshotResponse>> {
+            return localVarFp.apiSnapshotsSubvolumeGet(subvolume, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumePost(subvolume: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSnapshotResponse> {
+            return localVarFp.apiSnapshotsSubvolumePost(subvolume, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * SnapshotsApi - object-oriented interface
+ */
+export class SnapshotsApi extends BaseAPI {
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeGet(subvolume, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiSnapshotsSubvolumePost(subvolume: string, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumePost(subvolume, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

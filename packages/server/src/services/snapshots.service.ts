@@ -7,41 +7,38 @@ export class SnapshotsService {
 
   async listSnapshots(subvolPath: string) {
     const server = await this.remoteServerService.getPrimaryServerUnsanitized();
+    const snapshotsDir = `${subvolPath}/snapshots`;
 
-    const listCmd = `ls ${subvolPath}/snapshots`;
+    const listCmd = `sudo btrfs subvolume list -o ${snapshotsDir}`;
     const { stdout: listOut } = await this.sshService.execCommand(server, listCmd);
 
-    const names = listOut
+    const rows = listOut
       .trim()
       .split("\n")
-      .filter((line) => line.length > 0);
-
-    console.log(names);
+      .filter((l) => l.includes(snapshotsDir));
 
     const snapshots = [];
 
-    for (const name of names) {
-      const fullPath = `${subvolPath}/snapshots/${name}`;
+    for (const row of rows) {
+      // ID 123 gen 456 top level 5 path subvol/snapshots/snap1
+      const parts = row.trim().split(/\s+/);
+      const pathIndex = parts.indexOf("path") + 1;
+      const fullPath = parts.slice(pathIndex).join(" ");
+      const name = fullPath.split("/").pop();
 
       const showCmd = `sudo btrfs subvolume show ${fullPath}`;
       const { stdout: showOut } = await this.sshService.execCommand(server, showCmd);
 
-      let createdAt: string | undefined = undefined;
       const creationRegex = /Creation time:\s+(.+)/;
-
-      const creationMatch = showOut.split("\n").find((line) => creationRegex.test(line));
-
-      if (creationMatch) {
-        const rawTime = creationMatch.replace("Creation time:", "").trim();
-        const iso = new Date(rawTime).toISOString();
-        createdAt = iso;
-      }
+      const creationLine = showOut.split("\n").find((line) => creationRegex.test(line));
+      const createdAt = creationLine
+        ? new Date(creationLine.replace("Creation time:", "").trim()).toISOString()
+        : undefined;
 
       const duCmd = `sudo btrfs subvolume du -s ${fullPath}`;
       const { stdout: duOut } = await this.sshService.execCommand(server, duCmd);
 
-      const sizeMatch = duOut.trim().split(/\s+/)[0];
-      const sizeBytes = Number(sizeMatch);
+      const sizeBytes = Number(duOut.trim().split(/\s+/)[0]);
 
       snapshots.push({
         name,
@@ -57,8 +54,11 @@ export class SnapshotsService {
   async createSnapshot(subvolPath: string) {
     const server = await this.remoteServerService.getPrimaryServerUnsanitized();
 
+    const snapshotsDir = `${subvolPath}/snapshots`;
+    await this.sshService.execCommand(server, `sudo mkdir -p ${snapshotsDir}`);
+
     const name = new Date().toISOString().replace(/[:.]/g, "_");
-    const fullPath = `${subvolPath}/snapshots/${name}`;
+    const fullPath = `${snapshotsDir}/${name}`;
     const cmd = `sudo btrfs subvolume snapshot ${subvolPath} ${fullPath}`;
 
     await this.sshService.execCommand(server, cmd);

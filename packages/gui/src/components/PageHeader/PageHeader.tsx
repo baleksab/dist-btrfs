@@ -4,14 +4,17 @@ interface PageHeaderProps {
   title: string;
   buttonLabel: string;
   onClick?: () => void;
+  isLoading?: boolean;
 }
 
-export const PageHeader = ({ title, buttonLabel, onClick }: PageHeaderProps) => {
+export const PageHeader = ({ title, buttonLabel, isLoading, onClick }: PageHeaderProps) => {
   return (
     <Stack>
       <Group justify="space-between">
         <Title order={2}>{title}</Title>
-        <Button onClick={onClick}>{buttonLabel}</Button>
+        <Button onClick={onClick} loading={isLoading}>
+          {buttonLabel}
+        </Button>
       </Group>
       <Divider />
     </Stack>
