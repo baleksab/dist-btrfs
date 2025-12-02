@@ -28,11 +28,12 @@ export const ServerCard = ({ server, isOnline, onEdit }: ServerCardProps) => {
         <Text fw={600} size="lg">
           {server.name}
         </Text>
-        {server.isPrimary && (
-          <Badge color="blue" variant="light">
-            {formatMessage(translations.serverCardPrimary)}
-          </Badge>
-        )}
+
+        <Badge color={server.isPrimary ? "blue" : "orange"} variant="light">
+          {server.isPrimary
+            ? formatMessage(translations.serverCardPrimary)
+            : formatMessage(translations.severCardSecondary)}
+        </Badge>
       </Group>
 
       <Stack gap={4} flex="1">

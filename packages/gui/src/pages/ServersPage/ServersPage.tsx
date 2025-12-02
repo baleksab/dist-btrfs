@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Title, Button, Divider, SimpleGrid, LoadingOverlay, Text } from "@mantine/core";
+import { SimpleGrid, LoadingOverlay, Text, Stack } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { AddServerModal } from "../../components/AddServerModal";
-import styles from "./ServersPage.module.scss";
 import { useHealthChecks, useRemoteServers } from "../../hooks";
-import { ServerCard } from "../../components/ServerCard";
+import { ServerCard, PageHeader } from "../../components";
 import type { GetAllServersResponse } from "../../generated-types";
 
 export const ServersPage = () => {
@@ -33,46 +32,41 @@ export const ServersPage = () => {
   }
 
   return (
-    <>
-      <div className={styles.header}>
-        <Title order={2}>{formatMessage(translations.title)}</Title>
+    <Stack>
+      <PageHeader
+        title={formatMessage(translations.title)}
+        onClick={() => setAddServerModalOpen(true)}
+        buttonLabel={formatMessage(translations.addServer)}
+      />
 
-        <Button onClick={() => setAddServerModalOpen(true)}>
-          {formatMessage(translations.addServer)}
-        </Button>
-      </div>
+      {servers?.length === 0 ? (
+        <Text c="dimmed" mt="md">
+          {formatMessage(translations.noServers)}
+        </Text>
+      ) : (
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
+          {servers
+            ?.slice()
+            ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
+            ?.map((server) => (
+              <ServerCard
+                key={server.uid}
+                server={server}
+                onEdit={handleEdit}
+                isOnline={healthChecks?.some(
+                  (status) => status.uid === server.uid && status.online
+                )}
+              />
+            ))}
+        </SimpleGrid>
+      )}
 
-      <Divider />
-
-      <div className={styles.content}>
-        {servers?.length === 0 ? (
-          <Text c="dimmed" mt="md">
-            {formatMessage(translations.noServers)}
-          </Text>
-        ) : (
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" mt="md">
-            {servers
-              ?.slice()
-              ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
-              ?.map((server) => (
-                <ServerCard
-                  key={server.uid}
-                  server={server}
-                  onEdit={handleEdit}
-                  isOnline={healthChecks?.some(
-                    (status) => status.uid === server.uid && status.online
-                  )}
-                />
-              ))}
-          </SimpleGrid>
-        )}
-      </div>
       <AddServerModal
         key={isAddServerModalOpen ? "open" : "closed"}
         opened={isAddServerModalOpen}
         server={serverToBeEdited}
         onClose={handleClose}
       />
-    </>
+    </Stack>
   );
 };

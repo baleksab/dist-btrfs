@@ -23,7 +23,7 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-export interface BtrfsSubvolumesResponse {
+export interface BtrfsSubvolumesResponseInner {
     'id': number;
     'gen': string;
     'topLevel': string;
@@ -119,7 +119,7 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSubvolumesResponse>> {
+        async apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumesResponseInner>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesGet']?.[localVarOperationServerIndex]?.url;
@@ -140,7 +140,7 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumesResponse> {
+        apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumesResponseInner>> {
             return localVarFp.apiBtrfsSubvolumesGet(options).then((request) => request(axios, basePath));
         },
     };
