@@ -30,9 +30,7 @@ createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryclient}>
       <MantineProvider>
-        <I18nProvider locale="en">
-          <App />
-        </I18nProvider>
+        <App />
       </MantineProvider>
     </QueryClientProvider>
   </StrictMode>

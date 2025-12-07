@@ -65,7 +65,7 @@ export const SnapshotCleanupModal = ({ opened, subvolume, onClose }: SnapshotCle
         </form.Field>
 
         <Group justify="flex-end" mt="lg">
-          <Button variant="default" onClick={onClose} loading={isCleaningupSnapshots}>
+          <Button variant="default" onClick={onClose} disabled={isCleaningupSnapshots}>
             {formatMessage(translations.cancel)}
           </Button>
           <Button type="submit" loading={isCleaningupSnapshots}>

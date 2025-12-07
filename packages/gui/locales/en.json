@@ -30,6 +30,14 @@
   "components.sidebar.navItem.servers": "Servers",
   "components.sidebar.navItem.snapshots": "Snapshots",
   "components.sidebar.navItem.configuration": "Configuration",
+  "components.snapshotCleanupModal.title": "Clean up snapshots",
+  "components.snapshotCleanupModal.type": "Cleanup type:",
+  "components.snapshotCleanupModal.daily": "Daily",
+  "components.snapshotCleanupModal.weekly": "Weekly",
+  "components.snapshotCleanupModal.monthly": "Monthly",
+  "components.snapshotCleanupModal.keep": "Number of snapshots to keep",
+  "components.snapshotCleanupModal.cancel": "Cancel",
+  "components.snapshotCleanupModal.apply": "Apply cleanup",
   "pages.serversPage.title": "Servers",
   "pages.serversPage.addServer": "Add Server",
   "pages.serversPage.noServers": "No servers added yet",
@@ -46,5 +54,6 @@
   "pages.snapshotsPage.column.path": "Path",
   "pages.snapshotsPage.column.actions": "Actions",
   "pages.snapshotsPage.action.restore": "Restore",
-  "pages.snapshotsPage.action.delete": "Delete"
+  "pages.snapshotsPage.action.delete": "Delete",
+  "pages.snapshotsPage.cleanup": "Cleanup"
 }
