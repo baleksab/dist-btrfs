@@ -1,31 +1,17 @@
-import { Group, Title, Button, Divider, Stack } from "@mantine/core";
+import { Group, Title, Divider, Stack } from "@mantine/core";
+import type { ReactNode } from "react";
 
 interface PageHeaderProps {
   title: string;
-  buttonLabel: string;
-  onClick?: () => void;
-  isLoading?: boolean;
-  disabled?: boolean;
-  withButton?: boolean;
+  actions?: ReactNode;
 }
 
-export const PageHeader = ({
-  title,
-  buttonLabel,
-  isLoading,
-  disabled,
-  withButton = true,
-  onClick
-}: PageHeaderProps) => {
+export const PageHeader = ({ title, actions }: PageHeaderProps) => {
   return (
     <Stack>
       <Group justify="space-between">
         <Title order={2}>{title}</Title>
-        {withButton && (
-          <Button onClick={onClick} loading={isLoading} disabled={disabled}>
-            {buttonLabel}
-          </Button>
-        )}
+        {actions}
       </Group>
       <Divider />
     </Stack>

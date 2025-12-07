@@ -62,7 +62,6 @@ export const createRoute = ({
   });
 
   router[method](path, async (req, res, next) => {
-    console.log(req.body);
     try {
       const validatedBody = dto ? dto.parse(req.body) : req.body;
 

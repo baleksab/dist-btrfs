@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SimpleGrid, LoadingOverlay, Text, Stack } from "@mantine/core";
+import { SimpleGrid, LoadingOverlay, Text, Stack, Button } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { AddServerModal } from "../../components/AddServerModal";
@@ -35,8 +35,11 @@ export const ServersPage = () => {
     <Stack>
       <PageHeader
         title={formatMessage(translations.title)}
-        onClick={() => setAddServerModalOpen(true)}
-        buttonLabel={formatMessage(translations.addServer)}
+        actions={
+          <Button onClick={() => setAddServerModalOpen(true)}>
+            {formatMessage(translations.addServer)}
+          </Button>
+        }
       />
 
       {servers?.length === 0 ? (

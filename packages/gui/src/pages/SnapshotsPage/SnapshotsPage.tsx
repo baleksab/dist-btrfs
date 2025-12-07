@@ -6,7 +6,7 @@ import {
   useDeleteSnapshot,
   useRestoreSnapshot
 } from "../../hooks";
-import { PageHeader } from "../../components";
+import { PageHeader, SnapshotCleanupModal } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { useEffect, useRef, useState } from "react";
@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 export const SnapshotsPage = () => {
   const { formatMessage, formatDate, formatTime } = useIntl();
   const [selectedSubvolume, setSelectedSubvolume] = useState<ComboboxItem | undefined>(undefined);
+  const [isCleanupModalOpen, setCleanupModalOpen] = useState(false);
   const hasSetInitialSubvolume = useRef(false);
 
   const { subvolumes, isLoadingSubvolumes } = useSubvolumes();
@@ -44,7 +45,10 @@ export const SnapshotsPage = () => {
   }, [subvolumeOptions]);
 
   const handleSnapshotCreate = async () => {
-    if (!selectedSubvolume?.value) return;
+    if (!selectedSubvolume?.value) {
+      return;
+    }
+
     await createSnapshotAsync(selectedSubvolume?.value);
   };
 
@@ -60,11 +64,25 @@ export const SnapshotsPage = () => {
   return (
     <Stack>
       <PageHeader
-        buttonLabel={formatMessage(translations.createSnapshot)}
         title={formatMessage(translations.title)}
-        onClick={handleSnapshotCreate}
-        isLoading={isCreatingSnapshot}
-        disabled={isDeletingSnapshot || isRestoringSnapshot}
+        actions={
+          <Group>
+            <Button
+              color="red"
+              disabled={!selectedSubvolume || isDeletingSnapshot || isRestoringSnapshot}
+              onClick={() => setCleanupModalOpen(true)}
+            >
+              {formatMessage(translations.cleanup)}
+            </Button>
+            <Button
+              onClick={handleSnapshotCreate}
+              loading={isCreatingSnapshot}
+              disabled={!selectedSubvolume || isDeletingSnapshot || isRestoringSnapshot}
+            >
+              {formatMessage(translations.createSnapshot)}
+            </Button>
+          </Group>
+        }
       />
       <Select
         data={subvolumeOptions}
@@ -168,6 +186,12 @@ export const SnapshotsPage = () => {
           )}
         </Table.Tbody>
       </Table>
+      <SnapshotCleanupModal
+        key={isCleanupModalOpen ? "opened" : "closed"}
+        opened={isCleanupModalOpen}
+        onClose={() => setCleanupModalOpen(false)}
+        subvolume={selectedSubvolume?.value || ""}
+      />
     </Stack>
   );
 };

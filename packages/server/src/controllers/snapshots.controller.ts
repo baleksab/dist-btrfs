@@ -1,3 +1,4 @@
+import { BtrfsSnapshotCleanupRequest } from "../dtos";
 import { SnapshotsService } from "../services";
 import { Request, Response } from "express";
 
@@ -30,6 +31,13 @@ export class SnapshotsController {
   async restoreSnapshot(_dto: unknown, req: Request, res: Response) {
     const { subvolume, snapshot } = req.params;
     const response = await this.snapshotService.restoreSnapshot(subvolume, snapshot);
+
+    return res.status(200).json(response);
+  }
+
+  async cleanupSnapshots(dto: BtrfsSnapshotCleanupRequest, req: Request, res: Response) {
+    const { subvolume } = req.params;
+    const response = await this.snapshotService.cleanupSnapshots(subvolume, dto);
 
     return res.status(200).json(response);
   }

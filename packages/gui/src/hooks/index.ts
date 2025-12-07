@@ -9,3 +9,4 @@ export * from "./useCreateSnapshot";
 export * from "./useSnapshots";
 export * from "./useDeleteSnapshot";
 export * from "./useRestoreSnapshot";
+export * from "./useSnapshotsCleanup";

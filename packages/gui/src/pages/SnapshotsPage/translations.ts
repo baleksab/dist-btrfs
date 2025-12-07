@@ -56,5 +56,9 @@ export const translations = defineMessages({
   actionDelete: {
     id: "pages.snapshotsPage.action.delete",
     defaultMessage: "Delete"
+  },
+  cleanup: {
+    id: "pages.snapshotsPage.cleanup",
+    defaultMessage: "Cleanup"
   }
 });

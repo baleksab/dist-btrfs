@@ -1,3 +1,5 @@
+import { BtrfsSnapshotCleanupRequest } from "../dtos";
+import { getISOWeek } from "../utils";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
 
@@ -74,7 +76,7 @@ export class SnapshotsService {
     const snapshotsDir = this.getSnapshotsDir(subvolPath);
     await this.sshService.execCommand(server, `sudo mkdir -p ${snapshotsDir}`);
 
-    const name = new Date().toISOString().replace(/[:.]/g, "_");
+    const name = new Date().toISOString();
     const fullPath = `${snapshotsDir}/${name}`;
 
     await this.sshService.execCommand(
@@ -138,6 +140,100 @@ export class SnapshotsService {
       restored: true,
       snapshotUsed: snapshotPath,
       newSubvolume: subvolPath
+    };
+  }
+
+  async cleanupSnapshots(subvolumePath: string, request: BtrfsSnapshotCleanupRequest) {
+    const server = await this.remoteServerService.getPrimaryServerUnsanitized();
+    const snapshotsDir = this.getSnapshotsDir(subvolumePath);
+
+    const { stdout: listOut } = await this.sshService.execCommand(
+      server,
+      `sudo btrfs subvolume list -o ${snapshotsDir}`
+    );
+
+    const rows = listOut
+      .trim()
+      .split("\n")
+      .filter((l) => l.includes(snapshotsDir));
+
+    const snapshots: { path: string; date: Date }[] = [];
+
+    for (const row of rows) {
+      const parts = row.trim().split(/\s+/);
+      const pathIndex = parts.indexOf("path") + 1;
+
+      let relative = parts.slice(pathIndex).join(" ").trim();
+      relative = relative.replace(/^root\//, "");
+
+      const fullPath = "/" + relative;
+      const name = fullPath.split("/").pop()!;
+
+      const date = new Date(name);
+
+      if (!isNaN(date.getTime())) {
+        snapshots.push({ path: fullPath, date });
+      }
+    }
+
+    snapshots.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    let groupKeyFn: (d: Date) => string;
+
+    if (request.type === "daily") {
+      groupKeyFn = (d) => d.toISOString().split("T")[0];
+    } else if (request.type === "weekly") {
+      groupKeyFn = (d) => `${d.getFullYear()}-W${getISOWeek(d)}`;
+    } else {
+      groupKeyFn = (d) => `${d.getFullYear()}-${d.getMonth() + 1}`;
+    }
+
+    const groups: Record<string, { path: string; date: Date }[]> = {};
+
+    for (const snap of snapshots) {
+      const key = groupKeyFn(snap.date);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(snap);
+    }
+
+    const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+      const da = groups[a][0].date.getTime();
+      const db = groups[b][0].date.getTime();
+      return db - da;
+    });
+
+    const toDelete: string[] = [];
+    const kept: string[] = [];
+
+    for (const key of sortedGroupKeys) {
+      groups[key].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+      const keep = groups[key].slice(0, request.keep);
+      const del = groups[key].slice(request.keep);
+
+      kept.push(...keep.map((s) => s.path));
+      toDelete.push(...del.map((s) => s.path));
+    }
+
+    const deleted: string[] = [];
+
+    for (const snapPath of toDelete) {
+      const { stderr } = await this.sshService.execCommand(
+        server,
+        `sudo btrfs subvolume delete ${snapPath}`
+      );
+
+      if (!stderr || !stderr.includes("ERROR")) {
+        deleted.push(snapPath);
+      }
+    }
+
+    return {
+      cleaned: true,
+      kept,
+      deletedSnapshots: deleted,
+      totalBefore: snapshots.length,
+      totalAfter: kept.length
     };
   }
 }

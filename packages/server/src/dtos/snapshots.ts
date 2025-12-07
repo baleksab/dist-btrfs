@@ -39,3 +39,24 @@ export const btrfsSnapshotRestoreResponse = z
   .openapi("BtrfsSnapshotRestoreResponse");
 
 export type BtrfsSnapshotRestoreResponse = z.infer<typeof btrfsSnapshotRestoreResponse>;
+
+export const btrfsSnapshotCleanupRequest = z
+  .object({
+    type: z.enum(["daily", "weekly", "monthly"]),
+    keep: z.number().min(1)
+  })
+  .openapi("BtrfsSnapshotCleanupRequest");
+
+export type BtrfsSnapshotCleanupRequest = z.infer<typeof btrfsSnapshotCleanupRequest>;
+
+export const btrfsSnapshotCleanupResponse = z
+  .object({
+    cleaned: z.boolean(),
+    kept: z.array(z.string()),
+    deletedSnapshots: z.array(z.string()),
+    totalBefore: z.number(),
+    totalAfter: z.number()
+  })
+  .openapi("BtrfsSnapshotCleanupResponse");
+
+export type BtrfsSnapshotCleanupResponse = z.infer<typeof btrfsSnapshotCleanupResponse>;

@@ -1,6 +1,8 @@
 import z from "zod";
 import { SnapshotsController } from "../controllers";
 import {
+  btrfsSnapshotCleanupRequest,
+  btrfsSnapshotCleanupResponse,
   btrfsSnapshotDeleteResponse,
   btrfsSnapshotResponse,
   btrfsSnapshotRestoreResponse,
@@ -25,6 +27,16 @@ createRoute({
   handler: controller.createSnapshot.bind(controller),
   params: z.object({ subvolume: z.string() }),
   response: btrfsSnapshotResponse,
+  tags: ["Snapshots"]
+});
+
+createRoute({
+  method: "delete",
+  path: "/snapshots/:subvolume",
+  handler: controller.cleanupSnapshots.bind(controller),
+  params: z.object({ subvolume: z.string() }),
+  response: btrfsSnapshotCleanupResponse,
+  dto: btrfsSnapshotCleanupRequest,
   tags: ["Snapshots"]
 });
 
