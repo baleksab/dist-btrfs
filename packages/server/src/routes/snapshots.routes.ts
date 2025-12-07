@@ -3,6 +3,7 @@ import { SnapshotsController } from "../controllers";
 import {
   btrfsSnapshotDeleteResponse,
   btrfsSnapshotResponse,
+  btrfsSnapshotRestoreResponse,
   btrfsSnapshotsResponse
 } from "../dtos";
 import { createRoute } from "../utils";
@@ -33,5 +34,14 @@ createRoute({
   handler: controller.deleteSnapshot.bind(controller),
   params: z.object({ subvolume: z.string(), snapshot: z.string() }),
   response: btrfsSnapshotDeleteResponse,
+  tags: ["Snapshots"]
+});
+
+createRoute({
+  method: "post",
+  path: "/snapshots/:subvolume/:snapshot/restore",
+  handler: controller.restoreSnapshot.bind(controller),
+  params: z.object({ subvolume: z.string(), snapshot: z.string() }),
+  response: btrfsSnapshotRestoreResponse,
   tags: ["Snapshots"]
 });

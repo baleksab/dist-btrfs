@@ -26,3 +26,15 @@ export const deleteSnapshot = async ({
 
   return data;
 };
+
+export const restoreSnapshot = async ({
+  subvolume,
+  snapshot
+}: {
+  subvolume: string;
+  snapshot: string;
+}) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotRestorePost(subvolume, snapshot);
+
+  return data;
+};

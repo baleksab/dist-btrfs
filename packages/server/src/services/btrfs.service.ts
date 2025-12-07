@@ -36,7 +36,7 @@ export class BtrfsService {
 
       const [, id, gen, topLevel, relPath] = match;
 
-      if (relPath.includes("/snapshots/")) {
+      if (relPath.includes(".snapshots/")) {
         continue;
       }
 

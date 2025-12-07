@@ -8,3 +8,4 @@ export * from "./useSubvolumes";
 export * from "./useCreateSnapshot";
 export * from "./useSnapshots";
 export * from "./useDeleteSnapshot";
+export * from "./useRestoreSnapshot";

@@ -1,5 +1,11 @@
 import { Button, Group, Select, Skeleton, Stack, Table, type ComboboxItem } from "@mantine/core";
-import { useCreateSnapshot, useSnapshots, useSubvolumes, useDeleteSnapshot } from "../../hooks";
+import {
+  useCreateSnapshot,
+  useSnapshots,
+  useSubvolumes,
+  useDeleteSnapshot,
+  useRestoreSnapshot
+} from "../../hooks";
 import { PageHeader } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
@@ -20,6 +26,8 @@ export const SnapshotsPage = () => {
   const { deleteSnapshotAsync, isDeletingSnapshot } = useDeleteSnapshot(
     selectedSubvolume?.value || ""
   );
+
+  const { restoreSnapshotAsync, isRestoringSnapshot } = useRestoreSnapshot();
 
   const subvolumeOptions = subvolumes?.map((subvolume) => ({
     value: subvolume.path.toString(),
@@ -56,7 +64,7 @@ export const SnapshotsPage = () => {
         title={formatMessage(translations.title)}
         onClick={handleSnapshotCreate}
         isLoading={isCreatingSnapshot}
-        disabled={isDeletingSnapshot}
+        disabled={isDeletingSnapshot || isRestoringSnapshot}
       />
       <Select
         data={subvolumeOptions}
@@ -105,7 +113,8 @@ export const SnapshotsPage = () => {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit"
-                  })}{" "}
+                  })}
+                  &nbsp;
                   {formatTime(snapshot.createdAt, {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -116,7 +125,19 @@ export const SnapshotsPage = () => {
                 <Table.Td>{snapshot.path}</Table.Td>
                 <Table.Td>
                   <Group justify="center">
-                    <Button size="xs" variant="light" color="blue" disabled={isDeletingSnapshot}>
+                    <Button
+                      size="xs"
+                      variant="light"
+                      color="blue"
+                      disabled={isDeletingSnapshot || isCreatingSnapshot}
+                      loading={isRestoringSnapshot}
+                      onClick={() =>
+                        restoreSnapshotAsync({
+                          subvolume: selectedSubvolume?.value || "",
+                          snapshot: snapshot.name
+                        })
+                      }
+                    >
                       {formatMessage(translations.actionRestore)}
                     </Button>
                     <Button
@@ -130,6 +151,7 @@ export const SnapshotsPage = () => {
                         })
                       }
                       loading={isDeletingSnapshot}
+                      disabled={isRestoringSnapshot || isCreatingSnapshot}
                     >
                       {formatMessage(translations.actionDelete)}
                     </Button>
