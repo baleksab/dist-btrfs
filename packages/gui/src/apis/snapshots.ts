@@ -14,3 +14,15 @@ export const getSnapshots = async (subvolume: string) => {
 
   return data;
 };
+
+export const deleteSnapshot = async ({
+  subvolume,
+  snapshot
+}: {
+  subvolume: string;
+  snapshot: string;
+}) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotDelete(subvolume, snapshot);
+
+  return data;
+};

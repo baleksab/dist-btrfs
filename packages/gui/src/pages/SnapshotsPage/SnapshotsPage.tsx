@@ -1,5 +1,5 @@
 import { Button, Group, Select, Skeleton, Stack, Table, type ComboboxItem } from "@mantine/core";
-import { useCreateSnapshot, useSnapshots, useSubvolumes } from "../../hooks";
+import { useCreateSnapshot, useSnapshots, useSubvolumes, useDeleteSnapshot } from "../../hooks";
 import { PageHeader } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
@@ -14,6 +14,10 @@ export const SnapshotsPage = () => {
   const { snapshots, isLoadingSnapshots } = useSnapshots(selectedSubvolume?.value || "");
 
   const { createSnapshotAsync, isCreatingSnapshot } = useCreateSnapshot(
+    selectedSubvolume?.value || ""
+  );
+
+  const { deleteSnapshotAsync, isDeletingSnapshot } = useDeleteSnapshot(
     selectedSubvolume?.value || ""
   );
 
@@ -52,6 +56,7 @@ export const SnapshotsPage = () => {
         title={formatMessage(translations.title)}
         onClick={handleSnapshotCreate}
         isLoading={isCreatingSnapshot}
+        disabled={isDeletingSnapshot}
       />
       <Select
         data={subvolumeOptions}
@@ -72,8 +77,8 @@ export const SnapshotsPage = () => {
 
         <Table.Tbody>
           {isLoadingSnapshots ? (
-            [...Array(5)].map((_, i) => (
-              <Table.Tr key={`sk-${i}`}>
+            [...Array(5)].map((_, index) => (
+              <Table.Tr key={`sk-${index}`}>
                 <Table.Td>
                   <Skeleton height={12} />
                 </Table.Td>
@@ -92,29 +97,40 @@ export const SnapshotsPage = () => {
               </Table.Tr>
             ))
           ) : snapshots?.length ? (
-            snapshots.map((s) => (
-              <Table.Tr key={s.name}>
-                <Table.Td>{s.name}</Table.Td>
+            snapshots.map((snapshot) => (
+              <Table.Tr key={snapshot.name}>
+                <Table.Td>{snapshot.name}</Table.Td>
                 <Table.Td>
-                  {formatDate(s.createdAt, {
+                  {formatDate(snapshot.createdAt, {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit"
                   })}{" "}
-                  {formatTime(s.createdAt, {
+                  {formatTime(snapshot.createdAt, {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit"
                   })}
                 </Table.Td>
-                <Table.Td>{((s.sizeBytes || 0) / 1024 / 1024).toFixed(2)} MB</Table.Td>
-                <Table.Td>{s.path}</Table.Td>
+                <Table.Td>{((snapshot.sizeBytes || 0) / 1024 / 1024).toFixed(2)} MB</Table.Td>
+                <Table.Td>{snapshot.path}</Table.Td>
                 <Table.Td>
                   <Group justify="center">
-                    <Button size="xs" variant="light" color="blue">
+                    <Button size="xs" variant="light" color="blue" disabled={isDeletingSnapshot}>
                       {formatMessage(translations.actionRestore)}
                     </Button>
-                    <Button size="xs" variant="light" color="red">
+                    <Button
+                      size="xs"
+                      variant="light"
+                      color="red"
+                      onClick={() =>
+                        deleteSnapshotAsync({
+                          subvolume: selectedSubvolume?.value || "",
+                          snapshot: snapshot.name
+                        })
+                      }
+                      loading={isDeletingSnapshot}
+                    >
                       {formatMessage(translations.actionDelete)}
                     </Button>
                   </Group>

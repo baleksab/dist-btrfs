@@ -23,7 +23,8 @@ export class SnapshotsService {
       // ID 123 gen 456 top level 5 path subvol/snapshots/snap1
       const parts = row.trim().split(/\s+/);
       const pathIndex = parts.indexOf("path") + 1;
-      const fullPath = parts.slice(pathIndex).join(" ");
+      const relative = parts.slice(pathIndex).join(" ").trim();
+      const fullPath = relative === "root" ? "/" : "/" + relative.replace(/^root\//, "");
       const name = fullPath.split("/").pop();
 
       const showCmd = `sudo btrfs subvolume show ${fullPath}`;
@@ -66,6 +67,30 @@ export class SnapshotsService {
     return {
       name,
       path: fullPath
+    };
+  }
+
+  async deleteSnapshot(snapshotPath: string) {
+    const server = await this.remoteServerService.getPrimaryServerUnsanitized();
+
+    const checkCmd = `sudo btrfs subvolume show ${snapshotPath}`;
+    const { stderr: checkErr } = await this.sshService.execCommand(server, checkCmd);
+
+    if (checkErr && checkErr.includes("ERROR")) {
+      throw new Error(`Snapshot does not exist: ${snapshotPath}`);
+    }
+
+    const deleteCmd = `sudo btrfs subvolume delete ${snapshotPath}`;
+    const { stdout: delOut, stderr: delErr } = await this.sshService.execCommand(server, deleteCmd);
+
+    if (delErr && delErr.trim().length > 0) {
+      console.warn("btrfs delete stderr:", delErr);
+    }
+
+    return {
+      deleted: true,
+      path: snapshotPath,
+      message: delOut.trim() || "Snapshot deleted."
     };
   }
 }

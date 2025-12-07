@@ -5,16 +5,27 @@ interface PageHeaderProps {
   buttonLabel: string;
   onClick?: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
+  withButton?: boolean;
 }
 
-export const PageHeader = ({ title, buttonLabel, isLoading, onClick }: PageHeaderProps) => {
+export const PageHeader = ({
+  title,
+  buttonLabel,
+  isLoading,
+  disabled,
+  withButton = true,
+  onClick
+}: PageHeaderProps) => {
   return (
     <Stack>
       <Group justify="space-between">
         <Title order={2}>{title}</Title>
-        <Button onClick={onClick} loading={isLoading}>
-          {buttonLabel}
-        </Button>
+        {withButton && (
+          <Button onClick={onClick} loading={isLoading} disabled={disabled}>
+            {buttonLabel}
+          </Button>
+        )}
       </Group>
       <Divider />
     </Stack>

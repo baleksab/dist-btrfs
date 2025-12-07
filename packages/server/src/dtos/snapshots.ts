@@ -19,3 +19,11 @@ export const btrfsSnapshotsResponse = z
   .openapi("BtrfsSnapshotsResponse");
 
 export type BtrfsSnapshotsResponse = z.infer<typeof btrfsSnapshotsResponse>;
+
+export const btrfsSnapshotDeleteResponse = z.object({
+  path: z.string(),
+  deleted: z.boolean(),
+  message: z.string()
+});
+
+export type BtrfsSnapshotDeleteResponse = z.infer<typeof btrfsSnapshotDeleteResponse>;

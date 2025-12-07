@@ -17,4 +17,12 @@ export class SnapshotsController {
 
     return res.status(200).json(response);
   }
+
+  async deleteSnapshot(_dto: unknown, req: Request, res: Response) {
+    const { subvolume, snapshot } = req.params;
+    const snapshotPath = `${subvolume}/snapshots/${snapshot}`;
+    const response = await this.snapshotService.deleteSnapshot(snapshotPath);
+
+    return res.status(200).json(response);
+  }
 }

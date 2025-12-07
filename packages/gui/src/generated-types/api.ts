@@ -23,6 +23,11 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface ApiSnapshotsSubvolumeSnapshotDelete200Response {
+    'path': string;
+    'deleted': boolean;
+    'message': string;
+}
 export interface BtrfsSnapshotResponse {
     'name': string;
     'path': string;
@@ -676,6 +681,44 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotDelete: async (subvolume: string, snapshot: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotDelete', 'subvolume', subvolume)
+            // verify required parameter 'snapshot' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotDelete', 'snapshot', snapshot)
+            const localVarPath = `/api/snapshots/{subvolume}/{snapshot}`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)))
+                .replace(`{${"snapshot"}}`, encodeURIComponent(String(snapshot)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -711,6 +754,20 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumePost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSnapshotsSubvolumeSnapshotDelete(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiSnapshotsSubvolumeSnapshotDelete200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeSnapshotDelete(subvolume, snapshot, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumeSnapshotDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -740,6 +797,17 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
         apiSnapshotsSubvolumePost(subvolume: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSnapshotResponse> {
             return localVarFp.apiSnapshotsSubvolumePost(subvolume, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotDelete(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig): AxiosPromise<ApiSnapshotsSubvolumeSnapshotDelete200Response> {
+            return localVarFp.apiSnapshotsSubvolumeSnapshotDelete(subvolume, snapshot, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -767,6 +835,18 @@ export class SnapshotsApi extends BaseAPI {
      */
     public apiSnapshotsSubvolumePost(subvolume: string, options?: RawAxiosRequestConfig) {
         return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumePost(subvolume, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {string} snapshot 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiSnapshotsSubvolumeSnapshotDelete(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeSnapshotDelete(subvolume, snapshot, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
