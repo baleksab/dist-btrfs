@@ -1,3 +1,16 @@
+import { Stack } from "@mantine/core";
+import { PageHeader } from "../../components";
+import { useIntl } from "react-intl";
+import { translations } from "./translations";
+import { SubvolumeSelector } from "../../components";
+
 export const ConfigurationPage = () => {
-  return <p>Test</p>;
+  const { formatMessage } = useIntl();
+
+  return (
+    <Stack>
+      <PageHeader title={formatMessage(translations.title)} />
+      <SubvolumeSelector />
+    </Stack>
+  );
 };

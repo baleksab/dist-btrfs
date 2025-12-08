@@ -9,10 +9,6 @@ export const translations = defineMessages({
     id: "pages.snapshotsPage.createSnapshot",
     defaultMessage: "Create snapshot"
   },
-  subvolumesLabel: {
-    id: "pages.snapshotsPage.subvolumesLabel",
-    defaultMessage: "Selected subvolume"
-  },
   loadingSubvolumes: {
     id: "pages.snapshotsPage.loadingSubvolumes",
     defaultMessage: "Loading subvolumes..."

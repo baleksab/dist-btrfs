@@ -1,65 +1,24 @@
-import { Button, Group, Select, Skeleton, Stack, Table, type ComboboxItem } from "@mantine/core";
+import { Button, Group, Skeleton, Stack, Table } from "@mantine/core";
 import {
   useCreateSnapshot,
   useSnapshots,
-  useSubvolumes,
   useDeleteSnapshot,
   useRestoreSnapshot
 } from "../../hooks";
 import { PageHeader, SnapshotCleanupModal } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { SubvolumeSelector } from "../../components";
 
 export const SnapshotsPage = () => {
   const { formatMessage, formatDate, formatTime } = useIntl();
-  const [selectedSubvolume, setSelectedSubvolume] = useState<ComboboxItem | undefined>(undefined);
+  const [selectedSubvolume, setSelectedSubvolume] = useState<string | null>(null);
   const [isCleanupModalOpen, setCleanupModalOpen] = useState(false);
-  const hasSetInitialSubvolume = useRef(false);
-
-  const { subvolumes, isLoadingSubvolumes } = useSubvolumes();
-  const { snapshots, isLoadingSnapshots } = useSnapshots(selectedSubvolume?.value || "");
-
-  const { createSnapshotAsync, isCreatingSnapshot } = useCreateSnapshot(
-    selectedSubvolume?.value || ""
-  );
-
-  const { deleteSnapshotAsync, isDeletingSnapshot } = useDeleteSnapshot(
-    selectedSubvolume?.value || ""
-  );
-
+  const { snapshots, isLoadingSnapshots } = useSnapshots(selectedSubvolume || "");
+  const { createSnapshotAsync, isCreatingSnapshot } = useCreateSnapshot(selectedSubvolume || "");
+  const { deleteSnapshotAsync, isDeletingSnapshot } = useDeleteSnapshot(selectedSubvolume || "");
   const { restoreSnapshotAsync, isRestoringSnapshot } = useRestoreSnapshot();
-
-  const subvolumeOptions = subvolumes?.map((subvolume) => ({
-    value: subvolume.path.toString(),
-    label: subvolume.path
-  }));
-
-  useEffect(() => {
-    if (hasSetInitialSubvolume.current || !subvolumeOptions?.length) {
-      return;
-    }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedSubvolume(subvolumeOptions[0]);
-  }, [subvolumeOptions]);
-
-  const handleSnapshotCreate = async () => {
-    if (!selectedSubvolume?.value) {
-      return;
-    }
-
-    await createSnapshotAsync(selectedSubvolume?.value);
-  };
-
-  if (isLoadingSubvolumes) {
-    return (
-      <Stack>
-        <Skeleton height={32} />
-        <Skeleton height={48} />
-      </Stack>
-    );
-  }
 
   return (
     <Stack>
@@ -75,7 +34,7 @@ export const SnapshotsPage = () => {
               {formatMessage(translations.cleanup)}
             </Button>
             <Button
-              onClick={handleSnapshotCreate}
+              onClick={() => createSnapshotAsync(selectedSubvolume || "")}
               loading={isCreatingSnapshot}
               disabled={!selectedSubvolume || isDeletingSnapshot || isRestoringSnapshot}
             >
@@ -84,11 +43,9 @@ export const SnapshotsPage = () => {
           </Group>
         }
       />
-      <Select
-        data={subvolumeOptions}
-        label={formatMessage(translations.subvolumesLabel)}
-        value={selectedSubvolume?.value}
-        onChange={(_, option) => setSelectedSubvolume(option)}
+      <SubvolumeSelector
+        value={selectedSubvolume}
+        onChange={(option) => setSelectedSubvolume(option)}
       />
       <Table highlightOnHover striped withTableBorder withColumnBorders>
         <Table.Thead>
@@ -151,7 +108,7 @@ export const SnapshotsPage = () => {
                       loading={isRestoringSnapshot}
                       onClick={() =>
                         restoreSnapshotAsync({
-                          subvolume: selectedSubvolume?.value || "",
+                          subvolume: selectedSubvolume || "",
                           snapshot: snapshot.name
                         })
                       }
@@ -164,7 +121,7 @@ export const SnapshotsPage = () => {
                       color="red"
                       onClick={() =>
                         deleteSnapshotAsync({
-                          subvolume: selectedSubvolume?.value || "",
+                          subvolume: selectedSubvolume || "",
                           snapshot: snapshot.name
                         })
                       }
@@ -190,7 +147,7 @@ export const SnapshotsPage = () => {
         key={isCleanupModalOpen ? "opened" : "closed"}
         opened={isCleanupModalOpen}
         onClose={() => setCleanupModalOpen(false)}
-        subvolume={selectedSubvolume?.value || ""}
+        subvolume={selectedSubvolume || ""}
       />
     </Stack>
   );

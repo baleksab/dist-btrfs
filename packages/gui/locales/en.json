@@ -29,7 +29,7 @@
   "components.sidebar.title": "dist-btrfs",
   "components.sidebar.navItem.servers": "Servers",
   "components.sidebar.navItem.snapshots": "Snapshots",
-  "components.sidebar.navItem.configuration": "Configuration",
+  "components.sidebar.navItem.configuration": "Auto Snapshots",
   "components.sidebar.navItem.remoteReplication": "Remote Replication",
   "components.sidebar.navItem.reports": "Reports",
   "components.side.navItem.metricsAndAnalysis": "Metrics & Analysis",

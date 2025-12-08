@@ -9,3 +9,13 @@ export const remoteServers = sqliteTable("remote_servers", {
   password: text("password").notNull(),
   isPrimary: integer("is_primary").notNull().default(0)
 });
+
+export const subvolumeConfigs = sqliteTable("subvolume_config", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  serverUid: text("server_uid")
+    .notNull()
+    .references(() => remoteServers.uid, { onDelete: "cascade" }),
+  subvolPath: text("subvol_path").notNull(),
+  snapshotIntervalSeconds: integer("snapshot_interval_seconds").notNull().default(3600),
+  isEnabled: integer("is_enabled").notNull().default(0)
+});
