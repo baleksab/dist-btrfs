@@ -71,8 +71,12 @@ export class RemoteServerService {
     return this.sshService.checkAllServers(decryptedServers);
   }
 
+  getPrimaryServer() {
+    return this.remoteServerRepository.findPrimary();
+  }
+
   async getPrimaryServerUnsanitized() {
-    const server = await this.remoteServerRepository.findPrimary();
+    const server = await this.getPrimaryServer();
 
     const decryptedServer = {
       ...server,

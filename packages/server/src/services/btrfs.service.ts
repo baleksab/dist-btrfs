@@ -1,3 +1,4 @@
+import { BtrfsRepository } from "../repositories";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
 
@@ -11,6 +12,7 @@ export type BtrfsSubvolume = {
 export class BtrfsService {
   private remoteServerService = new RemoteServerService();
   private sshService = new SshService();
+  private btrfsRepository = new BtrfsRepository();
 
   async listSubvolumes() {
     const server = await this.remoteServerService.getPrimaryServerUnsanitized();
@@ -51,5 +53,11 @@ export class BtrfsService {
     }
 
     return results;
+  }
+
+  async findSubvolumeConfig(subvolume: string) {
+    const server = await this.remoteServerService.getPrimaryServer();
+
+    return this.btrfsRepository.findConfigBySubvolume(server.uid, subvolume);
   }
 }
