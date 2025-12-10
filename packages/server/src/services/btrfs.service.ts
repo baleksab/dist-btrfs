@@ -58,6 +58,14 @@ export class BtrfsService {
   async findSubvolumeConfig(subvolume: string) {
     const server = await this.remoteServerService.getPrimaryServer();
 
-    return this.btrfsRepository.findConfigBySubvolume(server.uid, subvolume);
+    const config = await this.btrfsRepository.findConfigBySubvolume(server.uid, subvolume);
+
+    if (!config) {
+      return {
+        exists: false
+      };
+    }
+
+    return config;
   }
 }

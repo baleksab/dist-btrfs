@@ -43,10 +43,7 @@ export const SnapshotsPage = () => {
           </Group>
         }
       />
-      <SubvolumeSelector
-        value={selectedSubvolume}
-        onChange={(option) => setSelectedSubvolume(option)}
-      />
+      <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
       <Table highlightOnHover striped withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>

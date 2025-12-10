@@ -65,6 +65,7 @@ export interface BtrfsSubvolumeConfigResponse {
     'subvolPath': string;
     'snapshotIntervalSeconds': number;
     'isEnabled'?: boolean;
+    'exists'?: boolean;
 }
 export interface BtrfsSubvolumesResponseInner {
     'id': number;

@@ -22,7 +22,8 @@ export const btrfsSubvolumeConfigResponse = z
     serverUid: z.string(),
     subvolPath: z.string(),
     snapshotIntervalSeconds: z.number().positive(),
-    isEnabled: z.boolean().default(false)
+    isEnabled: z.boolean().default(false),
+    exists: z.boolean().default(false)
   })
   .openapi("BtrfsSubvolumeConfigResponse");
 
