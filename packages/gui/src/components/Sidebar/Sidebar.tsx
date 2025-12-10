@@ -1,4 +1,4 @@
-import { AppShell, NavLink, ThemeIcon, Text, Stack, Box } from "@mantine/core";
+import { AppShell, NavLink, ThemeIcon, Text, Stack } from "@mantine/core";
 import {
   IconBook,
   IconChartBar,
@@ -48,7 +48,7 @@ export const Sidebar = () => {
             label={formatMessage(translations.configurationNavItem)}
             leftSection={
               <ThemeIcon variant="light" size="sm">
-                <IconManualGearbox size={16} />
+                <IconRefresh size={16} />
               </ThemeIcon>
             }
             active={matches.some((match) => match.routeId === "/configuration")}
@@ -58,7 +58,7 @@ export const Sidebar = () => {
             label={formatMessage(translations.remoteReplicationNavItem)}
             leftSection={
               <ThemeIcon variant="light" size="sm">
-                <IconRefresh size={16} />
+                <IconManualGearbox size={16} />
               </ThemeIcon>
             }
           />
@@ -79,9 +79,7 @@ export const Sidebar = () => {
             }
           />
         </Stack>
-        <Box mt="lg">
-          <LocaleSelector />
-        </Box>
+        <LocaleSelector />
       </Stack>
     </AppShell.Navbar>
   );
