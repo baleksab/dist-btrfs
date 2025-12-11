@@ -11,6 +11,6 @@ export const translations = defineMessages({
   },
   configuredSubvolumes: {
     id: "pages.configurationPage.configuredSubvolumes",
-    defaultMessage: "Configured subvolumes"
+    defaultMessage: "Configured automatic snapshot policies"
   }
 });

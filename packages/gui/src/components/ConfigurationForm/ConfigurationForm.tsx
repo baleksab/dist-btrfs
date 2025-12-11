@@ -1,9 +1,13 @@
 import { Button, NumberInput, Stack, Switch } from "@mantine/core";
 import { useForm } from "@tanstack/react-form";
 import { useIntl } from "react-intl";
-import type { BtrfsSubvolumeConfigResponse } from "../../generated-types";
+import type {
+  BtrfsSubvolumeConfigResponse,
+  BtrfsSubvolumeSetConfigRequest
+} from "../../generated-types";
 import { translations } from "./translations";
 import { useEffect } from "react";
+import { useUpdateSubvolumeConfig } from "../../hooks";
 
 type ConfigurationFormProps = {
   subvolumeConfig?: BtrfsSubvolumeConfigResponse;
@@ -12,23 +16,31 @@ type ConfigurationFormProps = {
 export const ConfigurationForm = ({ subvolumeConfig }: ConfigurationFormProps) => {
   const { formatMessage } = useIntl();
 
+  const { updateSubvolumeConfigAsync, isUpdatingSubvolumeConfig } = useUpdateSubvolumeConfig(
+    subvolumeConfig?.subvolPath || ""
+  );
+
   const form = useForm({
     defaultValues: {
       subvolPath: "",
       snapshotIntervalSeconds: 3600,
       isEnabled: false
-    } as BtrfsSubvolumeConfigResponse,
+    } as BtrfsSubvolumeSetConfigRequest,
     onSubmit: ({ value }) => {
-      console.log(value);
+      updateSubvolumeConfigAsync(value);
     }
   });
 
   useEffect(() => {
-    if (!subvolumeConfig || !subvolumeConfig.exists) {
+    if (!subvolumeConfig) {
       return;
     }
 
-    form.reset(subvolumeConfig);
+    form.reset({
+      ...subvolumeConfig,
+      snapshotIntervalSeconds: subvolumeConfig.snapshotIntervalSeconds || 3600,
+      isEnabled: subvolumeConfig.isEnabled || false
+    });
   }, [subvolumeConfig, form]);
 
   return (
@@ -59,7 +71,9 @@ export const ConfigurationForm = ({ subvolumeConfig }: ConfigurationFormProps) =
             />
           )}
         </form.Field>
-        <Button type="submit">{formatMessage(translations.saveButton)}</Button>
+        <Button type="submit" loading={isUpdatingSubvolumeConfig}>
+          {formatMessage(translations.saveButton)}
+        </Button>
       </Stack>
     </form>
   );

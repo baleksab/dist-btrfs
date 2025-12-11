@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { database, NewSubvolumeConfig, subvolumeConfigs, UpdateSubvolumeConfig } from "../db";
+import { database, NewSubvolumeConfig, subvolumeConfigs } from "../db";
 
 export class BtrfsRepository {
   async findConfigBySubvolume(serverUid: string, subvolume: string) {
@@ -14,15 +14,15 @@ export class BtrfsRepository {
   }
 
   async findAllConfigs(serverUid: string) {
-    const [subvolumeConfig] = await database
+    const configs = await database
       .select()
       .from(subvolumeConfigs)
       .where(and(eq(subvolumeConfigs.serverUid, serverUid)));
 
-    return subvolumeConfig;
+    return configs;
   }
 
-  async insert(data: NewSubvolumeConfig) {
+  async setConfig(data: NewSubvolumeConfig) {
     const existing = await database
       .select()
       .from(subvolumeConfigs)
@@ -47,17 +47,5 @@ export class BtrfsRepository {
     const [snapshot] = await database.insert(subvolumeConfigs).values(data).returning();
 
     return snapshot;
-  }
-
-  async update(serverUid: string, subvolume: string, data: UpdateSubvolumeConfig) {
-    const [subvolumeConfig] = await database
-      .update(subvolumeConfigs)
-      .set(data)
-      .where(
-        and(eq(subvolumeConfigs.serverUid, serverUid), eq(subvolumeConfigs.subvolPath, subvolume))
-      )
-      .returning();
-
-    return subvolumeConfig;
   }
 }

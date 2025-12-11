@@ -1,3 +1,4 @@
+import { BtrfsSubvolumeSetConfigRequest } from "../dtos";
 import { BtrfsService } from "../services";
 import { Request, Response } from "express";
 
@@ -21,5 +22,12 @@ export class BtrfsController {
     const configs = await this.service.findSubvolumeConfigAll();
 
     return res.status(200).json(configs);
+  }
+
+  async setSubvolumeConfig(dto: BtrfsSubvolumeSetConfigRequest, req: Request, res: Response) {
+    const { subvolume } = req.params;
+    const config = await this.service.setSubvolumeConfig(subvolume, dto);
+
+    return res.status(200).json(config);
   }
 }

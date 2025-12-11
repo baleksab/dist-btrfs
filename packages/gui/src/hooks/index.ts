@@ -12,3 +12,4 @@ export * from "./useRestoreSnapshot";
 export * from "./useSnapshotsCleanup";
 export * from "./useSubvolumeConfig";
 export * from "./useSubvolumeConfigAll";
+export * from "./useUpdateSubvolumeConfig";

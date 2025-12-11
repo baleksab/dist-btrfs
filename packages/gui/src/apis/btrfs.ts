@@ -1,4 +1,4 @@
-import { BtrfsApi } from "../generated-types";
+import { BtrfsApi, type BtrfsSubvolumeSetConfigRequest } from "../generated-types";
 import { axiosInstance } from "./axiosInstance";
 
 const btrfsApi = new BtrfsApi(undefined, undefined, axiosInstance);
@@ -17,6 +17,15 @@ export const getSubvolumeConfig = async (subvolume: string) => {
 
 export const getSubvolumeConfigAll = async () => {
   const { data } = await btrfsApi.apiBtrfsSubvolumesConfigGet();
+
+  return data;
+};
+
+export const updateSubvolumeConfig = async (
+  subvolume: string,
+  config: BtrfsSubvolumeSetConfigRequest
+) => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeConfigPost(subvolume, config);
 
   return data;
 };

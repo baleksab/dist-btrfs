@@ -5,6 +5,6 @@ export type NewRemoteServer = InferInsertModel<typeof remoteServers>;
 export type UpdateRemoteServer = Partial<NewRemoteServer>;
 export type RemoteServer = InferSelectModel<typeof remoteServers>;
 
-export type NewSubvolumeConfig = InferSelectModel<typeof subvolumeConfigs>;
+export type NewSubvolumeConfig = InferInsertModel<typeof subvolumeConfigs>;
 export type UpdateSubvolumeConfig = Partial<NewSubvolumeConfig>;
 export type SubvolumeConfig = InferSelectModel<typeof subvolumeConfigs>;

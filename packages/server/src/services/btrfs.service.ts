@@ -1,3 +1,4 @@
+import { BtrfsSubvolumeSetConfigRequest } from "../dtos";
 import { BtrfsRepository } from "../repositories";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
@@ -75,5 +76,20 @@ export class BtrfsService {
     const configs = await this.btrfsRepository.findAllConfigs(server.uid);
 
     return configs;
+  }
+
+  async setSubvolumeConfig(subvolume: string, data: BtrfsSubvolumeSetConfigRequest) {
+    const server = await this.remoteServerService.getPrimaryServer();
+
+    const sanitizedConfig = {
+      ...data,
+      isEnabled: data.isEnabled ? 1 : 0,
+      subvolPath: subvolume,
+      serverUid: server.uid
+    };
+
+    const config = await this.btrfsRepository.setConfig(sanitizedConfig);
+
+    return config;
   }
 }

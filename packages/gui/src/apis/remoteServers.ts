@@ -43,7 +43,6 @@ export const getHealthChecks = async () => {
 };
 
 export const validateConnection = async (request: HealthCheckRequest) => {
-  console.log(request);
   const { data } = await remoteServersApi.apiServersValidatePost(request);
 
   return data;

@@ -29,6 +29,17 @@ export const btrfsSubvolumeConfigResponse = z
 
 export type BtrfsSubvolumeConfigResponse = z.infer<typeof btrfsSubvolumeConfigResponse>;
 
+export const btrfsSubvolumeSetConfigRequest = btrfsSubvolumeConfigResponse
+  .omit({
+    serverUid: true,
+    subvolPath: true,
+    id: true,
+    exists: true
+  })
+  .openapi("BtrfsSubvolumeSetConfigRequest");
+
+export type BtrfsSubvolumeSetConfigRequest = z.infer<typeof btrfsSubvolumeSetConfigRequest>;
+
 export const btrfsSubvolumeConfigAllResponse = z
   .array(btrfsSubvolumeConfigResponse)
   .openapi("BtrfsSubvolumeConfigAllResponse");

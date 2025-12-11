@@ -3,6 +3,7 @@ import { BtrfsController } from "../controllers";
 import {
   btrfsSubvolumeConfigAllResponse,
   btrfsSubvolumeConfigResponse,
+  btrfsSubvolumeSetConfigRequest,
   btrfsSubvolumesResponse
 } from "../dtos";
 import { createRoute } from "../utils";
@@ -29,6 +30,18 @@ createRoute({
   method: "get",
   path: "/btrfs/subvolumes/:subvolume/config",
   handler: controller.getSubvolumeConfig.bind(controller),
+  response: btrfsSubvolumeConfigResponse,
+  params: z.object({
+    subvolume: z.string()
+  }),
+  tags: ["Btrfs"]
+});
+
+createRoute({
+  method: "post",
+  path: "/btrfs/subvolumes/:subvolume/config",
+  handler: controller.setSubvolumeConfig.bind(controller),
+  dto: btrfsSubvolumeSetConfigRequest,
   response: btrfsSubvolumeConfigResponse,
   params: z.object({
     subvolume: z.string()
