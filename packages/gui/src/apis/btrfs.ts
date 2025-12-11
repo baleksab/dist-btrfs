@@ -14,3 +14,9 @@ export const getSubvolumeConfig = async (subvolume: string) => {
 
   return data;
 };
+
+export const getSubvolumeConfigAll = async () => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesConfigGet();
+
+  return data;
+};

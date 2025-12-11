@@ -5,5 +5,6 @@ export const btrfsKeys = createQueryKeys("btrfs", {
   list: null,
   config: (subvolume: string) => ({
     queryKey: ["btrfsKeys", "config", subvolume]
-  })
+  }),
+  configList: null
 });

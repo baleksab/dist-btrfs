@@ -8,5 +8,9 @@ export const translations = defineMessages({
   automaticSnapshotPolicy: {
     id: "pages.configurationPage.automaticSnapshotPolicy",
     defaultMessage: "Automatic snapshot policy"
+  },
+  configuredSubvolumes: {
+    id: "pages.configurationPage.configuredSubvolumes",
+    defaultMessage: "Configured subvolumes"
   }
 });
