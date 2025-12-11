@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { remoteServersKeys, updateRemoteServer } from "../apis";
+import { updateRemoteServer } from "../apis";
 
 export const useUpdateRemoteServer = () => {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export const useUpdateRemoteServer = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: updateRemoteServer,
     onSuccess: () => {
-      queryClient.refetchQueries(remoteServersKeys.list);
+      queryClient.refetchQueries();
     }
   });
 

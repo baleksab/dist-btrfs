@@ -20,7 +20,8 @@
     "zod": "4.1.13",
     "@asteasolutions/zod-to-openapi": "8.1.0",
     "cors": "2.8.5",
-    "ssh2": "1.17.0"
+    "ssh2": "1.17.0",
+    "node-cron": "4.2.1"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",

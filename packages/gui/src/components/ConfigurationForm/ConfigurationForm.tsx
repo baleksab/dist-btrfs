@@ -39,7 +39,7 @@ export const ConfigurationForm = ({ subvolumeConfig }: ConfigurationFormProps) =
     form.reset({
       ...subvolumeConfig,
       snapshotIntervalSeconds: subvolumeConfig.snapshotIntervalSeconds || 3600,
-      isEnabled: subvolumeConfig.isEnabled || false
+      isEnabled: Boolean(subvolumeConfig.isEnabled) || false
     });
   }, [subvolumeConfig, form]);
 

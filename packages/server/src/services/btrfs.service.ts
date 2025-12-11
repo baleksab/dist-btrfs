@@ -1,6 +1,7 @@
 import { BtrfsSubvolumeSetConfigRequest } from "../dtos";
 import { BtrfsRepository } from "../repositories";
 import { RemoteServerService } from "./remoteServer.service";
+import { schedulerService } from "./scheduler.service";
 import { SshService } from "./ssh.service";
 
 export type BtrfsSubvolume = {
@@ -89,6 +90,12 @@ export class BtrfsService {
     };
 
     const config = await this.btrfsRepository.setConfig(sanitizedConfig);
+
+    if (config.isEnabled) {
+      schedulerService.schedule(server.uid, subvolume, config.snapshotIntervalSeconds);
+    } else {
+      schedulerService.unschedule(server.uid, subvolume);
+    }
 
     return config;
   }
