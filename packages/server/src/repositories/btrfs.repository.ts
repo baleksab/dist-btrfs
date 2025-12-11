@@ -13,6 +13,15 @@ export class BtrfsRepository {
     return subvolumeConfig;
   }
 
+  async findAllConfigs(serverUid: string) {
+    const [subvolumeConfig] = await database
+      .select()
+      .from(subvolumeConfigs)
+      .where(and(eq(subvolumeConfigs.serverUid, serverUid)));
+
+    return subvolumeConfig;
+  }
+
   async insert(data: NewSubvolumeConfig) {
     const existing = await database
       .select()

@@ -62,10 +62,18 @@ export class BtrfsService {
 
     if (!config) {
       return {
+        subvolPath: subvolume,
         exists: false
       };
     }
 
     return config;
+  }
+
+  async findSubvolumeConfigAll() {
+    const server = await this.remoteServerService.getPrimaryServer();
+    const configs = await this.btrfsRepository.findAllConfigs(server.uid);
+
+    return configs;
   }
 }

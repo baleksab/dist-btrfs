@@ -5,3 +5,4 @@ export * from "./LocaleSelector";
 export * from "./PageHeader";
 export * from "./SnapshotCleanupModal";
 export * from "./SubvolumeSelector";
+export * from "./ConfigurationForm";

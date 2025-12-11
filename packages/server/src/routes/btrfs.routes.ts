@@ -1,6 +1,10 @@
 import z from "zod";
 import { BtrfsController } from "../controllers";
-import { btrfsSubvolumeConfigResponse, btrfsSubvolumesResponse } from "../dtos";
+import {
+  btrfsSubvolumeConfigAllResponse,
+  btrfsSubvolumeConfigResponse,
+  btrfsSubvolumesResponse
+} from "../dtos";
 import { createRoute } from "../utils";
 
 const controller = new BtrfsController();
@@ -15,7 +19,15 @@ createRoute({
 
 createRoute({
   method: "get",
-  path: "/btrfs/subvolumes/:subvolume",
+  path: "/btrfs/subvolumes/config",
+  handler: controller.getSubvolumeConfigAll.bind(controller),
+  response: btrfsSubvolumeConfigAllResponse,
+  tags: ["Btrfs"]
+});
+
+createRoute({
+  method: "get",
+  path: "/btrfs/subvolumes/:subvolume/config",
   handler: controller.getSubvolumeConfig.bind(controller),
   response: btrfsSubvolumeConfigResponse,
   params: z.object({

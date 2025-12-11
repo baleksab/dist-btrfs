@@ -28,3 +28,9 @@ export const btrfsSubvolumeConfigResponse = z
   .openapi("BtrfsSubvolumeConfigResponse");
 
 export type BtrfsSubvolumeConfigResponse = z.infer<typeof btrfsSubvolumeConfigResponse>;
+
+export const btrfsSubvolumeConfigAllResponse = z
+  .array(btrfsSubvolumeConfigResponse)
+  .openapi("BtrfsSubvolumeConfigAllResponse");
+
+export type BtrfsSubvolumeConfigAllResponse = z.infer<typeof btrfsSubvolumeConfigAllResponse>;

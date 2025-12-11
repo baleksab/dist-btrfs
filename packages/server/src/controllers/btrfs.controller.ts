@@ -16,4 +16,10 @@ export class BtrfsController {
 
     return res.status(200).json(config);
   }
+
+  async getSubvolumeConfigAll(_dto: unknown, _req: Request, res: Response) {
+    const configs = await this.service.findSubvolumeConfigAll();
+
+    return res.status(200).json(configs);
+  }
 }

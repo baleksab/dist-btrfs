@@ -10,7 +10,7 @@ export const getAllSubvolumes = async () => {
 };
 
 export const getSubvolumeConfig = async (subvolume: string) => {
-  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeGet(subvolume);
+  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeConfigGet(subvolume);
 
   return data;
 };
