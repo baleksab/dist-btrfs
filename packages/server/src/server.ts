@@ -5,33 +5,41 @@ import cors from "cors";
 import { config } from "./config";
 import { swaggerSpec } from "./swagger";
 import { router } from "./utils";
+import { BtrfsService } from "./services";
+import { schedulerService } from "./services/scheduler.service";
 
-const app = express();
+const bootstrap = async () => {
+  const app = express();
+  const btrfsService = new BtrfsService();
 
-app.use(express.json());
-app.use(cors());
+  app.use(express.json());
+  app.use(cors());
 
-app.use("/api", router);
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/api", router);
+  app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use("/specifications", (_, res) => {
-  res.json(swaggerSpec);
-});
+  app.use("/specifications", (_, res) => {
+    res.json(swaggerSpec);
+  });
 
-app.get("/health", (_, res) => {
-  res.json({ status: "ok" });
-});
+  app.get("/health", (_, res) => {
+    res.json({ status: "ok" });
+  });
 
-console.log("Starting server...");
+  console.log("Starting server...");
 
-app.listen(config.port, () => {
-  console.log(`Server running at http://localhost:${config.port}`);
-  console.log(`Swagger available at http://localhost:${config.port}/swagger`);
-});
+  const configs = await btrfsService.findSubvolumeConfigAll();
+  const mappedConfigs = configs.map((config) => ({ ...config, isEnabled: !!config.isEnabled }));
 
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err);
+  await schedulerService.restoreFromDb(mappedConfigs);
+
+  app.listen(config.port, () => {
+    console.log(`Server running at http://localhost:${config.port}`);
+    console.log(`Swagger available at http://localhost:${config.port}/swagger`);
+  });
+};
+
+bootstrap().catch((err) => {
+  console.error("Fatal startup error", err);
+  process.exit(1);
 });

@@ -73,8 +73,6 @@ class SchedulerService {
       isEnabled: boolean;
     }[]
   ) {
-    console.log(`[scheduler] restoring ${configs.length} configs from database`);
-
     for (const cfg of configs) {
       if (cfg.isEnabled) {
         console.log(`[scheduler] restoring job ${cfg.serverUid}:${cfg.subvolPath}`);
