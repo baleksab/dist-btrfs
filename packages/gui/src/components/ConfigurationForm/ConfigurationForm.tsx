@@ -1,7 +1,7 @@
 import { Button, NumberInput, Stack, Switch } from "@mantine/core";
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { useIntl } from "react-intl";
-import type { BtrfsSubvolumeSetConfigRequest } from "../../generated-types";
+import type { BtrfsSubvolumeConfigResponse } from "../../generated-types";
 import { translations } from "./translations";
 import { useEffect } from "react";
 import { useSubvolumeConfig, useUpdateSubvolumeConfig } from "../../hooks";
@@ -24,11 +24,13 @@ export const ConfigurationForm = ({ subvolume }: ConfigurationFormProps) => {
       subvolPath: "",
       snapshotIntervalSeconds: 3600,
       isEnabled: false
-    } as BtrfsSubvolumeSetConfigRequest,
+    } as BtrfsSubvolumeConfigResponse,
     onSubmit: ({ value }) => {
       updateSubvolumeConfigAsync(value);
     }
   });
+
+  const formState = useStore(form.store);
 
   useEffect(() => {
     if (!subvolumeConfig) {
@@ -70,7 +72,11 @@ export const ConfigurationForm = ({ subvolume }: ConfigurationFormProps) => {
             />
           )}
         </form.Field>
-        <Button type="submit" loading={isUpdatingSubvolumeConfig}>
+        <Button
+          type="submit"
+          loading={isUpdatingSubvolumeConfig}
+          disabled={!formState.values.subvolPath}
+        >
           {formatMessage(translations.saveButton)}
         </Button>
       </Stack>
