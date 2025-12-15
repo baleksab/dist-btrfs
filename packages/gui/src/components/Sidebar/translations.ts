@@ -15,7 +15,7 @@ export const translations = defineMessages({
   },
   configurationNavItem: {
     id: "components.sidebar.navItem.configuration",
-    defaultMessage: "Auto Snapshots"
+    defaultMessage: "Automation"
   },
   remoteReplicationNavItem: {
     id: "components.sidebar.navItem.remoteReplication",

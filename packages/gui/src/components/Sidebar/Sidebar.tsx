@@ -12,16 +12,25 @@ import { translations } from "./translations";
 import { LocaleSelector } from "../LocaleSelector";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 
-export const Sidebar = () => {
+type SidebarProps = {
+  onNavigate?: () => void;
+};
+
+export const Sidebar = ({ onNavigate }: SidebarProps) => {
   const { formatMessage } = useIntl();
   const { navigate } = useRouter();
   const { matches } = useRouterState({ select: (s) => s });
+
+  const handleNavigate = (to: string) => {
+    navigate({ to });
+    onNavigate?.();
+  };
 
   return (
     <AppShell.Navbar p="md">
       <Stack h="100%" justify="space-between">
         <Stack gap={2}>
-          <Text size="xs" fw={700} opacity={0.6} mb="sm" tt="uppercase">
+          <Text size="xs" fw={700} opacity={0.6} mb="sm" tt="uppercase" visibleFrom="sm">
             {formatMessage(translations.sidebarTitle)}
           </Text>
           <NavLink
@@ -31,8 +40,8 @@ export const Sidebar = () => {
                 <IconServer size={16} />
               </ThemeIcon>
             }
-            active={matches.some((match) => match.routeId === "/")}
-            onClick={() => navigate({ to: "/" })}
+            active={matches.some((m) => m.routeId === "/")}
+            onClick={() => handleNavigate("/")}
           />
           <NavLink
             label={formatMessage(translations.snapshotsNavItem)}
@@ -41,8 +50,8 @@ export const Sidebar = () => {
                 <IconBook size={16} />
               </ThemeIcon>
             }
-            active={matches.some((match) => match.routeId === "/snapshots")}
-            onClick={() => navigate({ to: "/snapshots" })}
+            active={matches.some((m) => m.routeId === "/snapshots")}
+            onClick={() => handleNavigate("/snapshots")}
           />
           <NavLink
             label={formatMessage(translations.configurationNavItem)}
@@ -51,8 +60,8 @@ export const Sidebar = () => {
                 <IconRefresh size={16} />
               </ThemeIcon>
             }
-            active={matches.some((match) => match.routeId === "/configuration")}
-            onClick={() => navigate({ to: "/configuration" })}
+            active={matches.some((m) => m.routeId === "/configuration")}
+            onClick={() => handleNavigate("/configuration")}
           />
           <NavLink
             label={formatMessage(translations.remoteReplicationNavItem)}
@@ -61,6 +70,7 @@ export const Sidebar = () => {
                 <IconManualGearbox size={16} />
               </ThemeIcon>
             }
+            onClick={() => onNavigate?.()}
           />
           <NavLink
             label={formatMessage(translations.reportsNavItem)}
@@ -69,6 +79,7 @@ export const Sidebar = () => {
                 <IconReport size={16} />
               </ThemeIcon>
             }
+            onClick={() => onNavigate?.()}
           />
           <NavLink
             label={formatMessage(translations.metricsAndAnalysisNavItem)}
@@ -77,6 +88,7 @@ export const Sidebar = () => {
                 <IconChartBar size={16} />
               </ThemeIcon>
             }
+            onClick={() => onNavigate?.()}
           />
         </Stack>
         <LocaleSelector />
