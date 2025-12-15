@@ -429,7 +429,7 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumeSetRetentionConfigRequest>>> {
+        async apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumeRetentionConfigResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesRetentionConfigGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesRetentionConfigGet']?.[localVarOperationServerIndex]?.url;
@@ -522,7 +522,7 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumeSetRetentionConfigRequest>> {
+        apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumeRetentionConfigResponse>> {
             return localVarFp.apiBtrfsSubvolumesRetentionConfigGet(options).then((request) => request(axios, basePath));
         },
         /**

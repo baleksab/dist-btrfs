@@ -15,3 +15,4 @@ export * from "./useSubvolumeConfigAll";
 export * from "./useUpdateSubvolumeConfig";
 export * from "./useSubvolumeRetentionConfig";
 export * from "./useUpdateSubvolumeRetentionConfig";
+export * from "./useSubvolumeRetentionConfigAll";

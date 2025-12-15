@@ -9,20 +9,39 @@ export const SubvolumeConfigs = () => {
   const { subvolumeConfigs: configs, isLoadingSubvolumeConfigs: isLoading } =
     useSubvolumeConfigAll();
 
-  return (
-    <Skeleton visible={isLoading}>
-      {configs && configs.length > 0 ? (
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>{formatMessage(translations.subvolPathLabel)}</Table.Th>
-              <Table.Th>{formatMessage(translations.snapshotIntervalLabel)}</Table.Th>
-              <Table.Th>{formatMessage(translations.status)}</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
+  const renderSkeletonRows = (count = 3) =>
+    Array.from({ length: count }).map((_, index) => (
+      <Table.Tr key={index}>
+        <Table.Td>
+          <Skeleton height={16} width="80%" />
+        </Table.Td>
+        <Table.Td>
+          <Skeleton height={16} width={140} />
+        </Table.Td>
+        <Table.Td>
+          <Skeleton height={20} width={90} />
+        </Table.Td>
+      </Table.Tr>
+    ));
 
-          <Table.Tbody>
-            {configs.map((config) => (
+  if (!isLoading && (!configs || configs.length === 0)) {
+    return <Text>{formatMessage(translations.noConfiguredSubvolumes)}</Text>;
+  }
+
+  return (
+    <Table striped highlightOnHover>
+      <Table.Thead>
+        <Table.Tr>
+          <Table.Th>{formatMessage(translations.subvolPathLabel)}</Table.Th>
+          <Table.Th>{formatMessage(translations.snapshotIntervalLabel)}</Table.Th>
+          <Table.Th>{formatMessage(translations.status)}</Table.Th>
+        </Table.Tr>
+      </Table.Thead>
+
+      <Table.Tbody>
+        {isLoading
+          ? renderSkeletonRows()
+          : configs!.map((config) => (
               <Table.Tr key={config.id}>
                 <Table.Td>{config.subvolPath}</Table.Td>
                 <Table.Td>{config.snapshotIntervalSeconds}</Table.Td>
@@ -35,11 +54,7 @@ export const SubvolumeConfigs = () => {
                 </Table.Td>
               </Table.Tr>
             ))}
-          </Table.Tbody>
-        </Table>
-      ) : (
-        <Text>{formatMessage(translations.noConfiguredSubvolumes)}</Text>
-      )}
-    </Skeleton>
+      </Table.Tbody>
+    </Table>
   );
 };

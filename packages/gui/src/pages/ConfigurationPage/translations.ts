@@ -5,6 +5,14 @@ export const translations = defineMessages({
     id: "pages.configurationPage.title",
     defaultMessage: "Primary server - auto snapshots"
   },
+  snapshotsTab: {
+    id: "pages.configurationPage.tabs.snapshots",
+    defaultMessage: "Snapshots"
+  },
+  retentionTab: {
+    id: "pages.configurationPage.tabs.retention",
+    defaultMessage: "Retention"
+  },
   automaticSnapshotPolicy: {
     id: "pages.configurationPage.automaticSnapshotPolicy",
     defaultMessage: "Automatic snapshot policy"
@@ -12,6 +20,10 @@ export const translations = defineMessages({
   configuredSubvolumes: {
     id: "pages.configurationPage.configuredSubvolumes",
     defaultMessage: "Configured automatic snapshot policies"
+  },
+  configuredRetentionSubvolumes: {
+    id: "pages.configurationPage.configuredRetentionSubvolumes",
+    defaultMessage: "Configured automatic retention policies"
   },
   automaticRetentionPolicy: {
     id: "pages.configurationPage.automaticRetentionPolicy",

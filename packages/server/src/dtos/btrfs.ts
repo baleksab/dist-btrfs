@@ -77,7 +77,7 @@ export type BtrfsSubvolumeSetRetentionConfigRequest = z.infer<
 >;
 
 export const btrfsSubvolumeRetentionConfigAllResponse = z
-  .array(btrfsSubvolumeSetRetentionConfigRequest)
+  .array(btrfsSubvolumeRetentionConfigResponse)
   .openapi("BtrfsSubvolumeRetentionConfigAllResponse");
 
 export type BtrfsSubvolumeRetentionConfigAllResponse = z.infer<

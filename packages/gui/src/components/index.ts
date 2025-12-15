@@ -9,3 +9,4 @@ export * from "./ConfigurationForm";
 export * from "./SubvolumeConfigs";
 export * from "./ServerCardSkeleton";
 export * from "./RetentionConfigurationForm";
+export * from "./SubvolumeRetentionConfigs";

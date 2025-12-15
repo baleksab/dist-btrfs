@@ -1,0 +1,1 @@
+ALTER TABLE `subvolume_retention_config` ADD `retention_interval_seconds` integer DEFAULT 3600 NOT NULL;
