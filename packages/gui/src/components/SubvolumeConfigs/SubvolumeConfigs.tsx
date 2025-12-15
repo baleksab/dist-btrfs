@@ -1,15 +1,13 @@
 import { Table, Badge, Skeleton, Text } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
-import type { BtrfsSubvolumeConfigResponse } from "../../generated-types";
+import { useSubvolumeConfigAll } from "../../hooks";
 
-type SubvolumeConfigsProps = {
-  configs?: BtrfsSubvolumeConfigResponse[];
-  isLoading: boolean;
-};
-
-export const SubvolumeConfigs = ({ configs, isLoading }: SubvolumeConfigsProps) => {
+export const SubvolumeConfigs = () => {
   const { formatMessage } = useIntl();
+
+  const { subvolumeConfigs: configs, isLoadingSubvolumeConfigs: isLoading } =
+    useSubvolumeConfigAll();
 
   return (
     <Skeleton visible={isLoading}>

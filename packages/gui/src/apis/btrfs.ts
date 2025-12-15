@@ -1,4 +1,8 @@
-import { BtrfsApi, type BtrfsSubvolumeSetConfigRequest } from "../generated-types";
+import {
+  BtrfsApi,
+  type BtrfsSubvolumeSetConfigRequest,
+  type BtrfsSubvolumeSetRetentionConfigRequest
+} from "../generated-types";
 import { axiosInstance } from "./axiosInstance";
 
 const btrfsApi = new BtrfsApi(undefined, undefined, axiosInstance);
@@ -26,6 +30,27 @@ export const updateSubvolumeConfig = async (
   config: BtrfsSubvolumeSetConfigRequest
 ) => {
   const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeConfigPost(subvolume, config);
+
+  return data;
+};
+
+export const getSubvolumeRetentionConfig = async (subvolume: string) => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume);
+
+  return data;
+};
+
+export const getSubvolumeRetentionConfigAll = async () => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesRetentionConfigGet();
+
+  return data;
+};
+
+export const updateSubvolumeRetentionConfig = async (
+  subvolume: string,
+  config: BtrfsSubvolumeSetRetentionConfigRequest
+) => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume, config);
 
   return data;
 };

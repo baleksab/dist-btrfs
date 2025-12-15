@@ -30,5 +30,6 @@ export const subvolumeRetentionConfigs = sqliteTable("subvolume_retention_config
     enum: ["daily", "weekly", "monthly"]
   }).notNull(),
   keep: integer("keep").notNull(),
+  retentionIntervalSeconds: integer("retention_interval_seconds").notNull().default(3600),
   isEnabled: integer("is_enabled").notNull().default(0)
 });

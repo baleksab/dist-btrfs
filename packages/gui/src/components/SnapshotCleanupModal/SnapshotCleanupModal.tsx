@@ -51,7 +51,6 @@ export const SnapshotCleanupModal = ({ opened, subvolume, onClose }: SnapshotCle
             </Radio.Group>
           )}
         </form.Field>
-
         <form.Field name="keep">
           {(field) => (
             <NumberInput
@@ -63,7 +62,6 @@ export const SnapshotCleanupModal = ({ opened, subvolume, onClose }: SnapshotCle
             />
           )}
         </form.Field>
-
         <Group justify="flex-end" mt="lg">
           <Button variant="default" onClick={onClose} disabled={isCleaningupSnapshots}>
             {formatMessage(translations.cancel)}

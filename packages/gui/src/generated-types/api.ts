@@ -67,10 +67,44 @@ export interface BtrfsSubvolumeConfigResponse {
     'isEnabled'?: boolean;
     'exists'?: boolean;
 }
+export interface BtrfsSubvolumeRetentionConfigResponse {
+    'id': string;
+    'serverUid': string;
+    'subvolPath': string;
+    'type': BtrfsSubvolumeRetentionConfigResponseTypeEnum;
+    'keep': number;
+    'retentionIntervalSeconds': number;
+    'exists'?: boolean;
+    'isEnabled'?: boolean;
+}
+
+export const BtrfsSubvolumeRetentionConfigResponseTypeEnum = {
+    Daily: 'daily',
+    Weekly: 'weekly',
+    Monthly: 'monthly'
+} as const;
+
+export type BtrfsSubvolumeRetentionConfigResponseTypeEnum = typeof BtrfsSubvolumeRetentionConfigResponseTypeEnum[keyof typeof BtrfsSubvolumeRetentionConfigResponseTypeEnum];
+
 export interface BtrfsSubvolumeSetConfigRequest {
     'snapshotIntervalSeconds': number;
     'isEnabled'?: boolean;
 }
+export interface BtrfsSubvolumeSetRetentionConfigRequest {
+    'type': BtrfsSubvolumeSetRetentionConfigRequestTypeEnum;
+    'keep': number;
+    'retentionIntervalSeconds': number;
+    'isEnabled'?: boolean;
+}
+
+export const BtrfsSubvolumeSetRetentionConfigRequestTypeEnum = {
+    Daily: 'daily',
+    Weekly: 'weekly',
+    Monthly: 'monthly'
+} as const;
+
+export type BtrfsSubvolumeSetRetentionConfigRequestTypeEnum = typeof BtrfsSubvolumeSetRetentionConfigRequestTypeEnum[keyof typeof BtrfsSubvolumeSetRetentionConfigRequestTypeEnum];
+
 export interface BtrfsSubvolumesResponseInner {
     'id': number;
     'gen': string;
@@ -185,6 +219,36 @@ export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesRetentionConfigGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/btrfs/subvolumes/retention/config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
          * @param {string} subvolume 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -254,6 +318,78 @@ export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesSubvolumeRetentionConfigGet: async (subvolume: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiBtrfsSubvolumesSubvolumeRetentionConfigGet', 'subvolume', subvolume)
+            const localVarPath = `/api/btrfs/subvolumes/{subvolume}/retention/config`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {BtrfsSubvolumeSetRetentionConfigRequest} [btrfsSubvolumeSetRetentionConfigRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesSubvolumeRetentionConfigPost: async (subvolume: string, btrfsSubvolumeSetRetentionConfigRequest?: BtrfsSubvolumeSetRetentionConfigRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiBtrfsSubvolumesSubvolumeRetentionConfigPost', 'subvolume', subvolume)
+            const localVarPath = `/api/btrfs/subvolumes/{subvolume}/retention/config`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(btrfsSubvolumeSetRetentionConfigRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -290,6 +426,18 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumeSetRetentionConfigRequest>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesRetentionConfigGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesRetentionConfigGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
          * @param {string} subvolume 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -312,6 +460,33 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesSubvolumeConfigPost(subvolume, btrfsSubvolumeSetConfigRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesSubvolumeConfigPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSubvolumeRetentionConfigResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesSubvolumeRetentionConfigGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {BtrfsSubvolumeSetRetentionConfigRequest} [btrfsSubvolumeSetRetentionConfigRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume: string, btrfsSubvolumeSetRetentionConfigRequest?: BtrfsSubvolumeSetRetentionConfigRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSubvolumeRetentionConfigResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume, btrfsSubvolumeSetRetentionConfigRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesSubvolumeRetentionConfigPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -344,6 +519,15 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumeSetRetentionConfigRequest>> {
+            return localVarFp.apiBtrfsSubvolumesRetentionConfigGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
          * @param {string} subvolume 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -361,6 +545,27 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
          */
         apiBtrfsSubvolumesSubvolumeConfigPost(subvolume: string, btrfsSubvolumeSetConfigRequest?: BtrfsSubvolumeSetConfigRequest, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumeConfigResponse> {
             return localVarFp.apiBtrfsSubvolumesSubvolumeConfigPost(subvolume, btrfsSubvolumeSetConfigRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumeRetentionConfigResponse> {
+            return localVarFp.apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {BtrfsSubvolumeSetRetentionConfigRequest} [btrfsSubvolumeSetRetentionConfigRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume: string, btrfsSubvolumeSetRetentionConfigRequest?: BtrfsSubvolumeSetRetentionConfigRequest, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumeRetentionConfigResponse> {
+            return localVarFp.apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume, btrfsSubvolumeSetRetentionConfigRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -392,6 +597,16 @@ export class BtrfsApi extends BaseAPI {
     /**
      * 
      * @summary 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiBtrfsSubvolumesRetentionConfigGet(options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesRetentionConfigGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
      * @param {string} subvolume 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -410,6 +625,29 @@ export class BtrfsApi extends BaseAPI {
      */
     public apiBtrfsSubvolumesSubvolumeConfigPost(subvolume: string, btrfsSubvolumeSetConfigRequest?: BtrfsSubvolumeSetConfigRequest, options?: RawAxiosRequestConfig) {
         return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesSubvolumeConfigPost(subvolume, btrfsSubvolumeSetConfigRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume: string, options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesSubvolumeRetentionConfigGet(subvolume, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {BtrfsSubvolumeSetRetentionConfigRequest} [btrfsSubvolumeSetRetentionConfigRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume: string, btrfsSubvolumeSetRetentionConfigRequest?: BtrfsSubvolumeSetRetentionConfigRequest, options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesSubvolumeRetentionConfigPost(subvolume, btrfsSubvolumeSetRetentionConfigRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

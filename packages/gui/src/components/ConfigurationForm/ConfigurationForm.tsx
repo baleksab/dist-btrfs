@@ -1,20 +1,19 @@
 import { Button, NumberInput, Stack, Switch } from "@mantine/core";
 import { useForm } from "@tanstack/react-form";
 import { useIntl } from "react-intl";
-import type {
-  BtrfsSubvolumeConfigResponse,
-  BtrfsSubvolumeSetConfigRequest
-} from "../../generated-types";
+import type { BtrfsSubvolumeSetConfigRequest } from "../../generated-types";
 import { translations } from "./translations";
 import { useEffect } from "react";
-import { useUpdateSubvolumeConfig } from "../../hooks";
+import { useSubvolumeConfig, useUpdateSubvolumeConfig } from "../../hooks";
 
 type ConfigurationFormProps = {
-  subvolumeConfig?: BtrfsSubvolumeConfigResponse;
+  subvolume?: string;
 };
 
-export const ConfigurationForm = ({ subvolumeConfig }: ConfigurationFormProps) => {
+export const ConfigurationForm = ({ subvolume }: ConfigurationFormProps) => {
   const { formatMessage } = useIntl();
+
+  const { subvolumeConfig } = useSubvolumeConfig(subvolume || "");
 
   const { updateSubvolumeConfigAsync, isUpdatingSubvolumeConfig } = useUpdateSubvolumeConfig(
     subvolumeConfig?.subvolPath || ""

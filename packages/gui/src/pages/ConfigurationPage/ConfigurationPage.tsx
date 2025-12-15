@@ -3,29 +3,35 @@ import {
   PageHeader,
   SubvolumeSelector,
   ConfigurationForm,
-  SubvolumeConfigs
+  SubvolumeConfigs,
+  RetentionConfigurationForm
 } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { useState } from "react";
-import { useSubvolumeConfig, useSubvolumeConfigAll } from "../../hooks";
 
 export const ConfigurationPage = () => {
   const { formatMessage } = useIntl();
-  const [selectedSubvolume, setSelectedSubvolume] = useState<string | null>(null);
 
-  const { subvolumeConfig } = useSubvolumeConfig(selectedSubvolume || "");
-  const { subvolumeConfigs, isLoadingSubvolumeConfigs } = useSubvolumeConfigAll();
+  const [selectedSubvolume, setSelectedSubvolume] = useState<string | null>(null);
+  const [selectedRetentionSubvolume, setSelectedRetentionSubvolume] = useState<string | null>(null);
 
   return (
     <Stack>
       <PageHeader title={formatMessage(translations.title)} />
       <Fieldset legend={formatMessage(translations.automaticSnapshotPolicy)}>
         <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
-        <ConfigurationForm subvolumeConfig={subvolumeConfig} />
+        <ConfigurationForm subvolume={selectedRetentionSubvolume || ""} />
       </Fieldset>
       <Fieldset legend={formatMessage(translations.configuredSubvolumes)}>
-        <SubvolumeConfigs configs={subvolumeConfigs} isLoading={isLoadingSubvolumeConfigs} />
+        <SubvolumeConfigs />
+      </Fieldset>
+      <Fieldset legend={formatMessage(translations.automaticRetentionPolicy)}>
+        <SubvolumeSelector
+          value={selectedRetentionSubvolume}
+          onChange={setSelectedRetentionSubvolume}
+        />
+        <RetentionConfigurationForm subvolume={selectedRetentionSubvolume || ""} />
       </Fieldset>
     </Stack>
   );
