@@ -19,3 +19,16 @@ export const subvolumeConfigs = sqliteTable("subvolume_config", {
   snapshotIntervalSeconds: integer("snapshot_interval_seconds").notNull().default(3600),
   isEnabled: integer("is_enabled").notNull().default(0)
 });
+
+export const subvolumeRetentionConfigs = sqliteTable("subvolume_retention_config", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  serverUid: text("server_uid")
+    .notNull()
+    .references(() => remoteServers.uid, { onDelete: "cascade" }),
+  subvolPath: text("subvol_path").notNull(),
+  retentionType: text("retention_type", {
+    enum: ["daily", "weekly", "monthly"]
+  }).notNull(),
+  keepCount: integer("keep_count").notNull(),
+  isEnabled: integer("is_enabled").notNull().default(0)
+});

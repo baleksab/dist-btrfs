@@ -15,6 +15,13 @@
       "when": 1765312098938,
       "tag": "0001_flat_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1765739642208,
+      "tag": "0002_cuddly_vertigo",
+      "breakpoints": true
     }
   ]
 }

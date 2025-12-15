@@ -6,7 +6,12 @@ import { fileURLToPath } from "node:url";
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 1440,
-    height: 900
+    height: 900,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
   });
 
   const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
