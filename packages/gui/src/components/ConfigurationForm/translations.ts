@@ -2,15 +2,15 @@ import { defineMessages } from "react-intl";
 
 export const translations = defineMessages({
   snapshotIntervalLabel: {
-    id: "pages.configurationPage.label",
+    id: "components.configurationForm.label",
     defaultMessage: "Snapshot interval (seconds)"
   },
   enabledLabel: {
-    id: "pages.configurationPage.enabled",
+    id: "components.configurationForm.enabled",
     defaultMessage: "Enabled"
   },
   saveButton: {
-    id: "pages.configurationPage.save",
+    id: "components.configurationForm.save",
     defaultMessage: "Save"
   }
 });

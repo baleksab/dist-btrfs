@@ -3,10 +3,10 @@ import {
   BtrfsSubvolumeSetRetentionConfigRequestTypeEnum,
   type BtrfsSubvolumeSetRetentionConfigRequest
 } from "../../generated-types";
-import { NumberInput, Radio, Stack } from "@mantine/core";
+import { Button, NumberInput, Radio, Stack, Switch } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
-import { useSubvolumeRetentionConfig } from "../../hooks";
+import { useSubvolumeRetentionConfig, useUpdateSubvolumeRetentionConfig } from "../../hooks";
 import { useEffect } from "react";
 
 type RetentionConfigurationFormProps = {
@@ -17,13 +17,18 @@ export const RetentionConfigurationForm = ({ subvolume }: RetentionConfiguration
   const { formatMessage } = useIntl();
 
   const { subvolumeRetentionConfig } = useSubvolumeRetentionConfig(subvolume || "");
+  const { updateSubvolumeRetentionConfigAsync, isUpdatingSubvolumeRetentionConfig } =
+    useUpdateSubvolumeRetentionConfig(subvolume || "");
 
   const form = useForm({
     defaultValues: {
       retentionIntervalSeconds: 3600,
       isEnabled: false,
       type: BtrfsSubvolumeSetRetentionConfigRequestTypeEnum.Weekly
-    } as BtrfsSubvolumeSetRetentionConfigRequest
+    } as BtrfsSubvolumeSetRetentionConfigRequest,
+    onSubmit: ({ value }) => {
+      updateSubvolumeRetentionConfigAsync(value);
+    }
   });
 
   useEffect(() => {
@@ -45,33 +50,46 @@ export const RetentionConfigurationForm = ({ subvolume }: RetentionConfiguration
         form.handleSubmit();
       }}
     >
-      <form.Field name="type">
-        {(field) => (
-          <Radio.Group
-            label={formatMessage(translations.type)}
-            value={field.state.value}
-            onChange={(val) => field.handleChange(val as "daily" | "weekly" | "monthly")}
-            mb="lg"
-          >
-            <Stack gap="xs">
-              <Radio value="daily" label={formatMessage(translations.daily)} />
-              <Radio value="weekly" label={formatMessage(translations.weekly)} />
-              <Radio value="monthly" label={formatMessage(translations.monthly)} />
-            </Stack>
-          </Radio.Group>
-        )}
-      </form.Field>
-      <form.Field name="keep">
-        {(field) => (
-          <NumberInput
-            label={formatMessage(translations.keep)}
-            min={1}
-            value={field.state.value}
-            onChange={(val) => field.handleChange(val ? Number(val) : 1)}
-            mb="md"
-          />
-        )}
-      </form.Field>
+      <Stack>
+        <form.Field name="type">
+          {(field) => (
+            <Radio.Group
+              label={formatMessage(translations.type)}
+              value={field.state.value}
+              onChange={(val) => field.handleChange(val as "daily" | "weekly" | "monthly")}
+              mt="md"
+            >
+              <Stack gap="xs">
+                <Radio value="daily" label={formatMessage(translations.daily)} />
+                <Radio value="weekly" label={formatMessage(translations.weekly)} />
+                <Radio value="monthly" label={formatMessage(translations.monthly)} />
+              </Stack>
+            </Radio.Group>
+          )}
+        </form.Field>
+        <form.Field name="keep">
+          {(field) => (
+            <NumberInput
+              label={formatMessage(translations.keep)}
+              min={1}
+              value={field.state.value}
+              onChange={(val) => field.handleChange(val ? Number(val) : 1)}
+            />
+          )}
+        </form.Field>
+        <form.Field name="isEnabled">
+          {(field) => (
+            <Switch
+              label={formatMessage(translations.enabledLabel)}
+              checked={field.state.value}
+              onChange={(e) => field.handleChange(e.currentTarget.checked)}
+            />
+          )}
+        </form.Field>
+        <Button type="submit" loading={isUpdatingSubvolumeRetentionConfig}>
+          {formatMessage(translations.saveButton)}
+        </Button>
+      </Stack>
     </form>
   );
 };

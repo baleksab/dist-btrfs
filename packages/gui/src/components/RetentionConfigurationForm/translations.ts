@@ -32,5 +32,13 @@ export const translations = defineMessages({
   apply: {
     id: "components.retentionConfigurationForm.apply",
     defaultMessage: "Apply cleanup"
+  },
+  saveButton: {
+    id: "components.retentionConfigurationForm.save",
+    defaultMessage: "Save"
+  },
+  enabledLabel: {
+    id: "components.configurationForm.enabled",
+    defaultMessage: "Enabled"
   }
 });

@@ -21,7 +21,7 @@ export const ConfigurationPage = () => {
       <PageHeader title={formatMessage(translations.title)} />
       <Fieldset legend={formatMessage(translations.automaticSnapshotPolicy)}>
         <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
-        <ConfigurationForm subvolume={selectedRetentionSubvolume || ""} />
+        <ConfigurationForm subvolume={selectedSubvolume || ""} />
       </Fieldset>
       <Fieldset legend={formatMessage(translations.configuredSubvolumes)}>
         <SubvolumeConfigs />
