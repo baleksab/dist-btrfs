@@ -1,4 +1,4 @@
-import { BtrfsSubvolumeSetConfigRequest } from "../dtos";
+import { BtrfsSubvolumeSetConfigRequest, BtrfsSubvolumeSetRetentionConfigRequest } from "../dtos";
 import { BtrfsService } from "../services";
 import { Request, Response } from "express";
 
@@ -27,6 +27,30 @@ export class BtrfsController {
   async setSubvolumeConfig(dto: BtrfsSubvolumeSetConfigRequest, req: Request, res: Response) {
     const { subvolume } = req.params;
     const config = await this.service.setSubvolumeConfig(subvolume, dto);
+
+    return res.status(200).json(config);
+  }
+
+  async getSubvolumeRetentionConfig(_dto: unknown, req: Request, res: Response) {
+    const { subvolume } = req.params;
+    const config = await this.service.findSubvolumeRetentionConfig(subvolume);
+
+    return res.status(200).json(config);
+  }
+
+  async getSubvolumeRetentionConfigAll(_dto: unknown, _req: Request, res: Response) {
+    const configs = await this.service.findSubvolumeRetentionConfigall();
+
+    return res.status(200).json(configs);
+  }
+
+  async setSubvolumeRetentionConfig(
+    dto: BtrfsSubvolumeSetRetentionConfigRequest,
+    req: Request,
+    res: Response
+  ) {
+    const { subvolume } = req.params;
+    const config = await this.service.setSubvolumeRetentionConfig(subvolume, dto);
 
     return res.status(200).json(config);
   }
