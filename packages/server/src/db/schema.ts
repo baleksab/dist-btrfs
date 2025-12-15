@@ -26,9 +26,9 @@ export const subvolumeRetentionConfigs = sqliteTable("subvolume_retention_config
     .notNull()
     .references(() => remoteServers.uid, { onDelete: "cascade" }),
   subvolPath: text("subvol_path").notNull(),
-  retentionType: text("retention_type", {
+  type: text("retention", {
     enum: ["daily", "weekly", "monthly"]
   }).notNull(),
-  keepCount: integer("keep_count").notNull(),
+  keep: integer("keep").notNull(),
   isEnabled: integer("is_enabled").notNull().default(0)
 });

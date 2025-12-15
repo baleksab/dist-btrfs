@@ -1,5 +1,6 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { btrfsSnapshotCleanupRequest } from "./snapshots";
 
 extendZodWithOpenApi(z);
 
@@ -45,3 +46,33 @@ export const btrfsSubvolumeConfigAllResponse = z
   .openapi("BtrfsSubvolumeConfigAllResponse");
 
 export type BtrfsSubvolumeConfigAllResponse = z.infer<typeof btrfsSubvolumeConfigAllResponse>;
+
+export const btrfsSubvolumeSetRetentionConfigRequest = btrfsSnapshotCleanupRequest
+  .extend({
+    isEnabled: z.boolean().default(false)
+  })
+  .openapi("BtrfsSubvolumeSetRetentionConfigRequest");
+
+export type BtrfsSubvolumeSetRetentionConfigRequest = z.infer<
+  typeof btrfsSubvolumeSetRetentionConfigRequest
+>;
+
+export const btrfsSubvolumeRetentionConfigResponse = btrfsSnapshotCleanupRequest
+  .extend({
+    id: z.string(),
+    serverUid: z.string(),
+    subvolPath: z.string()
+  })
+  .openapi("BtrfsSubvolumeRetentionConfigResponse");
+
+export type BtrfsSubvolumeRetentionConfigResponse = z.infer<
+  typeof btrfsSubvolumeRetentionConfigResponse
+>;
+
+export const btrfsSubvolumeRetentionConfigAllResponse = z
+  .array(btrfsSubvolumeSetRetentionConfigRequest)
+  .openapi("BtrfsSubvolumeRetentionConfigAllResponse");
+
+export type BtrfsSubvolumeRetentionConfigAllResponse = z.infer<
+  typeof btrfsSubvolumeRetentionConfigAllResponse
+>;

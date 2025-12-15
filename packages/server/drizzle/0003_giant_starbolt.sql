@@ -1,0 +1,1 @@
+ALTER TABLE `subvolume_retention_config` RENAME COLUMN "keep_count" TO "keep";

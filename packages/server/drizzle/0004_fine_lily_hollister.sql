@@ -1,0 +1,1 @@
+ALTER TABLE `subvolume_retention_config` RENAME COLUMN "retention_type" TO "retention";

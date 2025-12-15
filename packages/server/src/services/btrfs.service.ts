@@ -1,4 +1,4 @@
-import { BtrfsSubvolumeSetConfigRequest } from "../dtos";
+import { BtrfsSubvolumeSetConfigRequest, BtrfsSubvolumeSetRetentionConfigRequest } from "../dtos";
 import { BtrfsRepository } from "../repositories";
 import { RemoteServerService } from "./remoteServer.service";
 import { schedulerService } from "./scheduler.service";
@@ -69,7 +69,10 @@ export class BtrfsService {
       };
     }
 
-    return config;
+    return {
+      ...config,
+      exists: true
+    };
   }
 
   async findSubvolumeConfigAll() {
@@ -98,5 +101,51 @@ export class BtrfsService {
     }
 
     return config;
+  }
+
+  async setSubvolumeRetentionConfig(
+    subvolume: string,
+    data: BtrfsSubvolumeSetRetentionConfigRequest
+  ) {
+    const server = await this.remoteServerService.getPrimaryServer();
+
+    const sanitizedConfig = {
+      ...data,
+      isEnabled: data.isEnabled ? 1 : 0,
+      subvolPath: subvolume,
+      serverUid: server.uid
+    };
+
+    const retentionConfig = await this.btrfsRepository.setRetentionConfig(sanitizedConfig);
+
+    return retentionConfig;
+  }
+
+  async findSubvolumeRetentionConfigall() {
+    const server = await this.remoteServerService.getPrimaryServer();
+    const configs = await this.btrfsRepository.findAllRetentionConfigs(server.uid);
+
+    return configs;
+  }
+
+  async findSubvolumeRetentionConfig(subvolume: string) {
+    const server = await this.remoteServerService.getPrimaryServer();
+
+    const retentionConfig = await this.btrfsRepository.findRetentionConfigBySubvolume(
+      server.uid,
+      subvolume
+    );
+
+    if (!retentionConfig) {
+      return {
+        subvolPath: subvolume,
+        exists: false
+      };
+    }
+
+    return {
+      ...retentionConfig,
+      exists: true
+    };
   }
 }
