@@ -86,7 +86,7 @@ export const RetentionConfigurationForm = ({ subvolume }: RetentionConfiguration
             />
           )}
         </form.Field>
-        <Button type="submit" loading={isUpdatingSubvolumeRetentionConfig}>
+        <Button type="submit" loading={isUpdatingSubvolumeRetentionConfig} disabled={!subvolume}>
           {formatMessage(translations.saveButton)}
         </Button>
       </Stack>
