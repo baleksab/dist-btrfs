@@ -28,10 +28,21 @@ const bootstrap = async () => {
 
   console.log("Starting server...");
 
-  const configs = await btrfsService.findSubvolumeConfigAll();
-  const mappedConfigs = configs.map((config) => ({ ...config, isEnabled: !!config.isEnabled }));
+  const snapshotConfigs = await btrfsService.findSubvolumeConfigAll();
+  const mappedSnapshotConfigs = snapshotConfigs.map((config) => ({
+    ...config,
+    isEnabled: !!config.isEnabled
+  }));
 
-  await schedulerService.restoreFromDb(mappedConfigs);
+  await schedulerService.restoreSnapshotScheduling(mappedSnapshotConfigs);
+
+  const retentionConfigs = await btrfsService.findSubvolumeRetentionConfigall();
+  const mappedRetentionConfigs = retentionConfigs.map((config) => ({
+    ...config,
+    isEnabled: !!config.isEnabled
+  }));
+
+  await schedulerService.restoreRetentionScheduling(mappedRetentionConfigs);
 
   app.listen(config.port, () => {
     console.log(`Server running at http://localhost:${config.port}`);

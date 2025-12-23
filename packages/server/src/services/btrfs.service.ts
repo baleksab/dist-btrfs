@@ -94,10 +94,10 @@ export class BtrfsService {
 
     const config = await this.btrfsRepository.setConfig(sanitizedConfig);
 
+    schedulerService.unschedule(server.uid, subvolume);
+
     if (config.isEnabled) {
       schedulerService.schedule(server.uid, subvolume, config.snapshotIntervalSeconds);
-    } else {
-      schedulerService.unschedule(server.uid, subvolume);
     }
 
     return config;
@@ -117,6 +117,18 @@ export class BtrfsService {
     };
 
     const retentionConfig = await this.btrfsRepository.setRetentionConfig(sanitizedConfig);
+
+    schedulerService.unschedule(server.uid, subvolume, "retention");
+
+    if (retentionConfig.isEnabled) {
+      schedulerService.schedule(
+        server.uid,
+        subvolume,
+        retentionConfig.retentionIntervalSeconds,
+        "retention",
+        { type: retentionConfig.type, keep: retentionConfig.keep }
+      );
+    }
 
     return retentionConfig;
   }

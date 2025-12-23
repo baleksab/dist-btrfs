@@ -40,5 +40,9 @@ export const translations = defineMessages({
   enabledLabel: {
     id: "components.configurationForm.enabled",
     defaultMessage: "Enabled"
+  },
+  interval: {
+    id: "components.configurationForm.interval",
+    defaultMessage: "Retention interval (seconds)"
   }
 });

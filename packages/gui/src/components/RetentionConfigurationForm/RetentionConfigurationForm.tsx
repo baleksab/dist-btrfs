@@ -39,7 +39,9 @@ export const RetentionConfigurationForm = ({ subvolume }: RetentionConfiguration
     form.reset({
       ...subvolumeRetentionConfig,
       retentionIntervalSeconds: subvolumeRetentionConfig.retentionIntervalSeconds || 3600,
-      isEnabled: Boolean(subvolumeRetentionConfig.isEnabled) || false
+      isEnabled: Boolean(subvolumeRetentionConfig.isEnabled) || false,
+      keep: subvolumeRetentionConfig.keep || 10,
+      type: subvolumeRetentionConfig.type || "weekly"
     });
   }, [subvolumeRetentionConfig, form]);
 
@@ -71,6 +73,16 @@ export const RetentionConfigurationForm = ({ subvolume }: RetentionConfiguration
           {(field) => (
             <NumberInput
               label={formatMessage(translations.keep)}
+              min={1}
+              value={field.state.value}
+              onChange={(val) => field.handleChange(val ? Number(val) : 1)}
+            />
+          )}
+        </form.Field>
+        <form.Field name="retentionIntervalSeconds">
+          {(field) => (
+            <NumberInput
+              label={formatMessage(translations.interval)}
               min={1}
               value={field.state.value}
               onChange={(val) => field.handleChange(val ? Number(val) : 1)}

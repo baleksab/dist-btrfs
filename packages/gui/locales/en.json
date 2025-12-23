@@ -73,7 +73,7 @@
   "components.retentionConfigs.retentionType.weekly": "Weekly",
   "components.retentionConfigs.retentionType.monthly": "Monthly",
   "components.subvolumeSelector.label": "Selected subvolume",
-  "pages.configurationPage.title": "Primary server - auto snapshots",
+  "pages.configurationPage.title": "Primary server - automation",
   "pages.configurationPage.tabs.snapshots": "Snapshots",
   "pages.configurationPage.tabs.retention": "Retention",
   "pages.configurationPage.automaticSnapshotPolicy": "Automatic snapshot policy",
