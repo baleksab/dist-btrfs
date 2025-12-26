@@ -46,6 +46,10 @@ export class BtrfsService {
 
       const absPath = relPath === "root" ? "/" : "/" + relPath.replace(/^root\//, "");
 
+      if (absPath === "/" || absPath === "/home") {
+        continue;
+      }
+
       results.push({
         id: Number(id),
         gen: Number(gen),
