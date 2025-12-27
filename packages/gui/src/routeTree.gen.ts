@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SnapshotsRouteImport } from './routes/snapshots'
+import { Route as RemoteReplicationRouteImport } from './routes/remoteReplication'
 import { Route as ConfigurationRouteImport } from './routes/configuration'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SnapshotsRoute = SnapshotsRouteImport.update({
   id: '/snapshots',
   path: '/snapshots',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemoteReplicationRoute = RemoteReplicationRouteImport.update({
+  id: '/remoteReplication',
+  path: '/remoteReplication',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfigurationRoute = ConfigurationRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
+  '/remoteReplication': typeof RemoteReplicationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
+  '/remoteReplication': typeof RemoteReplicationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
+  '/remoteReplication': typeof RemoteReplicationRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/configuration' | '/snapshots'
+  fullPaths: '/' | '/configuration' | '/remoteReplication' | '/snapshots'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/configuration' | '/snapshots'
-  id: '__root__' | '/' | '/configuration' | '/snapshots'
+  to: '/' | '/configuration' | '/remoteReplication' | '/snapshots'
+  id: '__root__' | '/' | '/configuration' | '/remoteReplication' | '/snapshots'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConfigurationRoute: typeof ConfigurationRoute
+  RemoteReplicationRoute: typeof RemoteReplicationRoute
   SnapshotsRoute: typeof SnapshotsRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/snapshots'
       fullPath: '/snapshots'
       preLoaderRoute: typeof SnapshotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/remoteReplication': {
+      id: '/remoteReplication'
+      path: '/remoteReplication'
+      fullPath: '/remoteReplication'
+      preLoaderRoute: typeof RemoteReplicationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configuration': {
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConfigurationRoute: ConfigurationRoute,
+  RemoteReplicationRoute: RemoteReplicationRoute,
   SnapshotsRoute: SnapshotsRoute,
 }
 export const routeTree = rootRouteImport

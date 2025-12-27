@@ -70,7 +70,8 @@ export const Sidebar = ({ onNavigate }: SidebarProps) => {
                 <IconManualGearbox size={16} />
               </ThemeIcon>
             }
-            onClick={() => onNavigate?.()}
+            active={matches.some((m) => m.routeId === "/remoteReplication")}
+            onClick={() => handleNavigate("/remoteReplication")}
           />
           <NavLink
             label={formatMessage(translations.reportsNavItem)}
