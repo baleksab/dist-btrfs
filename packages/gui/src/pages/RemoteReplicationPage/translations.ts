@@ -4,5 +4,13 @@ export const translations = defineMessages({
   title: {
     defaultMessage: "Primary server - remote replication",
     id: "pages.remoteReplicationPage.title"
+  },
+  fullTab: {
+    defaultMessage: "Full",
+    id: "pages.remoteReplicationPage.fullTab"
+  },
+  incrementalTab: {
+    defaultMessage: "Incremental",
+    id: "pages.remoteReplicationPage.incrementalTab"
   }
 });

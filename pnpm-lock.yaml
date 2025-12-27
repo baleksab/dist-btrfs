@@ -96,6 +96,9 @@ importers:
         specifier: 4.1.13
         version: 4.1.13
     devDependencies:
+      '@formatjs/cli':
+        specifier: 6.8.7
+        version: 6.8.7
       '@openapitools/openapi-generator-cli':
         specifier: 2.25.2
         version: 2.25.2(@types/node@24.6.0)
@@ -734,6 +737,37 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@formatjs/cli@6.8.7':
+    resolution: {integrity: sha512-xm0mnctV7AvZIKXjLme4YTOXDe9NpPdY7OnZXRP2Ugb4yPIS2w83i9lV4AHJsO+qg9/A0/ZY+tmosQ9m+NhLkQ==}
+    engines: {node: '>= 16'}
+    hasBin: true
+    peerDependencies:
+      '@glimmer/env': '*'
+      '@glimmer/reference': '*'
+      '@glimmer/syntax': ^0.95.0
+      '@glimmer/validator': '*'
+      '@vue/compiler-core': ^3.5.12
+      content-tag: ^3.0.0
+      ember-template-recast: ^6.1.5
+      vue: ^3.5.12
+    peerDependenciesMeta:
+      '@glimmer/env':
+        optional: true
+      '@glimmer/reference':
+        optional: true
+      '@glimmer/syntax':
+        optional: true
+      '@glimmer/validator':
+        optional: true
+      '@vue/compiler-core':
+        optional: true
+      content-tag:
+        optional: true
+      ember-template-recast:
+        optional: true
+      vue:
+        optional: true
 
   '@formatjs/ecma402-abstract@2.3.6':
     resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
@@ -4473,6 +4507,8 @@ snapshots:
       tabbable: 6.3.0
 
   '@floating-ui/utils@0.2.10': {}
+
+  '@formatjs/cli@6.8.7': {}
 
   '@formatjs/ecma402-abstract@2.3.6':
     dependencies:
