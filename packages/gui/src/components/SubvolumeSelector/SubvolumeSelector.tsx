@@ -7,9 +7,10 @@ import { translations } from "./translations";
 type SubvolumeSelectorProps = {
   onChange?: (value: string | null) => void;
   value?: string | null;
+  label?: string;
 };
 
-export const SubvolumeSelector = ({ value, onChange }: SubvolumeSelectorProps) => {
+export const SubvolumeSelector = ({ label, value, onChange }: SubvolumeSelectorProps) => {
   const hasSetInitialSubvolume = useRef(false);
   const [defaultSubvolume, setDefaultSubvolume] = useState<string | undefined>(undefined);
   const { subvolumes, isLoadingSubvolumes } = useSubvolumes();
@@ -38,7 +39,7 @@ export const SubvolumeSelector = ({ value, onChange }: SubvolumeSelectorProps) =
   return (
     <Select
       data={subvolumeOptions}
-      label={formatMessage(translations.subvolumesLabel)}
+      label={label || formatMessage(translations.subvolumesLabel)}
       onChange={onChange}
       value={value || defaultSubvolume}
     />
