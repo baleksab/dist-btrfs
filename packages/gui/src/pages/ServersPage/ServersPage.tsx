@@ -26,7 +26,7 @@ export const ServersPage = () => {
     setAddServerModalOpen(true);
   };
 
-  const { data: servers, isPending } = useRemoteServers();
+  const { remoteServers, isLoadingRemoteServers } = useRemoteServers();
   const { data: healthChecks } = useHealthChecks();
 
   return (
@@ -39,19 +39,17 @@ export const ServersPage = () => {
           </Button>
         }
       />
-      {isPending ? (
+      {isLoadingRemoteServers ? (
         <Stack>
           {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
             <ServerCardSkeleton key={index} />
           ))}
         </Stack>
-      ) : servers?.length === 0 ? (
-        <Text c="dimmed" mt="md">
-          {formatMessage(translations.noServers)}
-        </Text>
+      ) : remoteServers?.length === 0 ? (
+        <Text mt="md">{formatMessage(translations.noServers)}</Text>
       ) : (
         <Stack flex="column">
-          {servers
+          {remoteServers
             ?.slice()
             ?.sort((a, b) => Number(b?.isPrimary) - Number(a?.isPrimary))
             ?.map((server) => (

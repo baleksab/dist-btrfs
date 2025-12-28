@@ -12,3 +12,4 @@ export * from "./RetentionConfigurationForm";
 export * from "./SubvolumeRetentionConfigs";
 export * from "./FullReplicationForm";
 export * from "./SnapshotSelector";
+export * from "./SecondaryServerSelector";
