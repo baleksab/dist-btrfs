@@ -1,8 +1,8 @@
-import { Stack, Text, Fieldset, Group, Button, Progress } from "@mantine/core";
+import { Stack, Text, Fieldset, Button, Group, Badge } from "@mantine/core";
 import { SubvolumeSelector } from "../SubvolumeSelector";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { useSnapshots } from "../../hooks";
+import { useFullReplication, useSnapshots } from "../../hooks";
 import { SnapshotSelector } from "../SnapshotSelector";
 import { translations } from "./translations";
 import { SecondaryServerSelector } from "../SecondaryServerSelector/SecondaryServerSelector";
@@ -13,50 +13,42 @@ export const FullReplicationForm = () => {
   const [selectedSubvolume, setSelectedSubvolume] = useState<string | null>(null);
   const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>(null);
   const [selectedSecondaryServers, setSelectedSecondaryServers] = useState<string[]>([]);
-  const [progress, setProgress] = useState<number | null>(null);
-  const [isReplicating, setIsReplicating] = useState(false);
 
   const { snapshots, isLoadingSnapshots } = useSnapshots(selectedSubvolume || "");
+  const { fullReplicationResults, fullReplicateAsync, isFullyReplicating } = useFullReplication(
+    selectedSubvolume || "",
+    selectedSnapshot || ""
+  );
 
   const snapshot = snapshots?.find((s) => s.path === selectedSnapshot);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedSecondaryServers([]);
+    setSelectedSnapshot(null);
   }, [selectedSubvolume]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedSecondaryServers([]);
+  }, [selectedSnapshot]);
 
   const hasTargets = (selectedSecondaryServers?.length ?? 0) > 0;
 
-  const formReady =
-    Boolean(selectedSubvolume) && Boolean(selectedSnapshot) && hasTargets && !isReplicating;
-
-  const handleReplicate = () => {
-    setIsReplicating(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((p) => {
-        if (p === null) return 0;
-        if (p >= 100) {
-          clearInterval(interval);
-          setIsReplicating(false);
-          return 100;
-        }
-        return p + 10;
-      });
-    }, 500);
-  };
+  const buttonDisabled =
+    Boolean(selectedSubvolume) && Boolean(selectedSnapshot) && hasTargets && !isFullyReplicating;
 
   return (
     <Stack pt="md" pb="md">
       <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
-      {!!snapshots?.length && !isLoadingSnapshots && (
+      {(snapshots?.length !== 0 || isLoadingSnapshots) && (
         <SnapshotSelector
           subvolume={selectedSubvolume}
           value={selectedSnapshot}
           onChange={setSelectedSnapshot}
         />
       )}
+      {snapshots?.length === 0 && <Text>{formatMessage(translations.noSnapshots)}</Text>}
       {snapshot && !isLoadingSnapshots && (
         <>
           <Fieldset legend={formatMessage(translations.snapshotInfoTitle)}>
@@ -85,29 +77,55 @@ export const FullReplicationForm = () => {
             value={selectedSecondaryServers}
             onChange={setSelectedSecondaryServers}
           />
-          <Button disabled={!formReady} loading={isReplicating} onClick={handleReplicate}>
+          <Button
+            disabled={!buttonDisabled}
+            loading={isFullyReplicating}
+            onClick={() =>
+              fullReplicateAsync({
+                secondaryServers: selectedSecondaryServers
+              })
+            }
+          >
             {formatMessage(translations.replicateButton)}
           </Button>
-          {progress !== null && (
-            <Fieldset
-              legend={
-                <Group>
-                  <Text size="sm">{formatMessage(translations.replicationProgressTitle)}</Text>
-                  <Text size="sm">{progress}%</Text>
-                </Group>
-              }
-            >
-              <Stack>
-                <Progress value={progress} size="lg" />
-                {isReplicating ? (
-                  <Text size="sm" c="dimmed">
-                    {formatMessage(translations.replicationRunning)}
-                  </Text>
-                ) : (
-                  <Text size="sm" c="green">
-                    {formatMessage(translations.replicationCompleted)}
-                  </Text>
-                )}
+          {fullReplicationResults && (
+            <Fieldset legend={formatMessage(translations.replicationResults)}>
+              <Stack gap="sm">
+                {fullReplicationResults.results.map((result) => (
+                  <Group
+                    key={result.serverUid}
+                    justify="space-between"
+                    wrap="nowrap"
+                    align="flex-start"
+                  >
+                    <Stack gap={2}>
+                      <Text size="sm">
+                        <strong>{formatMessage(translations.serverUidLabel)}:</strong>&nbsp;
+                        {result.serverUid}
+                      </Text>
+                      <Text size="sm">
+                        <strong>{formatMessage(translations.serverAddressLabel)}:</strong>&nbsp;
+                        {result.address}/{result.port ?? 22}
+                      </Text>
+                    </Stack>
+                    <Stack gap={4} align="flex-end">
+                      <Badge
+                        size="sm"
+                        color={result.status === "ok" ? "green" : "red"}
+                        variant="filled"
+                      >
+                        {result.status === "ok"
+                          ? formatMessage(translations.replicationOk)
+                          : formatMessage(translations.replicationFailed)}
+                      </Badge>
+                      {result.error && (
+                        <Text size="xs" c="dimmed" ta="right">
+                          {result.error}
+                        </Text>
+                      )}
+                    </Stack>
+                  </Group>
+                ))}
               </Stack>
             </Fieldset>
           )}

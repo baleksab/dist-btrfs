@@ -27,7 +27,8 @@ export const SnapshotSelector = ({ subvolume, value, onChange }: SnapshotSelecto
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDefaultSnapshot(snapshots?.[0]?.path || "");
-  }, [subvolume, snapshots, isLoadingSnapshots]);
+    onChange?.(snapshots?.[0]?.path || "");
+  }, [subvolume, snapshots, isLoadingSnapshots, onChange]);
 
   if (isLoadingSnapshots) {
     return <Skeleton height={32} />;

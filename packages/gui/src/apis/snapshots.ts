@@ -1,3 +1,4 @@
+import type { RawAxiosRequestConfig } from "axios";
 import {
   SnapshotsApi,
   type BtrfsSnapshotCleanupRequest,
@@ -52,12 +53,14 @@ export const cleanupSnapshots = async (subvolume: string, request: BtrfsSnapshot
 export const fullReplication = async (
   subvolume: string,
   snapshot: string,
-  request: BtrfsSnapshotFullReplicationRequest
+  request: BtrfsSnapshotFullReplicationRequest,
+  options?: RawAxiosRequestConfig
 ) => {
   const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotReplicationFullPost(
     subvolume,
     snapshot,
-    request
+    request,
+    options
   );
 
   return data;

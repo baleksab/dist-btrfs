@@ -87,53 +87,118 @@ export class SshService {
     return new Promise((resolve, reject) => {
       let stderrFrom = "";
       let stderrTo = "";
+      let finished = false;
 
-      connFrom.on("ready", () => {
-        connTo.on("ready", () => {
+      let handshakeTimer: any;
+      let transferTimer: any;
+
+      const log = (...args: any[]) => console.log("[SSH-PIPE]", ...args);
+
+      const finish = (err?: any) => {
+        if (finished) return;
+        finished = true;
+
+        clearTimeout(handshakeTimer);
+        clearTimeout(transferTimer);
+
+        try {
+          connFrom.end();
+        } catch {
+          /* empty */
+        }
+        try {
+          connTo.end();
+        } catch {
+          /* empty */
+        }
+
+        if (err) reject(err);
+        else resolve({ stderrFrom, stderrTo });
+      };
+
+      handshakeTimer = setTimeout(() => finish(new Error("ssh handshake timeout")), 30000);
+
+      const fail = (label: string) => (e: any) => {
+        log(`${label} ERROR`, e);
+        finish(e instanceof Error ? e : new Error(String(e)));
+      };
+
+      connFrom.on("error", fail("FROM-CONN"));
+      connTo.on("error", fail("TO-CONN"));
+
+      Promise.all([
+        new Promise<void>((res) => connFrom.once("ready", res)),
+        new Promise<void>((res) => connTo.once("ready", res))
+      ])
+        .then(() => {
+          clearTimeout(handshakeTimer);
+
+          transferTimer = setTimeout(
+            () => finish(new Error("ssh transfer timeout")),
+            5 * 60 * 1000
+          );
+
           connFrom.exec(cmdFrom, (err, streamFrom) => {
-            if (err) return reject(err);
+            if (err) return finish(err);
 
-            connTo.exec(cmdTo, (err2, streamTo) => {
-              if (err2) return reject(err2);
+            connTo.exec(cmdTo, {}, (err2, streamTo) => {
+              if (err2) return finish(err2);
 
-              streamFrom.pipe(streamTo);
-
-              streamFrom.stderr.on("data", (d: Buffer) => {
-                stderrFrom += d.toString();
-              });
-
-              streamTo.stderr.on("data", (d: Buffer) => {
-                stderrTo += d.toString();
-              });
+              streamFrom.stderr.on("data", (d) => (stderrFrom += d.toString()));
+              streamTo.stderr.on("data", (d) => (stderrTo += d.toString()));
+              streamTo.resume();
+              streamFrom.pipe(streamTo, { end: true });
 
               let closedFrom = false;
               let closedTo = false;
 
-              const maybeFinish = () => {
+              const maybeDone = () => {
                 if (closedFrom && closedTo) {
-                  connFrom.end();
-                  connTo.end();
-                  resolve({ stderrFrom, stderrTo });
+                  clearTimeout(transferTimer);
+                  finish();
                 }
               };
 
-              streamFrom.on("close", () => {
-                closedFrom = true;
-                maybeFinish();
+              const stopFrom = (why: string) => {
+                log("Stopping FROM because:", why);
+                try {
+                  streamFrom.destroy();
+                } catch {
+                  /* empty */
+                }
+              };
+
+              streamTo.on("error", (e: unknown) => {
+                stopFrom("TO stream error");
+                finish(e);
               });
 
-              streamTo.on("close", () => {
+              streamTo.once("close", () => {
                 closedTo = true;
-                maybeFinish();
+                stopFrom("TO stream closed");
+                maybeDone();
+              });
+
+              streamFrom.on("error", (e: unknown) => finish(e));
+
+              streamFrom.once("close", () => {
+                closedFrom = true;
+                maybeDone();
+              });
+
+              connFrom.once("close", () => {
+                closedFrom = true;
+                maybeDone();
+              });
+
+              connTo.once("close", () => {
+                closedTo = true;
+                maybeDone();
               });
             });
           });
-        });
-
-        connTo.on("error", reject);
-      });
-
-      connFrom.on("error", reject);
+        })
+        .catch(finish);
     });
   }
 }

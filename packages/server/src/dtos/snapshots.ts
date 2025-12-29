@@ -73,6 +73,8 @@ export type BtrfsSnapshotFullReplicationRequest = z.infer<
 
 export const replicationResult = z.object({
   serverUid: z.string(),
+  address: z.string(),
+  port: z.number().default(22),
   status: z.enum(["ok", "failed"]),
   error: z.string().optional()
 });

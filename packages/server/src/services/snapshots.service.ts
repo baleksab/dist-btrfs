@@ -1,4 +1,9 @@
-import { BtrfsSnapshotCleanupRequest, BtrfsSnapshotFullReplicationRequest } from "../dtos";
+import path from "path";
+import {
+  BtrfsSnapshotCleanupRequest,
+  BtrfsSnapshotFullReplicationRequest,
+  ReplicationResult
+} from "../dtos";
 import { getISOWeek } from "../utils";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
@@ -89,7 +94,7 @@ export class SnapshotsService {
 
     await this.sshService.execCommand(
       server,
-      `sudo btrfs subvolume snapshot ${subvolPath} ${fullPath}`
+      `sudo btrfs subvolume snapshot -r ${subvolPath} ${fullPath}`
     );
 
     return { name, path: fullPath };
@@ -265,17 +270,21 @@ export class SnapshotsService {
       throw new Error(`Snapshot does not exist on primary: ${snapshotPath}`);
     }
 
-    const results: {
-      serverUid: string;
-      status: "ok" | "failed";
-      error?: string;
-    }[] = [];
+    const results: ReplicationResult[] = [];
+
+    const parentDir = path.posix.dirname(snapshotPath);
 
     for (const srv of secondaryServers) {
       try {
-        const parentDir = snapshotPath.substring(0, snapshotPath.lastIndexOf("/"));
-
         await this.sshService.execCommand(srv, `sudo mkdir -p ${parentDir}`);
+
+        const leaf = snapshotPath.substring(snapshotPath.lastIndexOf("/") + 1);
+        const targetPath = `${parentDir}/${leaf}`;
+
+        const { stderr } = await this.sshService.execCommand(
+          srv,
+          `sudo btrfs subvolume show ${targetPath} >/dev/null 2>&1 && sudo btrfs subvolume delete ${targetPath} || true`
+        );
 
         const { stderrFrom, stderrTo } = await this.sshService.execPipe(
           primary,
@@ -292,15 +301,33 @@ export class SnapshotsService {
           console.warn(`Replication stderr (receive:${srv.uid}):`, stderrTo);
         }
 
-        results.push({
-          serverUid: srv.uid,
-          status: "ok"
-        });
+        if (
+          stderrTo?.includes("ERROR") ||
+          stderrFrom?.includes("ERROR") ||
+          stderr?.includes("ERROR")
+        ) {
+          results.push({
+            serverUid: srv.uid,
+            status: "failed",
+            error: (stderrTo || stderrFrom || stderr)?.trim(),
+            address: srv.ipAddress,
+            port: srv.port || 22
+          });
+        } else {
+          results.push({
+            serverUid: srv.uid,
+            status: "ok",
+            address: srv.ipAddress,
+            port: srv.port || 22
+          });
+        }
       } catch (err: any) {
         results.push({
           serverUid: srv.uid,
           status: "failed",
-          error: err?.message ?? String(err)
+          error: err?.message ?? String(err),
+          address: srv.ipAddress,
+          port: srv.port || 22
         });
       }
     }

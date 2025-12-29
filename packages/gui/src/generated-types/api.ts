@@ -57,6 +57,8 @@ export interface BtrfsSnapshotFullReplicationResponse {
 }
 export interface BtrfsSnapshotFullReplicationResponseResultsInner {
     'serverUid': string;
+    'address': string;
+    'port'?: number;
     'status': BtrfsSnapshotFullReplicationResponseResultsInnerStatusEnum;
     'error'?: string;
 }
