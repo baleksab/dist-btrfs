@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { database, remoteServers, NewRemoteServer, UpdateRemoteServer } from "../db";
 
 export class RemoteServerRepository {
@@ -41,5 +41,18 @@ export class RemoteServerRepository {
       .where(eq(remoteServers.isPrimary, 1));
 
     return server;
+  }
+
+  async findServersByIds(serverUids: string[]) {
+    if (!serverUids.length) {
+      return [];
+    }
+
+    const servers = await database
+      .select()
+      .from(remoteServers)
+      .where(inArray(remoteServers.uid, serverUids));
+
+    return servers;
   }
 }

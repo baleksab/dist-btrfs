@@ -74,4 +74,66 @@ export class SshService {
       });
     });
   }
+
+  async execPipe(
+    from: SshCredentials,
+    cmdFrom: string,
+    to: SshCredentials,
+    cmdTo: string
+  ): Promise<{ stderrFrom: string; stderrTo: string }> {
+    const connFrom = this.createConnection(from);
+    const connTo = this.createConnection(to);
+
+    return new Promise((resolve, reject) => {
+      let stderrFrom = "";
+      let stderrTo = "";
+
+      connFrom.on("ready", () => {
+        connTo.on("ready", () => {
+          connFrom.exec(cmdFrom, (err, streamFrom) => {
+            if (err) return reject(err);
+
+            connTo.exec(cmdTo, (err2, streamTo) => {
+              if (err2) return reject(err2);
+
+              streamFrom.pipe(streamTo);
+
+              streamFrom.stderr.on("data", (d: Buffer) => {
+                stderrFrom += d.toString();
+              });
+
+              streamTo.stderr.on("data", (d: Buffer) => {
+                stderrTo += d.toString();
+              });
+
+              let closedFrom = false;
+              let closedTo = false;
+
+              const maybeFinish = () => {
+                if (closedFrom && closedTo) {
+                  connFrom.end();
+                  connTo.end();
+                  resolve({ stderrFrom, stderrTo });
+                }
+              };
+
+              streamFrom.on("close", () => {
+                closedFrom = true;
+                maybeFinish();
+              });
+
+              streamTo.on("close", () => {
+                closedTo = true;
+                maybeFinish();
+              });
+            });
+          });
+        });
+
+        connTo.on("error", reject);
+      });
+
+      connFrom.on("error", reject);
+    });
+  }
 }

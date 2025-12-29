@@ -60,3 +60,28 @@ export const btrfsSnapshotCleanupResponse = z
   .openapi("BtrfsSnapshotCleanupResponse");
 
 export type BtrfsSnapshotCleanupResponse = z.infer<typeof btrfsSnapshotCleanupResponse>;
+
+export const btrfsSnapshotFullReplicationRequest = z.object({
+  secondaryServers: z.array(z.string())
+});
+
+export type BtrfsSnapshotFullReplicationRequest = z.infer<
+  typeof btrfsSnapshotFullReplicationRequest
+>;
+
+export const replicationResult = z.object({
+  serverUid: z.string(),
+  status: z.enum(["ok", "failed"]),
+  error: z.string().optional()
+});
+
+export const btrfsSnapshotFullReplicationResponse = z.object({
+  snapshotPath: z.string(),
+  results: z.array(replicationResult)
+});
+
+export type ReplicationResult = z.infer<typeof replicationResult>;
+
+export type BtrfsSnapshotFullReplicationResponse = z.infer<
+  typeof btrfsSnapshotFullReplicationResponse
+>;

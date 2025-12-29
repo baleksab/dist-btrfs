@@ -86,4 +86,16 @@ export class RemoteServerService {
 
     return decryptedServer;
   }
+
+  async getServersUnsanitized(serverUids: string[]) {
+    const servers = await this.remoteServerRepository.findServersByIds(serverUids);
+
+    const decryptedServers = servers.map((server) => ({
+      ...server,
+      username: decrypt(server.username),
+      password: decrypt(server.password)
+    }));
+
+    return decryptedServers;
+  }
 }

@@ -4,6 +4,7 @@ import {
   btrfsSnapshotCleanupRequest,
   btrfsSnapshotCleanupResponse,
   btrfsSnapshotDeleteResponse,
+  btrfsSnapshotFullReplicationResponse,
   btrfsSnapshotResponse,
   btrfsSnapshotRestoreResponse,
   btrfsSnapshotsResponse
@@ -55,5 +56,14 @@ createRoute({
   handler: controller.restoreSnapshot.bind(controller),
   params: z.object({ subvolume: z.string(), snapshot: z.string() }),
   response: btrfsSnapshotRestoreResponse,
+  tags: ["Snapshots"]
+});
+
+createRoute({
+  method: "post",
+  path: "/snapshots/:subvolume/:snapshot/replication/full",
+  handler: controller.fullReplication.bind(controller),
+  params: z.object({ subvolume: z.string(), snapshot: z.string() }),
+  response: btrfsSnapshotFullReplicationResponse,
   tags: ["Snapshots"]
 });

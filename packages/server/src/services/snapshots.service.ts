@@ -1,4 +1,4 @@
-import { BtrfsSnapshotCleanupRequest } from "../dtos";
+import { BtrfsSnapshotCleanupRequest, BtrfsSnapshotFullReplicationRequest } from "../dtos";
 import { getISOWeek } from "../utils";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
@@ -242,6 +242,72 @@ export class SnapshotsService {
       deletedSnapshots: deleted,
       totalBefore: snapshots.length,
       totalAfter: kept.length
+    };
+  }
+
+  async fullReplication(snapshotPath: string, request: BtrfsSnapshotFullReplicationRequest) {
+    const primary = await this.remoteServerService.getPrimaryServerUnsanitized();
+
+    const secondaryServers = await this.remoteServerService.getServersUnsanitized(
+      request.secondaryServers.filter((uid) => uid !== primary.uid)
+    );
+
+    if (secondaryServers.length === 0) {
+      throw new Error("No valid secondary servers provided.");
+    }
+
+    const { stderr: checkErr } = await this.sshService.execCommand(
+      primary,
+      `sudo btrfs subvolume show ${snapshotPath}`
+    );
+
+    if (checkErr && checkErr.includes("ERROR")) {
+      throw new Error(`Snapshot does not exist on primary: ${snapshotPath}`);
+    }
+
+    const results: {
+      serverUid: string;
+      status: "ok" | "failed";
+      error?: string;
+    }[] = [];
+
+    for (const srv of secondaryServers) {
+      try {
+        const parentDir = snapshotPath.substring(0, snapshotPath.lastIndexOf("/"));
+
+        await this.sshService.execCommand(srv, `sudo mkdir -p ${parentDir}`);
+
+        const { stderrFrom, stderrTo } = await this.sshService.execPipe(
+          primary,
+          `sudo btrfs send ${snapshotPath}`,
+          srv,
+          `sudo btrfs receive ${parentDir}`
+        );
+
+        if (stderrFrom?.trim()) {
+          console.warn(`Replication stderr (send:${primary.uid}):`, stderrFrom);
+        }
+
+        if (stderrTo?.trim()) {
+          console.warn(`Replication stderr (receive:${srv.uid}):`, stderrTo);
+        }
+
+        results.push({
+          serverUid: srv.uid,
+          status: "ok"
+        });
+      } catch (err: any) {
+        results.push({
+          serverUid: srv.uid,
+          status: "failed",
+          error: err?.message ?? String(err)
+        });
+      }
+    }
+
+    return {
+      snapshotPath,
+      results
     };
   }
 }
