@@ -1,4 +1,8 @@
-import { SnapshotsApi, type BtrfsSnapshotCleanupRequest } from "../generated-types";
+import {
+  SnapshotsApi,
+  type BtrfsSnapshotCleanupRequest,
+  type BtrfsSnapshotFullReplicationRequest
+} from "../generated-types";
 import { axiosInstance } from "./axiosInstance";
 
 const snapshotsApi = new SnapshotsApi(undefined, undefined, axiosInstance);
@@ -41,6 +45,20 @@ export const restoreSnapshot = async ({
 
 export const cleanupSnapshots = async (subvolume: string, request: BtrfsSnapshotCleanupRequest) => {
   const { data } = await snapshotsApi.apiSnapshotsSubvolumeDelete(subvolume, request);
+
+  return data;
+};
+
+export const fullReplication = async (
+  subvolume: string,
+  snapshot: string,
+  request: BtrfsSnapshotFullReplicationRequest
+) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotReplicationFullPost(
+    subvolume,
+    snapshot,
+    request
+  );
 
   return data;
 };

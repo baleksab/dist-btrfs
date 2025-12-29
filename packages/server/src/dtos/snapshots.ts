@@ -61,9 +61,11 @@ export const btrfsSnapshotCleanupResponse = z
 
 export type BtrfsSnapshotCleanupResponse = z.infer<typeof btrfsSnapshotCleanupResponse>;
 
-export const btrfsSnapshotFullReplicationRequest = z.object({
-  secondaryServers: z.array(z.string())
-});
+export const btrfsSnapshotFullReplicationRequest = z
+  .object({
+    secondaryServers: z.array(z.string())
+  })
+  .openapi("BtrfsSnapshotFullReplicationRequest");
 
 export type BtrfsSnapshotFullReplicationRequest = z.infer<
   typeof btrfsSnapshotFullReplicationRequest
@@ -75,10 +77,12 @@ export const replicationResult = z.object({
   error: z.string().optional()
 });
 
-export const btrfsSnapshotFullReplicationResponse = z.object({
-  snapshotPath: z.string(),
-  results: z.array(replicationResult)
-});
+export const btrfsSnapshotFullReplicationResponse = z
+  .object({
+    snapshotPath: z.string(),
+    results: z.array(replicationResult)
+  })
+  .openapi("BtrfsSnapshotFullReplicationResponse");
 
 export type ReplicationResult = z.infer<typeof replicationResult>;
 

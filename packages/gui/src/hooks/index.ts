@@ -16,3 +16,4 @@ export * from "./useUpdateSubvolumeConfig";
 export * from "./useSubvolumeRetentionConfig";
 export * from "./useUpdateSubvolumeRetentionConfig";
 export * from "./useSubvolumeRetentionConfigAll";
+export * from "./useFullReplication";
