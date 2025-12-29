@@ -11,6 +11,7 @@ import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { LocaleSelector } from "../LocaleSelector";
 import { useRouter, useRouterState } from "@tanstack/react-router";
+import { ThemeSeLector } from "../ThemeSelector";
 
 type SidebarProps = {
   onNavigate?: () => void;
@@ -92,7 +93,10 @@ export const Sidebar = ({ onNavigate }: SidebarProps) => {
             onClick={() => onNavigate?.()}
           />
         </Stack>
-        <LocaleSelector />
+        <Stack>
+          <ThemeSeLector />
+          <LocaleSelector />
+        </Stack>
       </Stack>
     </AppShell.Navbar>
   );

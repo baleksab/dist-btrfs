@@ -13,3 +13,4 @@ export * from "./SubvolumeRetentionConfigs";
 export * from "./FullReplicationForm";
 export * from "./SnapshotSelector";
 export * from "./SecondaryServerSelector";
+export * from "./ThemeSelector";
