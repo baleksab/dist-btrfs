@@ -5,7 +5,9 @@ import { use } from "react";
 
 const availableLocales: { value: Locale; label: string }[] = [
   { value: "en", label: "English" },
-  { value: "sr", label: "Srpski" }
+  { value: "sr", label: "Srpski" },
+  { value: "zh", label: "简体中文" },
+  { value: "ru", label: "Русский" }
 ];
 
 export const LocaleSelector = () => {
