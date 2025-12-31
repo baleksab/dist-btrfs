@@ -166,4 +166,10 @@ export class BtrfsService {
       exists: true
     };
   }
+
+  async checkIfSubvolumeExists(path: string, serverUid?: string) {
+    const subvolumes = await this.listSubvolumes(serverUid);
+
+    return subvolumes.some((subvolume) => subvolume.path === path);
+  }
 }

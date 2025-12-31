@@ -15,3 +15,4 @@ export * from "./SnapshotSelector";
 export * from "./SecondaryServerSelector";
 export * from "./ThemeSelector";
 export * from "./IncrementalReplicationForm";
+export * from "./Dots";

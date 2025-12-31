@@ -85,3 +85,17 @@ createRoute({
   }),
   tags: ["Btrfs"]
 });
+
+createRoute({
+  method: "get",
+  path: "/btrfs/subvolumes/:subvolume/health",
+  handler: controller.checkIfSubvolumeExists.bind(controller),
+  response: z.boolean(),
+  params: z.object({
+    subvolume: z.string()
+  }),
+  query: z.object({
+    serverUid: z.string().optional()
+  }),
+  tags: ["Btrfs"]
+});

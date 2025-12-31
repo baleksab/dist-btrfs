@@ -55,4 +55,13 @@ export class BtrfsController {
 
     return res.status(200).json(config);
   }
+
+  async checkIfSubvolumeExists(_dto: unknown, req: Request, res: Response) {
+    const { subvolume } = req.params;
+    const { serverUid } = req.query;
+
+    const result = await this.service.checkIfSubvolumeExists(subvolume, serverUid as string);
+
+    return res.status(200).json(result);
+  }
 }
