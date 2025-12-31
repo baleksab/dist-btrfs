@@ -10,6 +10,7 @@ type SnapshotSelectorProps = {
   onChange?: (value: string | null) => void;
   value?: string | null;
   noSnapshotsMessage?: string | ReactNode;
+  label?: string;
 };
 
 export const SnapshotSelector = ({
@@ -17,7 +18,8 @@ export const SnapshotSelector = ({
   subvolume,
   value,
   onChange,
-  noSnapshotsMessage
+  noSnapshotsMessage,
+  label
 }: SnapshotSelectorProps) => {
   const { formatMessage } = useIntl();
   const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "", serverUid);
@@ -50,7 +52,7 @@ export const SnapshotSelector = ({
       data={snapshotOptions}
       onChange={onChange}
       value={value}
-      label={formatMessage(translations.selectedSnapshot)}
+      label={label || formatMessage(translations.selectedSnapshot)}
       allowDeselect={false}
     />
   );

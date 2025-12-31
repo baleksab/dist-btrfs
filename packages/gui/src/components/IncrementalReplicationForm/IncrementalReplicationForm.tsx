@@ -19,6 +19,7 @@ export const IncrementalReplicationForm = ({
   const [selectedSecondaryServer, setSelectedSecondaryServer] = useState<string>();
   const [selectedSubvolume, setSelectedSubvolume] = useState<string | null>();
   const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>();
+  const [selectedPrimarySnapshot, setSelectedPrimarySnapshot] = useState<string | null>();
 
   const { subvolumeHealth, isCheckingSubvolumeHealth } = useSubvolumeHealthCheck(
     selectedSubvolume || ""
@@ -62,6 +63,12 @@ export const IncrementalReplicationForm = ({
             noSnapshotsMessage={formatMessage(translations.noSnapshots, {
               nav: (text) => <Anchor onClick={onNavigateToFullReplication}>{text}</Anchor>
             })}
+          />
+          <SnapshotSelector
+            subvolume={selectedSubvolume}
+            label={formatMessage(translations.snapshotSelector)}
+            value={selectedPrimarySnapshot}
+            onChange={setSelectedPrimarySnapshot}
           />
         </>
       )}

@@ -17,5 +17,9 @@ export const translations = defineMessages({
   noSubvolumes: {
     id: "components.incrementalReplicationForm.noSubvolumes",
     defaultMessage: "This secondary server either has no subvolumes or it is not reachable."
+  },
+  snapshotSelector: {
+    id: "components.incrementalReplicationForm.snapshotSelector",
+    defaultMessage: "Selected snapshot on primary server"
   }
 });
