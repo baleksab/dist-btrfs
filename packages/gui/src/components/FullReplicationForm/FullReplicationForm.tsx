@@ -39,7 +39,7 @@ export const FullReplicationForm = () => {
     Boolean(selectedSubvolume) && Boolean(selectedSnapshot) && hasTargets && !isFullyReplicating;
 
   return (
-    <Stack pt="md" pb="md">
+    <Stack>
       <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
       {(snapshots?.length !== 0 || isLoadingSnapshots) && (
         <SnapshotSelector

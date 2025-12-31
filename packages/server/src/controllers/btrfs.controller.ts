@@ -5,8 +5,9 @@ import { Request, Response } from "express";
 export class BtrfsController {
   private service = new BtrfsService();
 
-  async getAllSubvolumes(_dto: unknown, _req: Request, res: Response) {
-    const subvolumes = await this.service.listSubvolumes();
+  async getAllSubvolumes(_dto: unknown, req: Request, res: Response) {
+    const { serverUid } = req.query;
+    const subvolumes = await this.service.listSubvolumes(serverUid as string);
 
     return res.status(200).json(subvolumes);
   }

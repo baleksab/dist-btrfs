@@ -16,6 +16,7 @@ type CreateRouteOptions = {
   summary?: string;
   tags?: string[];
   params?: z.ZodObject<Record<string, z.ZodTypeAny>>;
+  query?: z.ZodObject<Record<string, z.ZodTypeAny>>;
 };
 
 export const createRoute = ({
@@ -26,7 +27,8 @@ export const createRoute = ({
   response,
   summary = "",
   tags = [],
-  params
+  params,
+  query
 }: CreateRouteOptions) => {
   const openApiPath = path.replace(/:([A-Za-z0-9_]+)/g, "{$1}");
 
@@ -37,6 +39,7 @@ export const createRoute = ({
     tags,
     request: {
       params: params ? params : undefined,
+      query: query ? query : undefined,
       body: dto
         ? {
             content: {
@@ -64,8 +67,15 @@ export const createRoute = ({
   router[method](path, async (req, res, next) => {
     try {
       const validatedBody = dto ? dto.parse(req.body) : req.body;
+      const validatedQuery = query ? query.parse(req.query) : req.query;
+      const validatedParams = params ? params.parse(req.params) : req.params;
 
-      const result = await handler(validatedBody, req, res);
+      const result = await handler(
+        { body: validatedBody, query: validatedQuery, params: validatedParams },
+        req,
+        res
+      );
+
       if (!res.headersSent) {
         res.json(result);
       }

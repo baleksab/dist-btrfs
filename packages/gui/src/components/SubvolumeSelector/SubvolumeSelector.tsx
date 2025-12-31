@@ -1,21 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSubvolumes } from "../../hooks";
 import { Select, Skeleton } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 
 type SubvolumeSelectorProps = {
+  serverUid?: string;
   onChange?: (value: string | null) => void;
   value?: string | null;
   label?: string;
 };
 
-export const SubvolumeSelector = ({ label, value, onChange }: SubvolumeSelectorProps) => {
-  const hasSetInitialSubvolume = useRef(false);
-  const [defaultSubvolume, setDefaultSubvolume] = useState<string | undefined>(undefined);
-  const { subvolumes, isLoadingSubvolumes } = useSubvolumes();
+export const SubvolumeSelector = ({
+  serverUid,
+  label,
+  value,
+  onChange
+}: SubvolumeSelectorProps) => {
   const { formatMessage } = useIntl();
+  const hasSetInitialSubvolume = useRef(false);
 
+  const { subvolumes, isLoadingSubvolumes } = useSubvolumes(serverUid);
+  console.log(serverUid);
   const subvolumeOptions = subvolumes?.map((subvolume) => ({
     value: subvolume.path.toString(),
     label: subvolume.path
@@ -27,8 +33,6 @@ export const SubvolumeSelector = ({ label, value, onChange }: SubvolumeSelectorP
     }
 
     hasSetInitialSubvolume.current = true;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDefaultSubvolume(subvolumeOptions[0].value);
     onChange?.(subvolumeOptions[0].value);
   }, [subvolumeOptions]);
 
@@ -41,7 +45,8 @@ export const SubvolumeSelector = ({ label, value, onChange }: SubvolumeSelectorP
       data={subvolumeOptions}
       label={label || formatMessage(translations.subvolumesLabel)}
       onChange={onChange}
-      value={value || defaultSubvolume}
+      value={value}
+      allowDeselect={false}
     />
   );
 };

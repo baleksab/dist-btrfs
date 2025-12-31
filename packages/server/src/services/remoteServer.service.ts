@@ -30,6 +30,10 @@ export class RemoteServerService {
     return servers.map(({ username, password, ...rest }) => rest);
   }
 
+  get(uid: string) {
+    return this.remoteServerRepository.find(uid);
+  }
+
   delete(uid: string) {
     return this.remoteServerRepository.delete(uid);
   }
@@ -77,6 +81,18 @@ export class RemoteServerService {
 
   async getPrimaryServerUnsanitized() {
     const server = await this.getPrimaryServer();
+
+    const decryptedServer = {
+      ...server,
+      username: decrypt(server.username),
+      password: decrypt(server.password)
+    };
+
+    return decryptedServer;
+  }
+
+  async getServerUsanitized(uid: string) {
+    const server = await this.remoteServerRepository.find(uid);
 
     const decryptedServer = {
       ...server,

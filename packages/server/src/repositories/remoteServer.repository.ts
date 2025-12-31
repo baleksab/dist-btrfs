@@ -12,6 +12,12 @@ export class RemoteServerRepository {
     return server;
   }
 
+  async find(uid: string) {
+    const [server] = await database.select().from(remoteServers).where(eq(remoteServers.uid, uid));
+
+    return server;
+  }
+
   findAll() {
     return database.select().from(remoteServers);
   }

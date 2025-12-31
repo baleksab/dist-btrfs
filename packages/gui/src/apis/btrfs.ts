@@ -7,9 +7,9 @@ import { axiosInstance } from "./axiosInstance";
 
 const btrfsApi = new BtrfsApi(undefined, undefined, axiosInstance);
 
-export const getAllSubvolumes = async () => {
-  const { data } = await btrfsApi.apiBtrfsSubvolumesGet();
-
+export const getAllSubvolumes = async (serverUid?: string) => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesGet(serverUid);
+  console.log(serverUid);
   return data;
 };
 

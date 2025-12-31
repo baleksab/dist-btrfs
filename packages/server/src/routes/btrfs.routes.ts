@@ -16,6 +16,9 @@ const controller = new BtrfsController();
 createRoute({
   method: "get",
   path: "/btrfs/subvolumes",
+  query: z.object({
+    serverUid: z.string().optional()
+  }),
   handler: controller.getAllSubvolumes.bind(controller),
   response: btrfsSubvolumesResponse,
   tags: ["Btrfs"]

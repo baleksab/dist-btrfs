@@ -16,8 +16,10 @@ export class BtrfsService {
   private sshService = new SshService();
   private btrfsRepository = new BtrfsRepository();
 
-  async listSubvolumes() {
-    const server = await this.remoteServerService.getPrimaryServerUnsanitized();
+  async listSubvolumes(serverUid?: string) {
+    const server = serverUid
+      ? await this.remoteServerService.getServerUsanitized(serverUid)
+      : await this.remoteServerService.getPrimaryServerUnsanitized();
 
     const cmd = "sudo btrfs subvolume list /";
     const { stdout, stderr } = await this.sshService.execCommand(server, cmd);

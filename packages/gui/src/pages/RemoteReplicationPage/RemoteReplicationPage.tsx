@@ -1,5 +1,5 @@
 import { Stack, Tabs } from "@mantine/core";
-import { FullReplicationForm, PageHeader } from "../../components";
+import { FullReplicationForm, IncrementalReplicationForm, PageHeader } from "../../components";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 
@@ -14,11 +14,11 @@ export const RemoteReplicationPage = () => {
           <Tabs.Tab value="full">{formatMessage(translations.fullTab)}</Tabs.Tab>
           <Tabs.Tab value="incremental">{formatMessage(translations.incrementalTab)}</Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value="full">
+        <Tabs.Panel value="full" pt="md" pb="md">
           <FullReplicationForm />
         </Tabs.Panel>
-        <Tabs.Panel value="incremental">
-          <p>Incremental</p>
+        <Tabs.Panel value="incremental" pt="md" pb="md">
+          <IncrementalReplicationForm />
         </Tabs.Panel>
       </Tabs>
     </Stack>

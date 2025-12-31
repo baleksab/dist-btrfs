@@ -211,10 +211,11 @@ export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBtrfsSubvolumesGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiBtrfsSubvolumesGet: async (serverUid?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/btrfs/subvolumes`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -226,6 +227,10 @@ export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (serverUid !== undefined) {
+                localVarQueryParameter['serverUid'] = serverUid;
+            }
 
 
     
@@ -436,11 +441,12 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumesResponseInner>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesGet(options);
+        async apiBtrfsSubvolumesGet(serverUid?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSubvolumesResponseInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesGet(serverUid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -532,11 +538,12 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumesResponseInner>> {
-            return localVarFp.apiBtrfsSubvolumesGet(options).then((request) => request(axios, basePath));
+        apiBtrfsSubvolumesGet(serverUid?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSubvolumesResponseInner>> {
+            return localVarFp.apiBtrfsSubvolumesGet(serverUid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -609,11 +616,12 @@ export class BtrfsApi extends BaseAPI {
     /**
      * 
      * @summary 
+     * @param {string} [serverUid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public apiBtrfsSubvolumesGet(options?: RawAxiosRequestConfig) {
-        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesGet(options).then((request) => request(this.axios, this.basePath));
+    public apiBtrfsSubvolumesGet(serverUid?: string, options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsSubvolumesGet(serverUid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
