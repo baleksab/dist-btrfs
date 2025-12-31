@@ -1,6 +1,6 @@
 import { Stack, Text, Fieldset, Button, Group, Badge } from "@mantine/core";
 import { SubvolumeSelector } from "../SubvolumeSelector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useIntl } from "react-intl";
 import { useFullReplication, useSnapshots } from "../../hooks";
 import { SnapshotSelector } from "../SnapshotSelector";
@@ -14,24 +14,13 @@ export const FullReplicationForm = () => {
   const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>(null);
   const [selectedSecondaryServers, setSelectedSecondaryServers] = useState<string[]>([]);
 
-  const { snapshots, isLoadingSnapshots } = useSnapshots(selectedSubvolume || "");
+  const { snapshots } = useSnapshots(selectedSubvolume || "");
   const { fullReplicationResults, fullReplicateAsync, isFullyReplicating } = useFullReplication(
     selectedSubvolume || "",
     selectedSnapshot || ""
   );
 
   const snapshot = snapshots?.find((s) => s.path === selectedSnapshot);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedSecondaryServers([]);
-    setSelectedSnapshot(null);
-  }, [selectedSubvolume]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedSecondaryServers([]);
-  }, [selectedSnapshot]);
 
   const hasTargets = (selectedSecondaryServers?.length ?? 0) > 0;
 
@@ -41,15 +30,13 @@ export const FullReplicationForm = () => {
   return (
     <Stack>
       <SubvolumeSelector value={selectedSubvolume} onChange={setSelectedSubvolume} />
-      {(snapshots?.length !== 0 || isLoadingSnapshots) && (
-        <SnapshotSelector
-          subvolume={selectedSubvolume}
-          value={selectedSnapshot}
-          onChange={setSelectedSnapshot}
-        />
-      )}
-      {snapshots?.length === 0 && <Text>{formatMessage(translations.noSnapshots)}</Text>}
-      {snapshot && !isLoadingSnapshots && (
+      <SnapshotSelector
+        subvolume={selectedSubvolume}
+        value={selectedSnapshot}
+        onChange={setSelectedSnapshot}
+        noSnapshotsMessage={formatMessage(translations.noSnapshots)}
+      />
+      {snapshot && (
         <>
           <Fieldset legend={formatMessage(translations.snapshotInfoTitle)}>
             <Stack>
@@ -76,6 +63,7 @@ export const FullReplicationForm = () => {
           <SecondaryServerSelector
             value={selectedSecondaryServers}
             onChange={setSelectedSecondaryServers}
+            noSecondaryServersMessage={formatMessage(translations.noSecondaryServers)}
           />
           <Button
             disabled={!buttonDisabled}

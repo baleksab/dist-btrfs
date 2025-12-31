@@ -1,22 +1,23 @@
-import { MultiSelect, Select, Skeleton } from "@mantine/core";
+import { MultiSelect, Select, Skeleton, Text } from "@mantine/core";
 import { useRemoteServers } from "../../hooks";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
-import { useEffect, useRef } from "react";
+import { useEffect, type ReactNode } from "react";
 
 type SecondaryServerSelectorProps = {
   onChange?: (uid: string[]) => void;
   value?: string[] | null;
   type?: "multi" | "single";
+  noSecondaryServersMessage?: string | ReactNode;
 };
 
 export const SecondaryServerSelector = ({
   value,
   onChange,
-  type = "multi"
+  type = "multi",
+  noSecondaryServersMessage
 }: SecondaryServerSelectorProps) => {
   const { formatMessage } = useIntl();
-  const initialDataSetRef = useRef<boolean>(false);
 
   const { remoteServers, isLoadingRemoteServers } = useRemoteServers();
 
@@ -28,16 +29,21 @@ export const SecondaryServerSelector = ({
     }));
 
   useEffect(() => {
-    if (type === "multi" || initialDataSetRef.current || !remoteServerOptions?.length) {
+    if (type === "multi" || !remoteServerOptions?.length) {
       return;
     }
 
-    initialDataSetRef.current = true;
     onChange?.(remoteServerOptions?.[0]?.value ? [remoteServerOptions[0]?.value] : []);
-  }, [onChange]);
+
+    return () => onChange?.([]);
+  }, [onChange, remoteServerOptions]);
 
   if (isLoadingRemoteServers) {
     return <Skeleton height={32} />;
+  }
+
+  if (!remoteServerOptions?.length && noSecondaryServersMessage) {
+    return <Text>{noSecondaryServersMessage}</Text>;
   }
 
   if (type === "single") {

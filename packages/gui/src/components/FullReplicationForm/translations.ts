@@ -33,10 +33,6 @@ export const translations = defineMessages({
     id: "components.fullReplicationForm.willReplicateToTitle",
     defaultMessage: "Will be replicated to"
   },
-  noSecondaryServers: {
-    id: "components.fullReplicationForm.noSecondaryServers",
-    defaultMessage: "No secondary servers selected."
-  },
   replicateButton: {
     id: "components.fullReplicationForm.replicateButton",
     defaultMessage: "Replicate"
@@ -76,5 +72,9 @@ export const translations = defineMessages({
   replicationErrorLabel: {
     id: "components.fullReplicationForm.replicationErrorLabel",
     defaultMessage: "Error"
+  },
+  noSecondaryServers: {
+    id: "components.fullReplicationForm.noSecondaryServers",
+    defaultMessage: "There are no secondary servers added. Please add one before proceeding."
   }
 });

@@ -18,7 +18,7 @@ export class BtrfsService {
 
   async listSubvolumes(serverUid?: string) {
     const server = serverUid
-      ? await this.remoteServerService.getServerUsanitized(serverUid)
+      ? await this.remoteServerService.getServerUnsanitized(serverUid)
       : await this.remoteServerService.getPrimaryServerUnsanitized();
 
     const cmd = "sudo btrfs subvolume list /";

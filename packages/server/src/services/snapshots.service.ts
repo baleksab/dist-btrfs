@@ -21,8 +21,10 @@ export class SnapshotsService {
     return `/.snapshots/${name}`;
   }
 
-  async listSnapshots(subvolPath: string) {
-    const server = await this.remoteServerService.getPrimaryServerUnsanitized();
+  async listSnapshots(subvolPath: string, serverUid?: string) {
+    const server = serverUid
+      ? await this.remoteServerService.getServerUnsanitized(serverUid)
+      : await this.remoteServerService.getPrimaryServerUnsanitized();
 
     const snapshotsDir = this.getSnapshotsDir(subvolPath);
 

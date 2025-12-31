@@ -67,14 +67,8 @@ export const createRoute = ({
   router[method](path, async (req, res, next) => {
     try {
       const validatedBody = dto ? dto.parse(req.body) : req.body;
-      const validatedQuery = query ? query.parse(req.query) : req.query;
-      const validatedParams = params ? params.parse(req.params) : req.params;
 
-      const result = await handler(
-        { body: validatedBody, query: validatedQuery, params: validatedParams },
-        req,
-        res
-      );
+      const result = await handler(validatedBody, req, res);
 
       if (!res.headersSent) {
         res.json(result);

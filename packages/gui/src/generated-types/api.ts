@@ -1240,10 +1240,11 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
          * 
          * @summary 
          * @param {string} subvolume 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSnapshotsSubvolumeGet: async (subvolume: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiSnapshotsSubvolumeGet: async (subvolume: string, serverUid?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'subvolume' is not null or undefined
             assertParamExists('apiSnapshotsSubvolumeGet', 'subvolume', subvolume)
             const localVarPath = `/api/snapshots/{subvolume}`
@@ -1258,6 +1259,10 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (serverUid !== undefined) {
+                localVarQueryParameter['serverUid'] = serverUid;
+            }
 
 
     
@@ -1449,11 +1454,12 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * 
          * @summary 
          * @param {string} subvolume 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSnapshotResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeGet(subvolume, options);
+        async apiSnapshotsSubvolumeGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BtrfsSnapshotResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeGet(subvolume, serverUid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumeGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1538,11 +1544,12 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
          * 
          * @summary 
          * @param {string} subvolume 
+         * @param {string} [serverUid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSnapshotResponse>> {
-            return localVarFp.apiSnapshotsSubvolumeGet(subvolume, options).then((request) => request(axios, basePath));
+        apiSnapshotsSubvolumeGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<BtrfsSnapshotResponse>> {
+            return localVarFp.apiSnapshotsSubvolumeGet(subvolume, serverUid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1611,11 +1618,12 @@ export class SnapshotsApi extends BaseAPI {
      * 
      * @summary 
      * @param {string} subvolume 
+     * @param {string} [serverUid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public apiSnapshotsSubvolumeGet(subvolume: string, options?: RawAxiosRequestConfig) {
-        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeGet(subvolume, options).then((request) => request(this.axios, this.basePath));
+    public apiSnapshotsSubvolumeGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeGet(subvolume, serverUid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

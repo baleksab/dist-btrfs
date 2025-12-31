@@ -91,7 +91,7 @@ export class RemoteServerService {
     return decryptedServer;
   }
 
-  async getServerUsanitized(uid: string) {
+  async getServerUnsanitized(uid: string) {
     const server = await this.remoteServerRepository.find(uid);
 
     const decryptedServer = {

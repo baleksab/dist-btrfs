@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useSubvolumes } from "../../hooks";
-import { Select, Skeleton } from "@mantine/core";
+import { Select, Skeleton, Text } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 
@@ -9,35 +9,41 @@ type SubvolumeSelectorProps = {
   onChange?: (value: string | null) => void;
   value?: string | null;
   label?: string;
+  noSubvolumesMessage?: string | ReactNode;
 };
 
 export const SubvolumeSelector = ({
   serverUid,
   label,
   value,
-  onChange
+  onChange,
+  noSubvolumesMessage
 }: SubvolumeSelectorProps) => {
   const { formatMessage } = useIntl();
-  const hasSetInitialSubvolume = useRef(false);
 
   const { subvolumes, isLoadingSubvolumes } = useSubvolumes(serverUid);
-  console.log(serverUid);
+
   const subvolumeOptions = subvolumes?.map((subvolume) => ({
     value: subvolume.path.toString(),
     label: subvolume.path
   }));
 
   useEffect(() => {
-    if (hasSetInitialSubvolume.current || !subvolumeOptions?.length) {
+    if (!subvolumeOptions?.length) {
       return;
     }
 
-    hasSetInitialSubvolume.current = true;
     onChange?.(subvolumeOptions[0].value);
+
+    return () => onChange?.(null);
   }, [subvolumeOptions]);
 
   if (isLoadingSubvolumes) {
     return <Skeleton height={32} />;
+  }
+
+  if (!subvolumes?.length && noSubvolumesMessage) {
+    return <Text>{noSubvolumesMessage}</Text>;
   }
 
   return (

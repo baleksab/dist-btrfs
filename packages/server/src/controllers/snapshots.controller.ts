@@ -7,7 +7,8 @@ export class SnapshotsController {
 
   async listSnapshot(_dto: unknown, req: Request, res: Response) {
     const subvolume = req.params.subvolume;
-    const response = await this.snapshotService.listSnapshots(subvolume);
+    const serverUid = req.query.serverUid;
+    const response = await this.snapshotService.listSnapshots(subvolume, serverUid as string);
 
     return res.status(200).json(response);
   }

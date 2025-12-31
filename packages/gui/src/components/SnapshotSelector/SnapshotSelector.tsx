@@ -1,19 +1,26 @@
 import { useIntl } from "react-intl";
 import { useSnapshots } from "../../hooks";
-import { useEffect, useState } from "react";
-import { Select, Skeleton } from "@mantine/core";
+import { useEffect, type ReactNode } from "react";
+import { Select, Skeleton, Text } from "@mantine/core";
 import { translations } from "./translations";
 
 type SnapshotSelectorProps = {
+  serverUid?: string;
   subvolume?: string | null;
   onChange?: (value: string | null) => void;
   value?: string | null;
+  noSnapshotsMessage?: string | ReactNode;
 };
 
-export const SnapshotSelector = ({ subvolume, value, onChange }: SnapshotSelectorProps) => {
+export const SnapshotSelector = ({
+  serverUid,
+  subvolume,
+  value,
+  onChange,
+  noSnapshotsMessage
+}: SnapshotSelectorProps) => {
   const { formatMessage } = useIntl();
-  const [defaultSnapshot, setDefaultSnapshot] = useState<string | null>(null);
-  const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "");
+  const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "", serverUid);
 
   const snapshotOptions = snapshots?.map((snapshot) => ({
     value: snapshot.path,
@@ -21,25 +28,30 @@ export const SnapshotSelector = ({ subvolume, value, onChange }: SnapshotSelecto
   }));
 
   useEffect(() => {
-    if (isLoadingSnapshots) {
+    if (!snapshotOptions?.length) {
       return;
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDefaultSnapshot(snapshots?.[0]?.path || "");
-    onChange?.(snapshots?.[0]?.path || "");
-  }, [subvolume, snapshots, isLoadingSnapshots, onChange]);
+    onChange?.(snapshotOptions?.[0]?.value || "");
+
+    return () => onChange?.(null);
+  }, [snapshotOptions, onChange]);
 
   if (isLoadingSnapshots) {
     return <Skeleton height={32} />;
+  }
+
+  if (!snapshotOptions?.length && noSnapshotsMessage) {
+    return <Text>{noSnapshotsMessage}</Text>;
   }
 
   return (
     <Select
       data={snapshotOptions}
       onChange={onChange}
-      value={value || defaultSnapshot}
+      value={value}
       label={formatMessage(translations.selectedSnapshot)}
+      allowDeselect={false}
     />
   );
 };

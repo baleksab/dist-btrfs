@@ -19,6 +19,7 @@ createRoute({
   path: "/snapshots/:subvolume",
   handler: controller.listSnapshot.bind(controller),
   params: z.object({ subvolume: z.string() }),
+  query: z.object({ serverUid: z.string().optional() }),
   response: btrfsSnapshotsResponse,
   tags: ["Snapshots"]
 });
