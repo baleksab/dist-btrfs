@@ -10,6 +10,7 @@ type SnapshotSelectorProps = {
   onChange?: (value: string | null) => void;
   value?: string | null;
   noSnapshotsMessage?: string | ReactNode;
+  dateFilter?: Date;
   label?: string;
 };
 
@@ -19,15 +20,20 @@ export const SnapshotSelector = ({
   value,
   onChange,
   noSnapshotsMessage,
+  dateFilter,
   label
 }: SnapshotSelectorProps) => {
   const { formatMessage } = useIntl();
   const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "", serverUid);
 
-  const snapshotOptions = snapshots?.map((snapshot) => ({
-    value: snapshot.path,
-    label: snapshot.name
-  }));
+  const snapshotOptions = snapshots
+    ?.filter((snapshot) =>
+      dateFilter && snapshot.createdAt ? new Date(snapshot.createdAt) > dateFilter : true
+    )
+    ?.map((snapshot) => ({
+      value: snapshot.path,
+      label: snapshot.name
+    }));
 
   useEffect(() => {
     if (!snapshotOptions?.length) {
