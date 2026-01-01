@@ -81,7 +81,7 @@ export const IncrementalReplicationForm = ({
         <Fieldset legend={formatMessage(translations.secondarySnapshot)}>
           <Stack gap="xs">
             <Text size="sm">
-              <strong>{formatMessage(translations.snapshotName)}:</strong> {snapshot.name}
+              <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;{snapshot.name}
             </Text>
             <Text size="sm">
               <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
@@ -112,7 +112,7 @@ export const IncrementalReplicationForm = ({
         <Fieldset legend={formatMessage(translations.primarySnapshot)}>
           <Stack gap="xs">
             <Text size="sm">
-              <strong>{formatMessage(translations.snapshotName)}:</strong> {newSnapshot.name}
+              <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;{newSnapshot.name}
             </Text>
             <Text size="sm">
               <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
