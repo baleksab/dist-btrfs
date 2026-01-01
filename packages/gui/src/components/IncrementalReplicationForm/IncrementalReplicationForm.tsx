@@ -96,7 +96,7 @@ export const IncrementalReplicationForm = ({
           </Stack>
         </Fieldset>
       )}
-      {selectedSnapshot && (
+      {snapshot && (
         <SnapshotSelector
           label={formatMessage(translations.primaryServerSnapshot)}
           subvolume={selectedSubvolume}
