@@ -122,7 +122,7 @@ export const IncrementalReplicationForm = ({
               subvolume={selectedSubvolume}
               value={selectedNewSnapshot}
               onChange={setSelectedNewSnapshot}
-              dateFilter={snapshot?.createdAt ? new Date(snapshot?.createdAt) : undefined}
+              dateFilter={new Date(snapshot?.name)}
               noSnapshotsMessage={formatMessage(translations.noNewerSnapshots, {
                 nav: (text) => (
                   <Anchor onClick={() => navigate({ to: "/snapshots" })}>{text}</Anchor>
