@@ -27,8 +27,8 @@ export const SnapshotSelector = ({
   const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "", serverUid);
 
   const snapshotOptions = snapshots
-    ?.filter((snapshot) =>
-      dateFilter && snapshot.createdAt ? new Date(snapshot.createdAt) > dateFilter : true
+    ?.filter(
+      (snapshot) => !dateFilter || (snapshot.createdAt && new Date(snapshot.createdAt) > dateFilter)
     )
     ?.map((snapshot) => ({
       value: snapshot.path,
@@ -36,14 +36,19 @@ export const SnapshotSelector = ({
     }));
 
   useEffect(() => {
-    if (!snapshotOptions?.length) {
+    if (!snapshotOptions?.length && value !== null) {
+      onChange?.(null);
       return;
     }
 
-    onChange?.(snapshotOptions?.[0]?.value || "");
+    const currentExists = snapshotOptions?.some((o) => o.value === value);
 
-    return () => onChange?.(null);
-  }, [snapshotOptions, onChange]);
+    if (currentExists || value) {
+      return;
+    }
+
+    onChange?.(snapshotOptions?.[0]?.value || null);
+  }, [snapshotOptions, value, onChange]);
 
   if (isLoadingSnapshots) {
     return <Skeleton height={32} />;
