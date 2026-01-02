@@ -5,9 +5,17 @@ export const translations = defineMessages({
     id: "components.incrementalReplicationForm.subvolumeHealth",
     defaultMessage: "Checking if {subvolume} exists on the primary server"
   },
+  snapshotHealth: {
+    id: "components.incrementalReplicationForm.snapshotHealth",
+    defaultMessage: "Checking if {snapshot} exists on the primary server"
+  },
   subvolumeHealthFail: {
     id: "components.incrementalReplicationForm.subvolumeHealthFail",
     defaultMessage: "{subvolume} does not exist on  the primary server!"
+  },
+  snapshotHealthFail: {
+    id: "components.incrementalReplicationForm.snapshotHealthFail",
+    defaultMessage: "{snapshot} does not exist on  the primary server!"
   },
   noSnapshots: {
     id: "components.incrementalReplicationForm.noSnapshots",

@@ -40,6 +40,7 @@ export const IncrementalReplicationForm = ({
 
   const snapshot = secondarySnapshots?.find((snapshot) => snapshot.path === selectedSnapshot);
   const newSnapshot = primarySnapshots?.find((snapshot) => snapshot.path === selectedNewSnapshot);
+  const oldSnapshotExistsOnPrimary = primarySnapshots?.some((s) => s.path === selectedSnapshot);
 
   return (
     <Stack>
@@ -81,98 +82,118 @@ export const IncrementalReplicationForm = ({
           })}
         />
       )}
-      {snapshot && (
-        <Fieldset legend={formatMessage(translations.secondarySnapshot)}>
-          <Stack gap="xs">
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;{snapshot.name}
-            </Text>
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
-              {snapshot.createdAt ? new Date(snapshot.createdAt).toLocaleString() : "-"}
-            </Text>
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotSize)}:</strong>&nbsp;
-              {snapshot.sizeBytes != null
-                ? `${(snapshot.sizeBytes / 1024 / 1024).toFixed(2)} MB`
-                : "-"}
-            </Text>
-          </Stack>
-        </Fieldset>
-      )}
-      {snapshot && (
-        <SnapshotSelector
-          label={formatMessage(translations.primaryServerSnapshot)}
-          subvolume={selectedSubvolume}
-          value={selectedNewSnapshot}
-          onChange={setSelectedNewSnapshot}
-          dateFilter={snapshot?.createdAt ? new Date(snapshot?.createdAt) : undefined}
-          noSnapshotsMessage={formatMessage(translations.noNewerSnapshots, {
-            nav: (text) => <Anchor onClick={() => navigate({ to: "/snapshots" })}>{text}</Anchor>
-          })}
-        />
-      )}
-      {newSnapshot && (
-        <Fieldset legend={formatMessage(translations.primarySnapshot)}>
-          <Stack gap="xs">
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;{newSnapshot.name}
-            </Text>
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
-              {newSnapshot.createdAt ? new Date(newSnapshot.createdAt).toLocaleString() : "-"}
-            </Text>
-            <Text size="sm">
-              <strong>{formatMessage(translations.snapshotSize)}:</strong>&nbsp;
-              {newSnapshot.sizeBytes != null
-                ? `${(newSnapshot.sizeBytes / 1024 / 1024).toFixed(2)} MB`
-                : "-"}
-            </Text>
-          </Stack>
-        </Fieldset>
-      )}
-      {snapshot && newSnapshot && (
+      {selectedSnapshot && oldSnapshotExistsOnPrimary === undefined && (
         <>
-          <Fieldset legend={formatMessage(translations.deltaTitle)}>
-            <Stack gap="xs">
-              <Text size="sm">
-                <strong>{formatMessage(translations.deltaTimeGap)}:</strong>&nbsp;
-                {formatMinutesDuration(
-                  Math.round(
-                    (new Date(newSnapshot.createdAt || new Date()).getTime() -
-                      new Date(snapshot.createdAt || new Date()).getTime()) /
-                      1000 /
-                      60
-                  ),
-                  locale
-                )}
-              </Text>
-              <Text size="sm">
-                <strong>{formatMessage(translations.deltaTransferEstimate)}:</strong>&nbsp;
-                {snapshot.sizeBytes != null &&
-                newSnapshot.sizeBytes != null &&
-                newSnapshot.sizeBytes - snapshot.sizeBytes > 0
-                  ? `${((newSnapshot.sizeBytes - snapshot.sizeBytes) / 1024 / 1024).toFixed(2)} MB`
-                  : formatMessage(translations.deltaDepends)}
-              </Text>
-              <Text size="sm">
-                <strong>{formatMessage(translations.incrementalExplanation)}</strong>
-              </Text>
-            </Stack>
-          </Fieldset>
-          <Button
-            loading={isIncrementallyReplicating}
-            onClick={() =>
-              incrementallyReplicateAsync({
-                secondaryServer: selectedSecondaryServer || "",
-                secondaryServersSnapshot: selectedSnapshot || ""
-              })
-            }
-          >
-            {formatMessage(translations.replicate)}
-          </Button>
-          {incrementalReplicationResults && (
-            <ReplicationResults results={incrementalReplicationResults.results} />
+          <Text>
+            {formatMessage(translations.snapshotHealth, { snapshot: selectedSnapshot })}
+            <Dots />
+          </Text>
+        </>
+      )}
+      {selectedSnapshot && oldSnapshotExistsOnPrimary === false && (
+        <Text>
+          {formatMessage(translations.snapshotHealthFail, { snapshot: selectedSnapshot })}
+        </Text>
+      )}
+      {oldSnapshotExistsOnPrimary && (
+        <>
+          {snapshot && (
+            <Fieldset legend={formatMessage(translations.secondarySnapshot)}>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;{snapshot.name}
+                </Text>
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
+                  {snapshot.createdAt ? new Date(snapshot.createdAt).toLocaleString() : "-"}
+                </Text>
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotSize)}:</strong>&nbsp;
+                  {snapshot.sizeBytes != null
+                    ? `${(snapshot.sizeBytes / 1024 / 1024).toFixed(2)} MB`
+                    : "-"}
+                </Text>
+              </Stack>
+            </Fieldset>
+          )}
+          {snapshot && (
+            <SnapshotSelector
+              label={formatMessage(translations.primaryServerSnapshot)}
+              subvolume={selectedSubvolume}
+              value={selectedNewSnapshot}
+              onChange={setSelectedNewSnapshot}
+              dateFilter={snapshot?.createdAt ? new Date(snapshot?.createdAt) : undefined}
+              noSnapshotsMessage={formatMessage(translations.noNewerSnapshots, {
+                nav: (text) => (
+                  <Anchor onClick={() => navigate({ to: "/snapshots" })}>{text}</Anchor>
+                )
+              })}
+            />
+          )}
+          {newSnapshot && (
+            <Fieldset legend={formatMessage(translations.primarySnapshot)}>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotName)}:</strong>&nbsp;
+                  {newSnapshot.name}
+                </Text>
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotCreated)}:</strong>&nbsp;
+                  {newSnapshot.createdAt ? new Date(newSnapshot.createdAt).toLocaleString() : "-"}
+                </Text>
+                <Text size="sm">
+                  <strong>{formatMessage(translations.snapshotSize)}:</strong>&nbsp;
+                  {newSnapshot.sizeBytes != null
+                    ? `${(newSnapshot.sizeBytes / 1024 / 1024).toFixed(2)} MB`
+                    : "-"}
+                </Text>
+              </Stack>
+            </Fieldset>
+          )}
+          {snapshot && newSnapshot && (
+            <>
+              <Fieldset legend={formatMessage(translations.deltaTitle)}>
+                <Stack gap="xs">
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.deltaTimeGap)}:</strong>&nbsp;
+                    {formatMinutesDuration(
+                      Math.round(
+                        (new Date(newSnapshot.createdAt || new Date()).getTime() -
+                          new Date(snapshot.createdAt || new Date()).getTime()) /
+                          1000 /
+                          60
+                      ),
+                      locale
+                    )}
+                  </Text>
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.deltaTransferEstimate)}:</strong>&nbsp;
+                    {snapshot.sizeBytes != null &&
+                    newSnapshot.sizeBytes != null &&
+                    newSnapshot.sizeBytes - snapshot.sizeBytes > 0
+                      ? `${((newSnapshot.sizeBytes - snapshot.sizeBytes) / 1024 / 1024).toFixed(2)} MB`
+                      : formatMessage(translations.deltaDepends)}
+                  </Text>
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.incrementalExplanation)}</strong>
+                  </Text>
+                </Stack>
+              </Fieldset>
+              <Button
+                loading={isIncrementallyReplicating}
+                onClick={() =>
+                  incrementallyReplicateAsync({
+                    secondaryServer: selectedSecondaryServer || "",
+                    secondaryServersSnapshot: selectedSnapshot || ""
+                  })
+                }
+              >
+                {formatMessage(translations.replicate)}
+              </Button>
+              {incrementalReplicationResults && (
+                <ReplicationResults results={incrementalReplicationResults.results} />
+              )}
+            </>
           )}
         </>
       )}
