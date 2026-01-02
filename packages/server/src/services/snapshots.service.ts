@@ -2,6 +2,7 @@ import path from "path";
 import {
   BtrfsSnapshotCleanupRequest,
   BtrfsSnapshotFullReplicationRequest,
+  BtrfsSnapshotIncrementalReplicationRequest,
   ReplicationResult
 } from "../dtos";
 import { getISOWeek } from "../utils";
@@ -336,6 +337,103 @@ export class SnapshotsService {
 
     return {
       snapshotPath,
+      results
+    };
+  }
+
+  async incrementalReplication(
+    snapshot: string,
+    request: BtrfsSnapshotIncrementalReplicationRequest
+  ) {
+    const primary = await this.remoteServerService.getPrimaryServerUnsanitized();
+    const secondary = await this.remoteServerService.getServerUnsanitized(request.secondaryServer);
+    const secondarySnapshot = request.secondaryServersSnapshot;
+
+    const { stderr: checkParent } = await this.sshService.execCommand(
+      primary,
+      `sudo btrfs subvolume show ${snapshot}`
+    );
+
+    if (checkParent && checkParent.includes("ERROR")) {
+      throw new Error(`Parent snapshot does not exist on primary: ${snapshot}`);
+    }
+
+    const { stderr: checkNew } = await this.sshService.execCommand(
+      primary,
+      `sudo btrfs subvolume show ${snapshot}`
+    );
+
+    if (checkNew && checkNew.includes("ERROR")) {
+      throw new Error(`Target snapshot does not exist on primary: ${snapshot}`);
+    }
+
+    const parentDir = path.posix.dirname(snapshot);
+    const leaf = snapshot.substring(snapshot.lastIndexOf("/") + 1);
+    const targetPath = `${parentDir}/${leaf}`;
+
+    const results: ReplicationResult[] = [];
+
+    try {
+      await this.sshService.execCommand(secondary, `sudo mkdir -p ${parentDir}`);
+
+      // 🔹 HERE: parent must be the snapshot that exists on SECONDARY
+      const { stderr: hasParentOnSecondary } = await this.sshService.execCommand(
+        secondary,
+        `sudo btrfs subvolume show ${secondarySnapshot}`
+      );
+
+      if (hasParentOnSecondary && hasParentOnSecondary.includes("ERROR")) {
+        throw new Error(`Parent snapshot does not exist on secondary server: ${secondarySnapshot}`);
+      }
+
+      await this.sshService.execCommand(
+        secondary,
+        `sudo btrfs subvolume show ${targetPath} >/dev/null 2>&1 && sudo btrfs subvolume delete ${targetPath} || true`
+      );
+
+      // 🔹 HERE: -p must reference the secondary snapshot (parent)
+      const { stderrFrom, stderrTo } = await this.sshService.execPipe(
+        primary,
+        `sudo btrfs send -p ${secondarySnapshot} ${snapshot}`,
+        secondary,
+        `sudo btrfs receive ${parentDir}`
+      );
+
+      if (stderrFrom?.trim()) {
+        console.warn(`Replication stderr (send:${primary.uid}):`, stderrFrom);
+      }
+
+      if (stderrTo?.trim()) {
+        console.warn(`Replication stderr (receive:${secondary.uid}):`, stderrTo);
+      }
+
+      if (stderrTo?.includes("ERROR") || stderrFrom?.includes("ERROR")) {
+        results.push({
+          serverUid: secondary.uid,
+          status: "failed",
+          error: (stderrTo || stderrFrom)?.trim(),
+          address: secondary.ipAddress,
+          port: secondary.port || 22
+        });
+      } else {
+        results.push({
+          serverUid: secondary.uid,
+          status: "ok",
+          address: secondary.ipAddress,
+          port: secondary.port || 22
+        });
+      }
+    } catch (err: any) {
+      results.push({
+        serverUid: secondary.uid,
+        status: "failed",
+        error: err?.message ?? String(err),
+        address: secondary.ipAddress,
+        port: secondary.port || 22
+      });
+    }
+
+    return {
       results
     };
   }

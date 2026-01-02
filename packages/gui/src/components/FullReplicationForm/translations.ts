@@ -37,10 +37,6 @@ export const translations = defineMessages({
     id: "components.fullReplicationForm.replicateButton",
     defaultMessage: "Replicate"
   },
-  replicationResults: {
-    id: "components.fullReplicationForm.replicationResults",
-    defaultMessage: "Replication results"
-  },
   replicationRunning: {
     id: "components.fullReplicationForm.replicationRunning",
     defaultMessage: "Running full replication…"
@@ -49,25 +45,9 @@ export const translations = defineMessages({
     id: "components.fullReplicationForm.replicationCompleted",
     defaultMessage: "Replication completed"
   },
-  serverUidLabel: {
-    id: "components.fullReplicationForm.serverUidLabel",
-    defaultMessage: "Server UID"
-  },
-  serverAddressLabel: {
-    id: "components.fullReplicationForm.serverAddressLabel",
-    defaultMessage: "Address"
-  },
   serverPortLabel: {
     id: "components.fullReplicationForm.serverPortLabel",
     defaultMessage: "Port"
-  },
-  replicationOk: {
-    id: "components.fullReplicationForm.replicationOk",
-    defaultMessage: "OK"
-  },
-  replicationFailed: {
-    id: "components.fullReplicationForm.replicationFailed",
-    defaultMessage: "Failed"
   },
   replicationErrorLabel: {
     id: "components.fullReplicationForm.replicationErrorLabel",

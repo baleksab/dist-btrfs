@@ -2,7 +2,8 @@ import type { RawAxiosRequestConfig } from "axios";
 import {
   SnapshotsApi,
   type BtrfsSnapshotCleanupRequest,
-  type BtrfsSnapshotFullReplicationRequest
+  type BtrfsSnapshotFullReplicationRequest,
+  type BtrfsSnapshotIncrementalReplicationRequest
 } from "../generated-types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -57,6 +58,22 @@ export const fullReplication = async (
   options?: RawAxiosRequestConfig
 ) => {
   const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotReplicationFullPost(
+    subvolume,
+    snapshot,
+    request,
+    options
+  );
+
+  return data;
+};
+
+export const incrementalReplication = async (
+  subvolume: string,
+  snapshot: string,
+  request: BtrfsSnapshotIncrementalReplicationRequest,
+  options?: RawAxiosRequestConfig
+) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(
     subvolume,
     snapshot,
     request,

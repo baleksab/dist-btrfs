@@ -2,13 +2,14 @@ import { Anchor, Button, Fieldset, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { SecondaryServerSelector } from "../SecondaryServerSelector";
 import { SubvolumeSelector } from "../SubvolumeSelector";
-import { useSnapshots, useSubvolumeHealthCheck } from "../../hooks";
+import { useIncrementalReplication, useSnapshots, useSubvolumeHealthCheck } from "../../hooks";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { Dots } from "../Dots";
 import { SnapshotSelector } from "../SnapshotSelector";
 import { useRouter } from "@tanstack/react-router";
 import { formatMinutesDuration } from "../../utils";
+import { ReplicationResults } from "../ReplicationResults";
 
 type IncrementalReplicationFormProps = {
   onNavigateToFullReplication?: () => void;
@@ -33,6 +34,9 @@ export const IncrementalReplicationForm = ({
     selectedSecondaryServer
   );
   const { snapshots: primarySnapshots } = useSnapshots(selectedSubvolume || "");
+
+  const { incrementallyReplicateAsync, isIncrementallyReplicating, incrementalReplicationResults } =
+    useIncrementalReplication(selectedSubvolume || "", selectedNewSnapshot || "");
 
   const snapshot = secondarySnapshots?.find((snapshot) => snapshot.path === selectedSnapshot);
   const newSnapshot = primarySnapshots?.find((snapshot) => snapshot.path === selectedNewSnapshot);
@@ -156,7 +160,20 @@ export const IncrementalReplicationForm = ({
               </Text>
             </Stack>
           </Fieldset>
-          <Button>{formatMessage(translations.replicate)}</Button>
+          <Button
+            loading={isIncrementallyReplicating}
+            onClick={() =>
+              incrementallyReplicateAsync({
+                secondaryServer: selectedSecondaryServer || "",
+                secondaryServersSnapshot: selectedSnapshot || ""
+              })
+            }
+          >
+            {formatMessage(translations.replicate)}
+          </Button>
+          {incrementalReplicationResults && (
+            <ReplicationResults results={incrementalReplicationResults.results} />
+          )}
         </>
       )}
     </Stack>

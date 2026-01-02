@@ -91,3 +91,14 @@ export type ReplicationResult = z.infer<typeof replicationResult>;
 export type BtrfsSnapshotFullReplicationResponse = z.infer<
   typeof btrfsSnapshotFullReplicationResponse
 >;
+
+export const btrfsSnapshotIncrementalReplicationRequest = z
+  .object({
+    secondaryServer: z.string(),
+    secondaryServersSnapshot: z.string()
+  })
+  .openapi("BtrfsSnapshotIncrementalReplicationRequest");
+
+export type BtrfsSnapshotIncrementalReplicationRequest = z.infer<
+  typeof btrfsSnapshotIncrementalReplicationRequest
+>;

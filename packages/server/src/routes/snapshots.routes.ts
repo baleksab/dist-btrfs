@@ -6,6 +6,7 @@ import {
   btrfsSnapshotDeleteResponse,
   btrfsSnapshotFullReplicationRequest,
   btrfsSnapshotFullReplicationResponse,
+  btrfsSnapshotIncrementalReplicationRequest,
   btrfsSnapshotResponse,
   btrfsSnapshotRestoreResponse,
   btrfsSnapshotsResponse
@@ -67,6 +68,16 @@ createRoute({
   handler: controller.fullReplication.bind(controller),
   params: z.object({ subvolume: z.string(), snapshot: z.string() }),
   dto: btrfsSnapshotFullReplicationRequest,
+  response: btrfsSnapshotFullReplicationResponse,
+  tags: ["Snapshots"]
+});
+
+createRoute({
+  method: "post",
+  path: "/snapshots/:subvolume/:snapshot/replication/incremental",
+  handler: controller.incrementalReplication.bind(controller),
+  params: z.object({ subvolume: z.string(), snapshot: z.string() }),
+  dto: btrfsSnapshotIncrementalReplicationRequest,
   response: btrfsSnapshotFullReplicationResponse,
   tags: ["Snapshots"]
 });

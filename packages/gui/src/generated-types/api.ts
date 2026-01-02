@@ -70,6 +70,10 @@ export const BtrfsSnapshotFullReplicationResponseResultsInnerStatusEnum = {
 
 export type BtrfsSnapshotFullReplicationResponseResultsInnerStatusEnum = typeof BtrfsSnapshotFullReplicationResponseResultsInnerStatusEnum[keyof typeof BtrfsSnapshotFullReplicationResponseResultsInnerStatusEnum];
 
+export interface BtrfsSnapshotIncrementalReplicationRequest {
+    'secondaryServer': string;
+    'secondaryServersSnapshot': string;
+}
 export interface BtrfsSnapshotResponse {
     'name': string;
     'path': string;
@@ -1394,6 +1398,48 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {BtrfsSnapshotIncrementalReplicationRequest} [btrfsSnapshotIncrementalReplicationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost: async (subvolume: string, snapshot: string, btrfsSnapshotIncrementalReplicationRequest?: BtrfsSnapshotIncrementalReplicationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost', 'subvolume', subvolume)
+            // verify required parameter 'snapshot' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost', 'snapshot', snapshot)
+            const localVarPath = `/api/snapshots/{subvolume}/{snapshot}/replication/incremental`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)))
+                .replace(`{${"snapshot"}}`, encodeURIComponent(String(snapshot)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(btrfsSnapshotIncrementalReplicationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1511,6 +1557,21 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {BtrfsSnapshotIncrementalReplicationRequest} [btrfsSnapshotIncrementalReplicationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume: string, snapshot: string, btrfsSnapshotIncrementalReplicationRequest?: BtrfsSnapshotIncrementalReplicationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSnapshotFullReplicationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume, snapshot, btrfsSnapshotIncrementalReplicationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1589,6 +1650,18 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {BtrfsSnapshotIncrementalReplicationRequest} [btrfsSnapshotIncrementalReplicationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume: string, snapshot: string, btrfsSnapshotIncrementalReplicationRequest?: BtrfsSnapshotIncrementalReplicationRequest, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSnapshotFullReplicationResponse> {
+            return localVarFp.apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume, snapshot, btrfsSnapshotIncrementalReplicationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1660,6 +1733,19 @@ export class SnapshotsApi extends BaseAPI {
      */
     public apiSnapshotsSubvolumeSnapshotReplicationFullPost(subvolume: string, snapshot: string, btrfsSnapshotFullReplicationRequest?: BtrfsSnapshotFullReplicationRequest, options?: RawAxiosRequestConfig) {
         return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeSnapshotReplicationFullPost(subvolume, snapshot, btrfsSnapshotFullReplicationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {string} snapshot 
+     * @param {BtrfsSnapshotIncrementalReplicationRequest} [btrfsSnapshotIncrementalReplicationRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume: string, snapshot: string, btrfsSnapshotIncrementalReplicationRequest?: BtrfsSnapshotIncrementalReplicationRequest, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeSnapshotReplicationIncrementalPost(subvolume, snapshot, btrfsSnapshotIncrementalReplicationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
