@@ -20,10 +20,12 @@
   "components.addServerModal.restorePath": "Putanja za vraćanje",
   "components.addServerModal.verifyConnection": "Proveri",
   "components.addServerModal.verifyTooltip": "Prvo unesite IP adresu, port, korisničko ime i lozinku",
+
   "components.configurationForm.label": "Interval snapshot-a (sekunde)",
   "components.configurationForm.interval": "Interval zadržavanja (sekunde)",
   "components.configurationForm.enabled": "Omogućeno",
   "components.configurationForm.save": "Sačuvaj",
+
   "components.fullReplicationForm.noSecondaryServers": "Nema izabranih sekundarnih servera.",
   "components.fullReplicationForm.noSnapshots": "Ovaj podvolumen nema snapshot-ove. Napravite snapshot pre nastavka.",
   "components.fullReplicationForm.replicateButton": "Replikuj",
@@ -44,6 +46,30 @@
   "components.fullReplicationForm.snapshotSelectedBadge": "Izabrano",
   "components.fullReplicationForm.snapshotSizeLabel": "Veličina (referencirana)",
   "components.fullReplicationForm.willReplicateToTitle": "Biće replicirano na",
+
+  "components.icnrementalReplicationForm.secondaryServerSnapshot": "Izabrani snapshot na sekundarnom serveru",
+
+  "components.incrementalReplicationForm.deltaDepends": "Zavisi od promenjenih blokova",
+  "components.incrementalReplicationForm.deltaTimeGap": "Vremenska razlika",
+  "components.incrementalReplicationForm.deltaTitle": "Inkrementalna delta",
+  "components.incrementalReplicationForm.deltaTransferEstimate": "Procenjena količina podataka",
+  "components.incrementalReplicationForm.incrementalDetails": "Detalji inkrementalne replikacije",
+  "components.incrementalReplicationForm.incrementalExplanation": "U inkrementalnom režimu prenose se samo podaci koji su promenjeni između ova dva snapshot-a.",
+  "components.incrementalReplicationForm.noNewerSnapshots": "Na primarnom serveru ne postoje noviji snapshot-ovi u odnosu na izabrani na sekundarnom. Izaberite drugi snapshot ili napravite nove <nav>ovde</nav>.",
+  "components.incrementalReplicationForm.noSnapshots": "Ovaj podvolumen nema snapshot-ove. Prvo izvršite <nav>punu replikaciju</nav>.",
+  "components.incrementalReplicationForm.noSubvolumes": "Ovaj sekundarni server ne sadrži podvolumene ili nije dostupan.",
+  "components.incrementalReplicationForm.primaryServerSnapshot": "Izabrani snapshot na primarnom serveru",
+  "components.incrementalReplicationForm.primarySnapshot": "Snapshot na primarnom serveru",
+  "components.incrementalReplicationForm.replicate": "Replikuj",
+  "components.incrementalReplicationForm.secondarySnapshot": "Snapshot na sekundarnom serveru",
+  "components.incrementalReplicationForm.snapshotCreated": "Kreirano",
+  "components.incrementalReplicationForm.snapshotHealth": "Provera postojanja snapshot-a {snapshot} na primarnom serveru",
+  "components.incrementalReplicationForm.snapshotHealthFail": "Snapshot {snapshot} ne postoji na primarnom serveru!",
+  "components.incrementalReplicationForm.snapshotName": "Naziv",
+  "components.incrementalReplicationForm.snapshotSize": "Veličina (referencirana)",
+  "components.incrementalReplicationForm.subvolumeHealth": "Provera postojanja podvolumena {subvolume} na primarnom serveru",
+  "components.incrementalReplicationForm.subvolumeHealthFail": "Podvolumen {subvolume} ne postoji na primarnom serveru!",
+
   "components.retentionConfigurationForm.title": "Čišćenje snapshot-ova",
   "components.retentionConfigurationForm.type": "Tip čišćenja:",
   "components.retentionConfigurationForm.daily": "Dnevno",
@@ -53,12 +79,14 @@
   "components.retentionConfigurationForm.cancel": "Otkaži",
   "components.retentionConfigurationForm.apply": "Primeni čišćenje",
   "components.retentionConfigurationForm.save": "Sačuvaj",
+
   "components.serverCard.ip": "IP adresa",
   "components.serverCard.port": "Port",
   "components.serverCard.primary": "Primarni",
   "components.serverCard.secondary": "Sekundarni",
   "components.serverCard.online": "Online",
   "components.serverCard.offline": "Offline",
+
   "components.sidebar.title": "dist-btrfs",
   "components.sidebar.navItem.servers": "Serveri",
   "components.sidebar.navItem.snapshots": "Snapshot-ovi",
@@ -66,6 +94,7 @@
   "components.sidebar.navItem.remoteReplication": "Udaljena replikacija",
   "components.sidebar.navItem.reports": "Izveštaji",
   "components.side.navItem.metricsAndAnalysis": "Metrike i analize",
+
   "components.snapshotCleanupModal.title": "Čišćenje snapshot-ova",
   "components.snapshotCleanupModal.type": "Tip čišćenja:",
   "components.snapshotCleanupModal.daily": "Dnevno",
@@ -74,12 +103,14 @@
   "components.snapshotCleanupModal.keep": "Broj snapshot-ova za čuvanje",
   "components.snapshotCleanupModal.cancel": "Otkaži",
   "components.snapshotCleanupModal.apply": "Primeni čišćenje",
+
   "components.subvolumeConfigs.subvolPath": "Putanja podvolumena",
   "components.subvolumeConfigs.snapshotInterval": "Interval snapshot-a (sekunde)",
   "components.subvolumeConfigs.status": "Status",
   "components.subvolumeConfigs.enabled": "Omogućeno",
   "components.subvolumeConfigs.disabled": "Onemogućeno",
   "components.subvolumeConfigs.empty": "Nema konfigurisanih automatskih snapshot politika",
+
   "components.retentionConfigs.subvolumePath": "Putanja podvolumena",
   "components.retentionConfigs.retentionType": "Tip zadržavanja",
   "components.retentionConfigs.retentionType.value": "{type}",
@@ -93,8 +124,10 @@
   "components.retentionConfigs.retentionType.daily": "Dnevno",
   "components.retentionConfigs.retentionType.weekly": "Nedeljno",
   "components.retentionConfigs.retentionType.monthly": "Mesečno",
+
   "components.subvolumeSelector.label": "Izabrani podvolumen",
   "components.secondaryServerSelector.label": "Izaberite sekundarne servere",
+
   "pages.configurationPage.title": "Primarni server – automatski snapshot-ovi",
   "pages.configurationPage.tabs.snapshots": "Snapshot-ovi",
   "pages.configurationPage.tabs.retention": "Zadržavanje",
@@ -102,12 +135,15 @@
   "pages.configurationPage.configuredSubvolumes": "Konfigurisane automatske snapshot politike",
   "pages.configurationPage.configuredRetentionSubvolumes": "Konfigurisane automatske retention politike",
   "pages.configurationPage.automaticRetentionPolicy": "Politika automatskog zadržavanja",
+
   "pages.remoteReplicationPage.title": "Primarni server – udaljena replikacija",
   "pages.remoteReplicationPage.fullTab": "Puna",
   "pages.remoteReplicationPage.incrementalTab": "Inkrementalna",
+
   "pages.serversPage.title": "Serveri",
   "pages.serversPage.addServer": "Dodaj server",
   "pages.serversPage.noServers": "Još nema dodatih servera",
+
   "pages.snapshotsPage.title": "Primarni server – snapshot-ovi",
   "pages.snapshotsPage.createSnapshot": "Kreiraj snapshot",
   "pages.snapshotsPage.loadingSubvolumes": "Učitavanje podvolumena...",
