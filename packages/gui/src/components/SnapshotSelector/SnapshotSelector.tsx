@@ -50,6 +50,10 @@ export const SnapshotSelector = ({
     onChange?.(snapshotOptions?.[0]?.value || null);
   }, [snapshotOptions, value, onChange]);
 
+  useEffect(() => {
+    return () => onChange?.(null);
+  }, [onChange]);
+
   if (isLoadingSnapshots) {
     return <Skeleton height={32} />;
   }
