@@ -477,6 +477,7 @@ export class SnapshotsService {
       serverUid: string;
       address: string;
       status: "ok" | "missing" | "error";
+      port: number;
       foundPath?: string;
     }> = [];
 
@@ -490,7 +491,8 @@ export class SnapshotsService {
           replicas.push({
             serverUid: srv.uid,
             address: srv.ipAddress,
-            status: "missing"
+            status: "missing",
+            port: srv.port || 22
           });
           continue;
         }
@@ -513,21 +515,24 @@ export class SnapshotsService {
           replicas.push({
             serverUid: srv.uid,
             address: srv.ipAddress,
-            status: "error"
+            status: "error",
+            port: srv.port || 22
           });
         } else {
           replicas.push({
             serverUid: srv.uid,
             address: srv.ipAddress,
             status: "ok",
-            foundPath
+            foundPath,
+            port: srv.port || 22
           });
         }
       } catch {
         replicas.push({
           serverUid: srv.uid,
           address: srv.ipAddress,
-          status: "error"
+          status: "error",
+          port: srv.port || 22
         });
       }
     }

@@ -17,3 +17,4 @@ export * from "./ThemeSelector";
 export * from "./IncrementalReplicationForm";
 export * from "./Dots";
 export * from "./ReplicationResults";
+export * from "./SnapshotsHealthReport";
