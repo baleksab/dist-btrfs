@@ -64,4 +64,11 @@ export class SnapshotsController {
 
     return res.status(200).json(response);
   }
+
+  async snapshotHealth(_: unknown, req: Request, res: Response) {
+    const { snapshot } = req.params;
+    const response = await this.snapshotService.checkSnapshotHealth(snapshot);
+
+    return res.status(200).json(response);
+  }
 }

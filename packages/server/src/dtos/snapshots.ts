@@ -102,3 +102,27 @@ export const btrfsSnapshotIncrementalReplicationRequest = z
 export type BtrfsSnapshotIncrementalReplicationRequest = z.infer<
   typeof btrfsSnapshotIncrementalReplicationRequest
 >;
+
+export const btrfsSnapshotReplicationHealthReplica = z.object({
+  serverUid: z.string(),
+  address: z.string(),
+  port: z.number().default(22),
+  status: z.enum(["ok", "missing", "error"]),
+  foundPath: z.string().optional()
+});
+
+export const btrfsSnapshotReplicationHealthResponse = z
+  .object({
+    snapshotPath: z.string(),
+    primary: z.object({
+      status: z.enum(["ok", "missing", "error"]),
+      uuid: z.string().optional()
+    }),
+    replicas: z.array(btrfsSnapshotReplicationHealthReplica),
+    overall: z.enum(["ok", "degraded", "failed"])
+  })
+  .openapi("BtrfsSnapshotReplicationHealthResponse");
+
+export type BtrfsSnapshotReplicationHealthResponse = z.infer<
+  typeof btrfsSnapshotReplicationHealthResponse
+>;

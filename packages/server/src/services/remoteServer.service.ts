@@ -114,4 +114,16 @@ export class RemoteServerService {
 
     return decryptedServers;
   }
+
+  async getAllSecondaryServersUnsanitized() {
+    const servers = await this.remoteServerRepository.findSecondaryServers();
+
+    const decryptedServers = servers.map((server) => ({
+      ...server,
+      username: decrypt(server.username),
+      password: decrypt(server.password)
+    }));
+
+    return decryptedServers;
+  }
 }

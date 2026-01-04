@@ -80,6 +80,7 @@ export const Sidebar = ({ onNavigate }: SidebarProps) => {
                 <IconReport size={16} />
               </ThemeIcon>
             }
+            active={matches.some((m) => m.routeId === "/reportsAndMetrics")}
             onClick={() => handleNavigate("/reportsAndMetrics")}
           />
         </Stack>

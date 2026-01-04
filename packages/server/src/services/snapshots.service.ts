@@ -437,4 +437,111 @@ export class SnapshotsService {
       results
     };
   }
+
+  async checkSnapshotHealth(snapshotPath: string) {
+    const primary = await this.remoteServerService.getPrimaryServerUnsanitized();
+    const secondaries = await this.remoteServerService.getAllSecondaryServersUnsanitized();
+
+    let primaryStatus: "ok" | "missing" | "error" = "ok";
+    let snapshotUuid: string | undefined;
+
+    try {
+      const { stdout, stderr } = await this.sshService.execCommand(
+        primary,
+        `sudo btrfs subvolume show ${snapshotPath}`
+      );
+
+      if (stderr && stderr.includes("ERROR")) {
+        primaryStatus = "missing";
+      } else {
+        const uuidLine = stdout.split("\n").find((l) => l.trim().startsWith("UUID:"));
+        snapshotUuid = uuidLine?.split("UUID:").pop()?.trim();
+        if (!snapshotUuid) {
+          primaryStatus = "error";
+        }
+      }
+    } catch {
+      primaryStatus = "error";
+    }
+
+    if (primaryStatus !== "ok" || !snapshotUuid) {
+      return {
+        snapshotPath,
+        primary: { status: primaryStatus, uuid: snapshotUuid },
+        replicas: [],
+        overall: "failed"
+      };
+    }
+
+    const replicas: Array<{
+      serverUid: string;
+      address: string;
+      status: "ok" | "missing" | "error";
+      foundPath?: string;
+    }> = [];
+
+    for (const srv of secondaries) {
+      try {
+        const { stdout } = await this.sshService.execCommand(srv, `sudo btrfs subvolume list -u /`);
+
+        const line = stdout.split("\n").find((l) => l.includes(snapshotUuid));
+
+        if (!line) {
+          replicas.push({
+            serverUid: srv.uid,
+            address: srv.ipAddress,
+            status: "missing"
+          });
+          continue;
+        }
+
+        const parts = line.trim().split(/\s+/);
+        const pathIndex = parts.indexOf("path") + 1;
+        const foundPath =
+          "/" +
+          parts
+            .slice(pathIndex)
+            .join(" ")
+            .replace(/^root\//, "");
+
+        const { stderr } = await this.sshService.execCommand(
+          srv,
+          `sudo btrfs subvolume show ${foundPath}`
+        );
+
+        if (stderr && stderr.includes("ERROR")) {
+          replicas.push({
+            serverUid: srv.uid,
+            address: srv.ipAddress,
+            status: "error"
+          });
+        } else {
+          replicas.push({
+            serverUid: srv.uid,
+            address: srv.ipAddress,
+            status: "ok",
+            foundPath
+          });
+        }
+      } catch {
+        replicas.push({
+          serverUid: srv.uid,
+          address: srv.ipAddress,
+          status: "error"
+        });
+      }
+    }
+
+    const overall = replicas.every((r) => r.status === "ok") ? "ok" : "degraded";
+
+    return {
+      snapshotPath,
+      primary: {
+        status: "ok",
+        uuid: snapshotUuid
+      },
+      replicas,
+      overall
+    };
+  }
 }

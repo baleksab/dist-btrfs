@@ -7,6 +7,7 @@ import {
   btrfsSnapshotFullReplicationRequest,
   btrfsSnapshotFullReplicationResponse,
   btrfsSnapshotIncrementalReplicationRequest,
+  btrfsSnapshotReplicationHealthResponse,
   btrfsSnapshotResponse,
   btrfsSnapshotRestoreResponse,
   btrfsSnapshotsResponse
@@ -79,5 +80,14 @@ createRoute({
   params: z.object({ subvolume: z.string(), snapshot: z.string() }),
   dto: btrfsSnapshotIncrementalReplicationRequest,
   response: btrfsSnapshotFullReplicationResponse,
+  tags: ["Snapshots"]
+});
+
+createRoute({
+  method: "get",
+  path: "/snapshots/:subvolume/:snapshot/health",
+  handler: controller.snapshotHealth.bind(controller),
+  params: z.object({ subvolume: z.string(), snapshot: z.string() }),
+  response: btrfsSnapshotReplicationHealthResponse,
   tags: ["Snapshots"]
 });

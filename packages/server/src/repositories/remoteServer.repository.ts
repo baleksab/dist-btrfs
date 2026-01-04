@@ -61,4 +61,8 @@ export class RemoteServerRepository {
 
     return servers;
   }
+
+  async findSecondaryServers() {
+    return database.select().from(remoteServers).where(eq(remoteServers.isPrimary, 0));
+  }
 }
