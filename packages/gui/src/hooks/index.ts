@@ -19,3 +19,4 @@ export * from "./useSubvolumeRetentionConfigAll";
 export * from "./useFullReplication";
 export * from "./useSubvolumeHealthCheck";
 export * from "./useIncrementalReplication";
+export * from "./useSnapshotsHealth";

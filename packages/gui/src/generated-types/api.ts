@@ -74,6 +74,50 @@ export interface BtrfsSnapshotIncrementalReplicationRequest {
     'secondaryServer': string;
     'secondaryServersSnapshot': string;
 }
+export interface BtrfsSnapshotReplicationHealthResponse {
+    'snapshotPath': string;
+    'primary': BtrfsSnapshotReplicationHealthResponsePrimary;
+    'replicas': Array<BtrfsSnapshotReplicationHealthResponseReplicasInner>;
+    'overall': BtrfsSnapshotReplicationHealthResponseOverallEnum;
+}
+
+export const BtrfsSnapshotReplicationHealthResponseOverallEnum = {
+    Ok: 'ok',
+    Degraded: 'degraded',
+    Failed: 'failed'
+} as const;
+
+export type BtrfsSnapshotReplicationHealthResponseOverallEnum = typeof BtrfsSnapshotReplicationHealthResponseOverallEnum[keyof typeof BtrfsSnapshotReplicationHealthResponseOverallEnum];
+
+export interface BtrfsSnapshotReplicationHealthResponsePrimary {
+    'status': BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum;
+    'uuid'?: string;
+}
+
+export const BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum = {
+    Ok: 'ok',
+    Missing: 'missing',
+    Error: 'error'
+} as const;
+
+export type BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum = typeof BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum[keyof typeof BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum];
+
+export interface BtrfsSnapshotReplicationHealthResponseReplicasInner {
+    'serverUid': string;
+    'address': string;
+    'port'?: number;
+    'status': BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum;
+    'foundPath'?: string;
+}
+
+export const BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum = {
+    Ok: 'ok',
+    Missing: 'missing',
+    Error: 'error'
+} as const;
+
+export type BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum = typeof BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum[keyof typeof BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum];
+
 export interface BtrfsSnapshotResponse {
     'name': string;
     'path': string;
@@ -1356,6 +1400,44 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotHealthGet: async (subvolume: string, snapshot: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subvolume' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotHealthGet', 'subvolume', subvolume)
+            // verify required parameter 'snapshot' is not null or undefined
+            assertParamExists('apiSnapshotsSubvolumeSnapshotHealthGet', 'snapshot', snapshot)
+            const localVarPath = `/api/snapshots/{subvolume}/{snapshot}/health`
+                .replace(`{${"subvolume"}}`, encodeURIComponent(String(subvolume)))
+                .replace(`{${"snapshot"}}`, encodeURIComponent(String(snapshot)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {BtrfsSnapshotFullReplicationRequest} [btrfsSnapshotFullReplicationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1542,6 +1624,20 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSnapshotsSubvolumeSnapshotHealthGet(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSnapshotReplicationHealthResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSnapshotsSubvolumeSnapshotHealthGet(subvolume, snapshot, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SnapshotsApi.apiSnapshotsSubvolumeSnapshotHealthGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {BtrfsSnapshotFullReplicationRequest} [btrfsSnapshotFullReplicationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1638,6 +1734,17 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
          * @summary 
          * @param {string} subvolume 
          * @param {string} snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSubvolumeSnapshotHealthGet(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSnapshotReplicationHealthResponse> {
+            return localVarFp.apiSnapshotsSubvolumeSnapshotHealthGet(subvolume, snapshot, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
+         * @param {string} subvolume 
+         * @param {string} snapshot 
          * @param {BtrfsSnapshotFullReplicationRequest} [btrfsSnapshotFullReplicationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1720,6 +1827,18 @@ export class SnapshotsApi extends BaseAPI {
      */
     public apiSnapshotsSubvolumeSnapshotDelete(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig) {
         return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeSnapshotDelete(subvolume, snapshot, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 
+     * @param {string} subvolume 
+     * @param {string} snapshot 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiSnapshotsSubvolumeSnapshotHealthGet(subvolume: string, snapshot: string, options?: RawAxiosRequestConfig) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSubvolumeSnapshotHealthGet(subvolume, snapshot, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -82,3 +82,9 @@ export const incrementalReplication = async (
 
   return data;
 };
+
+export const snapshotHealthCheck = async (subvolume: string, snapshot: string) => {
+  const { data } = await snapshotsApi.apiSnapshotsSubvolumeSnapshotHealthGet(subvolume, snapshot);
+
+  return data;
+};
