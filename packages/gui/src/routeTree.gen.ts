@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SnapshotsRouteImport } from './routes/snapshots'
+import { Route as ReportsAndMetricsRouteImport } from './routes/reportsAndMetrics'
 import { Route as RemoteReplicationRouteImport } from './routes/remoteReplication'
 import { Route as ConfigurationRouteImport } from './routes/configuration'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SnapshotsRoute = SnapshotsRouteImport.update({
   id: '/snapshots',
   path: '/snapshots',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsAndMetricsRoute = ReportsAndMetricsRouteImport.update({
+  id: '/reportsAndMetrics',
+  path: '/reportsAndMetrics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RemoteReplicationRoute = RemoteReplicationRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
   '/remoteReplication': typeof RemoteReplicationRoute
+  '/reportsAndMetrics': typeof ReportsAndMetricsRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
   '/remoteReplication': typeof RemoteReplicationRoute
+  '/reportsAndMetrics': typeof ReportsAndMetricsRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,38 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/configuration': typeof ConfigurationRoute
   '/remoteReplication': typeof RemoteReplicationRoute
+  '/reportsAndMetrics': typeof ReportsAndMetricsRoute
   '/snapshots': typeof SnapshotsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/configuration' | '/remoteReplication' | '/snapshots'
+  fullPaths:
+    | '/'
+    | '/configuration'
+    | '/remoteReplication'
+    | '/reportsAndMetrics'
+    | '/snapshots'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/configuration' | '/remoteReplication' | '/snapshots'
-  id: '__root__' | '/' | '/configuration' | '/remoteReplication' | '/snapshots'
+  to:
+    | '/'
+    | '/configuration'
+    | '/remoteReplication'
+    | '/reportsAndMetrics'
+    | '/snapshots'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuration'
+    | '/remoteReplication'
+    | '/reportsAndMetrics'
+    | '/snapshots'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConfigurationRoute: typeof ConfigurationRoute
   RemoteReplicationRoute: typeof RemoteReplicationRoute
+  ReportsAndMetricsRoute: typeof ReportsAndMetricsRoute
   SnapshotsRoute: typeof SnapshotsRoute
 }
 
@@ -76,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/snapshots'
       fullPath: '/snapshots'
       preLoaderRoute: typeof SnapshotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reportsAndMetrics': {
+      id: '/reportsAndMetrics'
+      path: '/reportsAndMetrics'
+      fullPath: '/reportsAndMetrics'
+      preLoaderRoute: typeof ReportsAndMetricsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/remoteReplication': {
@@ -106,6 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConfigurationRoute: ConfigurationRoute,
   RemoteReplicationRoute: RemoteReplicationRoute,
+  ReportsAndMetricsRoute: ReportsAndMetricsRoute,
   SnapshotsRoute: SnapshotsRoute,
 }
 export const routeTree = rootRouteImport

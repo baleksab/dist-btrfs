@@ -1,7 +1,6 @@
 import { AppShell, NavLink, ThemeIcon, Text, Stack } from "@mantine/core";
 import {
   IconBook,
-  IconChartBar,
   IconManualGearbox,
   IconRefresh,
   IconReport,
@@ -81,16 +80,7 @@ export const Sidebar = ({ onNavigate }: SidebarProps) => {
                 <IconReport size={16} />
               </ThemeIcon>
             }
-            onClick={() => onNavigate?.()}
-          />
-          <NavLink
-            label={formatMessage(translations.metricsAndAnalysisNavItem)}
-            leftSection={
-              <ThemeIcon variant="light" size="sm">
-                <IconChartBar size={16} />
-              </ThemeIcon>
-            }
-            onClick={() => onNavigate?.()}
+            onClick={() => handleNavigate("/reportsAndMetrics")}
           />
         </Stack>
         <Stack>

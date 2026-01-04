@@ -22,11 +22,7 @@ export const translations = defineMessages({
     defaultMessage: "Remote Replication"
   },
   reportsNavItem: {
-    id: "components.sidebar.navItem.reports",
-    defaultMessage: "Reports"
-  },
-  metricsAndAnalysisNavItem: {
-    id: "components.side.navItem.metricsAndAnalysis",
-    defaultMessage: "Metrics & Analysis"
+    id: "components.sidebar.navItem.reportsAndMetrics",
+    defaultMessage: "Monitoring & Reporting"
   }
 });
