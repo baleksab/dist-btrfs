@@ -78,7 +78,9 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
         <Accordion.Item value="primary">
           <Accordion.Control>
             <Group justify="space-between" w="100%">
-              <Text size="sm">{formatMessage(translations.primaryServer)}</Text>
+              <Text size="sm">
+                <strong>{formatMessage(translations.primaryServer)}</strong>
+              </Text>
               <Badge color={statusColor(snapshotsHealth.primary.status)} mr={8}>
                 {snapshotsHealth.primary.status}
               </Badge>
@@ -118,7 +120,10 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
             <Accordion.Control>
               <Group justify="space-between" w="100%">
                 <Text size="sm">
-                  {replica.address}:{replica.port}
+                  {formatMessage(translations.secondaryServer, {
+                    strong: (text) => <strong>{text}</strong>,
+                    ipAddress: `${replica.address}:${replica.port}`
+                  })}
                 </Text>
                 <Badge color={statusColor(replica.status)} mr={8}>
                   {replica.status}

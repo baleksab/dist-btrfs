@@ -9,6 +9,10 @@ export const translations = defineMessages({
     id: "components.snapshotsHealthReport.primaryServer",
     defaultMessage: "Primary server"
   },
+  secondaryServer: {
+    id: "components.snapshotsHealthReport.secondaryServer",
+    defaultMessage: "<strong>Secondary server:</strong> {ipAddress}"
+  },
   uidLabel: {
     id: "components.snapshotsHealthReport.uidLabel",
     defaultMessage: "UUID"
