@@ -90,25 +90,25 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
             <Stack gap="xs">
               {snapshotsHealth.primary.meta?.uuid && (
                 <Text size="sm">
-                  <strong>{formatMessage(translations.uidLabel)}:</strong>{" "}
+                  <strong>{formatMessage(translations.uidLabel)}:</strong>&nbsp;
                   {snapshotsHealth.primary.meta.uuid}
                 </Text>
               )}
               {snapshotsHealth.primary.meta?.creationTime && (
                 <Text size="sm">
-                  <strong>{formatMessage(translations.createdLabel)}:</strong>{" "}
+                  <strong>{formatMessage(translations.createdLabel)}:</strong>&nbsp;
                   {snapshotsHealth.primary.meta.creationTime}
                 </Text>
               )}
               {snapshotsHealth.primary.meta?.ageSeconds !== undefined && (
                 <Text size="sm">
-                  <strong>{formatMessage(translations.ageLabel)}:</strong>{" "}
+                  <strong>{formatMessage(translations.ageLabel)}:</strong>&nbsp;
                   {formatDuration(snapshotsHealth.primary.meta.ageSeconds)}
                 </Text>
               )}
               {snapshotsHealth.primary.meta?.size && (
                 <Text size="sm">
-                  <strong>{formatMessage(translations.sizeLabel)}:</strong>{" "}
+                  <strong>{formatMessage(translations.sizeLabel)}:</strong>&nbsp;
                   {formatSize(snapshotsHealth.primary.meta.size)}
                 </Text>
               )}
@@ -142,31 +142,31 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
                 )}
                 {replica.meta?.receivedUuid && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.receivedUidLabel)}:</strong>{" "}
+                    <strong>{formatMessage(translations.receivedUidLabel)}:</strong>&nbsp;
                     {replica.meta.receivedUuid}
                   </Text>
                 )}
                 {replica.meta?.creationTime && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.createdLabel)}:</strong>{" "}
+                    <strong>{formatMessage(translations.createdLabel)}:</strong>&nbsp;
                     {replica.meta.creationTime}
                   </Text>
                 )}
                 {replica.meta?.ageSeconds !== undefined && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.ageLabel)}:</strong>{" "}
+                    <strong>{formatMessage(translations.ageLabel)}:</strong>&nbsp;
                     {formatDuration(replica.meta.ageSeconds)}
                   </Text>
                 )}
                 {replica.meta?.lagSeconds !== undefined && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.lagLabel)}:</strong>{" "}
+                    <strong>{formatMessage(translations.lagLabel)}:</strong>&nbsp;
                     {formatDuration(replica.meta.lagSeconds)}
                   </Text>
                 )}
                 {replica.meta?.size && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.sizeLabel)}:</strong>{" "}
+                    <strong>{formatMessage(translations.sizeLabel)}:</strong>&nbsp;
                     {formatSize(replica.meta.size)}
                   </Text>
                 )}
