@@ -103,12 +103,35 @@ export type BtrfsSnapshotIncrementalReplicationRequest = z.infer<
   typeof btrfsSnapshotIncrementalReplicationRequest
 >;
 
+export const btrfsSnapshotSize = z.object({
+  total: z.string().optional(),
+  exclusive: z.string().optional(),
+  shared: z.string().optional()
+});
+
+export const btrfsSnapshotMeta = z.object({
+  name: z.string().optional(),
+  uuid: z.string().optional(),
+  receivedUuid: z.string().optional(),
+  parentUuid: z.string().optional(),
+  creationTime: z.string().optional(),
+  generation: z.string().optional(),
+  subvolumeId: z.string().optional(),
+  flags: z.string().optional(),
+  size: btrfsSnapshotSize.optional(),
+  ageSeconds: z.number().optional(),
+  lagSeconds: z.number().optional()
+});
+
+export type BtrfsSnapshotMeta = z.infer<typeof btrfsSnapshotMeta>;
+
 export const btrfsSnapshotReplicationHealthReplica = z.object({
   serverUid: z.string(),
   address: z.string(),
   port: z.number().default(22),
   status: z.enum(["ok", "missing", "error"]),
-  foundPath: z.string().optional()
+  foundPath: z.string().optional(),
+  meta: btrfsSnapshotMeta.optional()
 });
 
 export const btrfsSnapshotReplicationHealthResponse = z
@@ -116,7 +139,7 @@ export const btrfsSnapshotReplicationHealthResponse = z
     snapshotPath: z.string(),
     primary: z.object({
       status: z.enum(["ok", "missing", "error"]),
-      uuid: z.string().optional()
+      meta: btrfsSnapshotMeta.optional()
     }),
     replicas: z.array(btrfsSnapshotReplicationHealthReplica),
     overall: z.enum(["ok", "degraded", "failed"])

@@ -91,7 +91,7 @@ export type BtrfsSnapshotReplicationHealthResponseOverallEnum = typeof BtrfsSnap
 
 export interface BtrfsSnapshotReplicationHealthResponsePrimary {
     'status': BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum;
-    'uuid'?: string;
+    'meta'?: BtrfsSnapshotReplicationHealthResponsePrimaryMeta;
 }
 
 export const BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum = {
@@ -102,12 +102,31 @@ export const BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum = {
 
 export type BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum = typeof BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum[keyof typeof BtrfsSnapshotReplicationHealthResponsePrimaryStatusEnum];
 
+export interface BtrfsSnapshotReplicationHealthResponsePrimaryMeta {
+    'name'?: string;
+    'uuid'?: string;
+    'receivedUuid'?: string;
+    'parentUuid'?: string;
+    'creationTime'?: string;
+    'generation'?: string;
+    'subvolumeId'?: string;
+    'flags'?: string;
+    'size'?: BtrfsSnapshotReplicationHealthResponsePrimaryMetaSize;
+    'ageSeconds'?: number;
+    'lagSeconds'?: number;
+}
+export interface BtrfsSnapshotReplicationHealthResponsePrimaryMetaSize {
+    'total'?: string;
+    'exclusive'?: string;
+    'shared'?: string;
+}
 export interface BtrfsSnapshotReplicationHealthResponseReplicasInner {
     'serverUid': string;
     'address': string;
     'port'?: number;
     'status': BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum;
     'foundPath'?: string;
+    'meta'?: BtrfsSnapshotReplicationHealthResponsePrimaryMeta;
 }
 
 export const BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum = {

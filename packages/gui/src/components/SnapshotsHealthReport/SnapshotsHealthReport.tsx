@@ -26,6 +26,25 @@ const statusColor = (
   }
 };
 
+const formatDuration = (seconds?: number) => {
+  if (seconds === undefined) {
+    return "";
+  }
+
+  const s = Math.abs(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return `${h}h ${m}m`;
+};
+
+const formatSize = (size?: { total?: string; exclusive?: string }) => {
+  if (!size?.total) {
+    return "";
+  }
+
+  return size.exclusive ? `${size.total} (exclusive: ${size.exclusive})` : size.total;
+};
+
 type SnapshotsHealthReportProps = {
   subvolume?: string | null;
   snapshot?: string | null;
@@ -39,9 +58,13 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
     snapshot || ""
   );
 
-  if (isCheckingSnapshotsHealth) return <Skeleton height={32} />;
+  if (isCheckingSnapshotsHealth) {
+    return <Skeleton height={32} />;
+  }
 
-  if (!snapshotsHealth) return null;
+  if (!snapshotsHealth) {
+    return null;
+  }
 
   return (
     <Stack>
@@ -62,40 +85,89 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
             </Group>
           </Accordion.Control>
           <Accordion.Panel>
-            <Stack>
-              {snapshotsHealth.primary.uuid && (
+            <Stack gap="xs">
+              {snapshotsHealth.primary.meta?.uuid && (
                 <Text size="sm">
-                  {formatMessage(translations.uidLabel)}: {snapshotsHealth.primary.uuid}
+                  <strong>{formatMessage(translations.uidLabel)}:</strong>{" "}
+                  {snapshotsHealth.primary.meta.uuid}
+                </Text>
+              )}
+              {snapshotsHealth.primary.meta?.creationTime && (
+                <Text size="sm">
+                  <strong>{formatMessage(translations.createdLabel)}:</strong>{" "}
+                  {snapshotsHealth.primary.meta.creationTime}
+                </Text>
+              )}
+              {snapshotsHealth.primary.meta?.ageSeconds !== undefined && (
+                <Text size="sm">
+                  <strong>{formatMessage(translations.ageLabel)}:</strong>{" "}
+                  {formatDuration(snapshotsHealth.primary.meta.ageSeconds)}
+                </Text>
+              )}
+              {snapshotsHealth.primary.meta?.size && (
+                <Text size="sm">
+                  <strong>{formatMessage(translations.sizeLabel)}:</strong>{" "}
+                  {formatSize(snapshotsHealth.primary.meta.size)}
                 </Text>
               )}
             </Stack>
           </Accordion.Panel>
         </Accordion.Item>
-        {snapshotsHealth.replicas.map((r) => (
-          <Accordion.Item key={r.serverUid} value={r.serverUid}>
+        {snapshotsHealth.replicas.map((replica) => (
+          <Accordion.Item key={replica.serverUid} value={replica.serverUid}>
             <Accordion.Control>
               <Group justify="space-between" w="100%">
                 <Text size="sm">
-                  {r.address}:{r.port}
+                  {replica.address}:{replica.port}
                 </Text>
-                <Badge color={statusColor(r.status)} mr={8}>
-                  {r.status}
+                <Badge color={statusColor(replica.status)} mr={8}>
+                  {replica.status}
                 </Badge>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              <Stack gap={4}>
+              <Stack gap="xs">
                 <Text size="sm">
-                  {formatMessage(translations.uidLabel)}: {r.serverUid}
+                  <strong>{formatMessage(translations.serverUidLabel)}:</strong> {replica.serverUid}
                 </Text>
-
-                {r.foundPath ? (
+                {replica.meta?.uuid && (
                   <Text size="sm">
-                    {formatMessage(translations.pathLabel)}: {r.foundPath}
+                    <strong>{formatMessage(translations.uidLabel)}:</strong> {replica.meta.uuid}
                   </Text>
-                ) : (
-                  <Text size="sm" c="red">
-                    {formatMessage(translations.snapshotNotFound)}
+                )}
+                {replica.meta?.receivedUuid && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.receivedUidLabel)}:</strong>{" "}
+                    {replica.meta.receivedUuid}
+                  </Text>
+                )}
+                {replica.meta?.creationTime && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.createdLabel)}:</strong>{" "}
+                    {replica.meta.creationTime}
+                  </Text>
+                )}
+                {replica.meta?.ageSeconds !== undefined && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.ageLabel)}:</strong>{" "}
+                    {formatDuration(replica.meta.ageSeconds)}
+                  </Text>
+                )}
+                {replica.meta?.lagSeconds !== undefined && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.lagLabel)}:</strong>{" "}
+                    {formatDuration(replica.meta.lagSeconds)}
+                  </Text>
+                )}
+                {replica.meta?.size && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.sizeLabel)}:</strong>{" "}
+                    {formatSize(replica.meta.size)}
+                  </Text>
+                )}
+                {replica.foundPath && (
+                  <Text size="sm">
+                    <strong>{formatMessage(translations.pathLabel)}:</strong> {replica.foundPath}
                   </Text>
                 )}
               </Stack>

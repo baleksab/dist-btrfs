@@ -3,9 +3,10 @@ import {
   BtrfsSnapshotCleanupRequest,
   BtrfsSnapshotFullReplicationRequest,
   BtrfsSnapshotIncrementalReplicationRequest,
+  BtrfsSnapshotMeta,
   ReplicationResult
 } from "../dtos";
-import { getISOWeek } from "../utils";
+import { computeAgeSeconds, getISOWeek, parseBtrfsDu, parseBtrfsShow } from "../utils";
 import { RemoteServerService } from "./remoteServer.service";
 import { SshService } from "./ssh.service";
 
@@ -444,7 +445,9 @@ export class SnapshotsService {
 
     let primaryStatus: "ok" | "missing" | "error" = "ok";
     let snapshotUuid: string | undefined;
+    let primaryMeta: BtrfsSnapshotMeta | undefined;
 
+    // --- PRIMARY ---
     try {
       const { stdout, stderr } = await this.sshService.execCommand(
         primary,
@@ -454,40 +457,51 @@ export class SnapshotsService {
       if (stderr && stderr.includes("ERROR")) {
         primaryStatus = "missing";
       } else {
-        const uuidLine = stdout.split("\n").find((l) => l.trim().startsWith("UUID:"));
-        snapshotUuid = uuidLine?.split("UUID:").pop()?.trim();
-        if (!snapshotUuid) {
+        primaryMeta = parseBtrfsShow(stdout);
+        if (!primaryMeta.uuid) {
           primaryStatus = "error";
+        } else {
+          snapshotUuid = primaryMeta.uuid;
         }
+
+        const { stdout: duOut } = await this.sshService.execCommand(
+          primary,
+          `sudo btrfs filesystem du -s ${snapshotPath}`
+        );
+
+        primaryMeta.size = parseBtrfsDu(duOut);
+        primaryMeta.ageSeconds = computeAgeSeconds(primaryMeta.creationTime);
       }
     } catch {
       primaryStatus = "error";
     }
 
-    if (primaryStatus !== "ok" || !snapshotUuid) {
+    if (primaryStatus !== "ok" || !snapshotUuid || !primaryMeta) {
       return {
         snapshotPath,
-        primary: { status: primaryStatus, uuid: snapshotUuid },
+        primary: { status: primaryStatus, meta: primaryMeta },
         replicas: [],
         overall: "failed"
       };
     }
 
+    // --- REPLICAS ---
     const replicas: Array<{
       serverUid: string;
       address: string;
       status: "ok" | "missing" | "error";
       port: number;
-      foundPath?: string;
+      meta?: BtrfsSnapshotMeta;
     }> = [];
 
     for (const srv of secondaries) {
       try {
-        const { stdout } = await this.sshService.execCommand(srv, `sudo btrfs subvolume list -u /`);
+        const { stdout, stderr } = await this.sshService.execCommand(
+          srv,
+          `sudo btrfs subvolume show ${snapshotPath}`
+        );
 
-        const line = stdout.split("\n").find((l) => l.includes(snapshotUuid));
-
-        if (!line) {
+        if (stderr && stderr.includes("ERROR")) {
           replicas.push({
             serverUid: srv.uid,
             address: srv.ipAddress,
@@ -497,36 +511,39 @@ export class SnapshotsService {
           continue;
         }
 
-        const parts = line.trim().split(/\s+/);
-        const pathIndex = parts.indexOf("path") + 1;
-        const foundPath =
-          "/" +
-          parts
-            .slice(pathIndex)
-            .join(" ")
-            .replace(/^root\//, "");
+        const meta = parseBtrfsShow(stdout);
 
-        const { stderr } = await this.sshService.execCommand(
+        const matches = meta.uuid === snapshotUuid || meta.receivedUuid === snapshotUuid;
+
+        if (!matches) {
+          replicas.push({
+            serverUid: srv.uid,
+            address: srv.ipAddress,
+            status: "missing",
+            port: srv.port || 22
+          });
+          continue;
+        }
+
+        const { stdout: duOut } = await this.sshService.execCommand(
           srv,
-          `sudo btrfs subvolume show ${foundPath}`
+          `sudo btrfs filesystem du -s ${snapshotPath}`
         );
 
-        if (stderr && stderr.includes("ERROR")) {
-          replicas.push({
-            serverUid: srv.uid,
-            address: srv.ipAddress,
-            status: "error",
-            port: srv.port || 22
-          });
-        } else {
-          replicas.push({
-            serverUid: srv.uid,
-            address: srv.ipAddress,
-            status: "ok",
-            foundPath,
-            port: srv.port || 22
-          });
+        meta.size = parseBtrfsDu(duOut);
+        meta.ageSeconds = computeAgeSeconds(meta.creationTime);
+
+        if (meta.ageSeconds !== undefined && primaryMeta.ageSeconds !== undefined) {
+          meta.lagSeconds = meta.ageSeconds - primaryMeta.ageSeconds;
         }
+
+        replicas.push({
+          serverUid: srv.uid,
+          address: srv.ipAddress,
+          status: "ok",
+          port: srv.port || 22,
+          meta
+        });
       } catch {
         replicas.push({
           serverUid: srv.uid,
@@ -542,8 +559,8 @@ export class SnapshotsService {
     return {
       snapshotPath,
       primary: {
-        status: "ok",
-        uuid: snapshotUuid
+        status: primaryStatus,
+        meta: primaryMeta
       },
       replicas,
       overall

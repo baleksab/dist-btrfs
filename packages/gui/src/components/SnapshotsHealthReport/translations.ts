@@ -9,16 +9,36 @@ export const translations = defineMessages({
     id: "components.snapshotsHealthReport.primaryServer",
     defaultMessage: "Primary server"
   },
-  snapshotNotFound: {
-    id: "components.snapshotsHealthReport.snapshotNotFound",
-    defaultMessage: "Snapshot not found"
-  },
   uidLabel: {
     id: "components.snapshotsHealthReport.uidLabel",
-    defaultMessage: "UID"
+    defaultMessage: "UUID"
+  },
+  receivedUidLabel: {
+    id: "components.snapshotsHealthReport.receivedUidLabel",
+    defaultMessage: "Received UUID"
+  },
+  serverUidLabel: {
+    id: "components.snapshotsHealthReport.serverUidLabel",
+    defaultMessage: "Server UID"
   },
   pathLabel: {
     id: "components.snapshotsHealthReport.pathLabel",
     defaultMessage: "Path"
+  },
+  createdLabel: {
+    id: "components.snapshotsHealthReport.createdLabel",
+    defaultMessage: "Created"
+  },
+  ageLabel: {
+    id: "components.snapshotsHealthReport.ageLabel",
+    defaultMessage: "Age"
+  },
+  lagLabel: {
+    id: "components.snapshotsHealthReport.lagLabel",
+    defaultMessage: "Lag"
+  },
+  sizeLabel: {
+    id: "components.snapshotsHealthReport.sizeLabel",
+    defaultMessage: "Size"
   }
 });
