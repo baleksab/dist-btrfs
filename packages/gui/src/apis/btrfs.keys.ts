@@ -15,5 +15,8 @@ export const btrfsKeys = createQueryKeys("btrfs", {
   }),
   subvolumeHealth: (subvolume: string, serverUid?: string) => ({
     queryKey: ["btrfsKeys", "subvolumeHealth", subvolume, serverUid]
+  }),
+  storageMetrics: (serverUid?: string) => ({
+    queryKey: ["btrfsKeys", "storageMetrics", serverUid]
   })
 });

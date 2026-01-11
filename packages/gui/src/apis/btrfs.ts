@@ -69,3 +69,9 @@ export const checkSubvolumeHealth = async (
 
   return data;
 };
+
+export const getStorageMetrics = async (serverUid?: string) => {
+  const { data } = await btrfsApi.apiBtrfsStorageMetricsGet(serverUid);
+
+  return data;
+};

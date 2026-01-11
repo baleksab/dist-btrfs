@@ -148,6 +148,24 @@ export interface BtrfsSnapshotRestoreResponse {
     'snapshotUsed': string;
     'newSubvolume': string;
 }
+export interface BtrfsStorageMetricsResponse {
+    'totalBytes': number;
+    'usedBytes': number;
+    'freeBytes': number;
+    'data': BtrfsStorageMetricsResponseData;
+    'metadata': BtrfsStorageMetricsResponseData;
+    'system': BtrfsStorageMetricsResponseData;
+    'chart': Array<BtrfsStorageMetricsResponseChartInner>;
+}
+export interface BtrfsStorageMetricsResponseChartInner {
+    'name': string;
+    'value': number;
+    'color': string;
+}
+export interface BtrfsStorageMetricsResponseData {
+    'total': number;
+    'used': number;
+}
 export interface BtrfsSubvolumeConfigResponse {
     'id': string;
     'serverUid': string;
@@ -245,6 +263,41 @@ export interface UpdateServerRequest {
  */
 export const BtrfsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary 
+         * @param {string} [serverUid] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsStorageMetricsGet: async (serverUid?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/btrfs/storageMetrics`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (serverUid !== undefined) {
+                localVarQueryParameter['serverUid'] = serverUid;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary 
@@ -535,6 +588,19 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 
+         * @param {string} [serverUid] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBtrfsStorageMetricsGet(serverUid?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsStorageMetricsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsStorageMetricsGet(serverUid, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsStorageMetricsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -649,6 +715,16 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary 
+         * @param {string} [serverUid] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBtrfsStorageMetricsGet(serverUid?: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsStorageMetricsResponse> {
+            return localVarFp.apiBtrfsStorageMetricsGet(serverUid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -734,6 +810,17 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
  * BtrfsApi - object-oriented interface
  */
 export class BtrfsApi extends BaseAPI {
+    /**
+     * 
+     * @summary 
+     * @param {string} [serverUid] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public apiBtrfsStorageMetricsGet(serverUid?: string, options?: RawAxiosRequestConfig) {
+        return BtrfsApiFp(this.configuration).apiBtrfsStorageMetricsGet(serverUid, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary 

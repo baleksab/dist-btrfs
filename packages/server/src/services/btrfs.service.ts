@@ -172,4 +172,84 @@ export class BtrfsService {
 
     return subvolumes.some((subvolume) => subvolume.path === path);
   }
+
+  async getStorageMetrics(serverUid?: string) {
+    const server = serverUid
+      ? await this.remoteServerService.getServerUnsanitized(serverUid)
+      : await this.remoteServerService.getPrimaryServerUnsanitized();
+
+    const cmd = "sudo btrfs filesystem usage /";
+    const { stdout, stderr } = await this.sshService.execCommand(server, cmd);
+
+    if (stderr && stderr.trim().length > 0) {
+      console.warn("btrfs filesystem usage stderr:", stderr);
+    }
+
+    const parseBytes = (value: number, unit: string) => {
+      switch (unit) {
+        case "TiB":
+          return value * 1024 ** 4;
+        case "GiB":
+          return value * 1024 ** 3;
+        case "MiB":
+          return value * 1024 ** 2;
+        case "KiB":
+          return value * 1024;
+        case "B":
+        default:
+          return value;
+      }
+    };
+
+    const getOverallValue = (label: string) => {
+      const regex = new RegExp(`${label}:\\s*(\\d+(?:\\.\\d+)?)\\s*(TiB|GiB|MiB|KiB|B)`);
+      const match = stdout.match(regex);
+      if (!match) {
+        return 0;
+      }
+
+      const [, value, unit] = match;
+      return Math.round(parseBytes(Number(value), unit));
+    };
+
+    const parseSection = (name: string) => {
+      const regex = new RegExp(
+        `${name}[^\\n]*Size:\\s*(\\d+(?:\\.\\d+)?)\\s*(TiB|GiB|MiB|KiB|B),\\s*Used:\\s*(\\d+(?:\\.\\d+)?)\\s*(TiB|GiB|MiB|KiB|B)`
+      );
+
+      const match = stdout.match(regex);
+      if (!match) {
+        return { total: 0, used: 0 };
+      }
+
+      const [, totalVal, totalUnit, usedVal, usedUnit] = match;
+
+      return {
+        total: Math.round(parseBytes(Number(totalVal), totalUnit)),
+        used: Math.round(parseBytes(Number(usedVal), usedUnit))
+      };
+    };
+
+    const totalBytes = getOverallValue("Device size");
+    const usedBytes = getOverallValue("Used");
+    const freeBytes = totalBytes - usedBytes;
+    const data = parseSection("Data");
+    const metadata = parseSection("Metadata");
+    const system = parseSection("System");
+
+    return {
+      totalBytes,
+      usedBytes,
+      freeBytes,
+      data,
+      metadata,
+      system,
+      chart: [
+        { name: "Data", value: data.used, color: "blue" },
+        { name: "Metadata", value: metadata.used, color: "orange" },
+        { name: "System", value: system.used, color: "red" },
+        { name: "Free", value: freeBytes, color: "green" }
+      ]
+    };
+  }
 }

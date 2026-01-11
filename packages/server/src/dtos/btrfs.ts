@@ -83,3 +83,32 @@ export const btrfsSubvolumeRetentionConfigAllResponse = z
 export type BtrfsSubvolumeRetentionConfigAllResponse = z.infer<
   typeof btrfsSubvolumeRetentionConfigAllResponse
 >;
+
+export const btrfsStorageMetricsResponse = z
+  .object({
+    totalBytes: z.number(),
+    usedBytes: z.number(),
+    freeBytes: z.number(),
+    data: z.object({
+      total: z.number(),
+      used: z.number()
+    }),
+    metadata: z.object({
+      total: z.number(),
+      used: z.number()
+    }),
+    system: z.object({
+      total: z.number(),
+      used: z.number()
+    }),
+    chart: z.array(
+      z.object({
+        name: z.string(),
+        value: z.number(),
+        color: z.string()
+      })
+    )
+  })
+  .openapi("BtrfsStorageMetricsResponse");
+
+export type BtrfsStorageMetricsResponse = z.infer<typeof btrfsStorageMetricsResponse>;

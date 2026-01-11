@@ -1,6 +1,7 @@
 import z from "zod";
 import { BtrfsController } from "../controllers";
 import {
+  btrfsStorageMetricsResponse,
   btrfsSubvolumeConfigAllResponse,
   btrfsSubvolumeConfigResponse,
   btrfsSubvolumeRetentionConfigAllResponse,
@@ -94,6 +95,17 @@ createRoute({
   params: z.object({
     subvolume: z.string()
   }),
+  query: z.object({
+    serverUid: z.string().optional()
+  }),
+  tags: ["Btrfs"]
+});
+
+createRoute({
+  method: "get",
+  path: "/btrfs/storageMetrics",
+  handler: controller.getStorageMetrics.bind(controller),
+  response: btrfsStorageMetricsResponse,
   query: z.object({
     serverUid: z.string().optional()
   }),

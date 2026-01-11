@@ -5,6 +5,7 @@ import { MantineProvider } from "@mantine/core";
 import { I18nProvider, RoutesProvider, ThemeProvider, type Locale, type Theme } from "./providers";
 import { LocaleContext } from "./context";
 import "@mantine/core/styles.css";
+import "@mantine/charts/styles.css";
 import "@formatjs/intl-durationformat/polyfill.js";
 
 const root = document.getElementById("root");

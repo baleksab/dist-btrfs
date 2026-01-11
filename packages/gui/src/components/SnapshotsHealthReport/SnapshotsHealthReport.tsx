@@ -148,7 +148,7 @@ export const SnapshotsHealthReport = ({ subvolume, snapshot }: SnapshotsHealthRe
                 )}
                 {replica.meta?.creationTime && (
                   <Text size="sm">
-                    <strong>{formatMessage(translations.createdLabel)}:</strong>&nbsp;
+                    <strong>{formatMessage(translations.replicatedLabel)}:</strong>&nbsp;
                     {replica.meta.creationTime}
                   </Text>
                 )}

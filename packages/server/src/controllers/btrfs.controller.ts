@@ -64,4 +64,12 @@ export class BtrfsController {
 
     return res.status(200).json(result);
   }
+
+  async getStorageMetrics(_dto: unknown, req: Request, res: Response) {
+    const { serverUid } = req.query;
+
+    const result = await this.service.getStorageMetrics(serverUid as string);
+
+    return res.status(200).json(result);
+  }
 }

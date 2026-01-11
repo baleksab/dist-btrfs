@@ -20,3 +20,4 @@ export * from "./useFullReplication";
 export * from "./useSubvolumeHealthCheck";
 export * from "./useIncrementalReplication";
 export * from "./useSnapshotsHealth";
+export * from "./useStorageMetrics";

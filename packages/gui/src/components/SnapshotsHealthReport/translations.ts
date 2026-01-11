@@ -33,6 +33,10 @@ export const translations = defineMessages({
     id: "components.snapshotsHealthReport.createdLabel",
     defaultMessage: "Created"
   },
+  replicatedLabel: {
+    id: "components.snapshotsHealthReport.replicatedLabel",
+    defaultMessage: "Replicated at"
+  },
   ageLabel: {
     id: "components.snapshotsHealthReport.ageLabel",
     defaultMessage: "Age"

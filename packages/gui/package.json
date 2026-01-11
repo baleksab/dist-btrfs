@@ -15,23 +15,26 @@
     "generate:translations": "tsx scripts/extractTranslations"
   },
   "dependencies": {
+    "@formatjs/intl-durationformat": "0.9.0",
     "@lukemorales/query-key-factory": "1.2.0",
+    "@mantine/charts": "8.3.12",
     "@mantine/core": "8.3.9",
     "@mantine/hooks": "8.3.9",
     "@tabler/icons-react": "3.35.0",
+    "@tanstack/react-form": "1.26.0",
     "@tanstack/react-query": "5.90.11",
     "@tanstack/react-router": "1.139.10",
-    "@tanstack/react-form": "1.26.0",
     "axios": "1.13.2",
     "classnames": "2.5.1",
     "electron-devtools-installer": "4.0.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-intl": "7.1.14",
-    "zod": "4.1.13",
-    "@formatjs/intl-durationformat": "0.9.0"
+    "recharts": "3.6.0",
+    "zod": "4.1.13"
   },
   "devDependencies": {
+    "@formatjs/cli": "6.8.7",
     "@openapitools/openapi-generator-cli": "2.25.2",
     "@tanstack/router-plugin": "1.139.10",
     "@types/node": "24.6.0",
@@ -48,7 +51,6 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.45.0",
     "vite": "7.1.7",
-    "wait-on": "9.0.1",
-    "@formatjs/cli": "6.8.7"
+    "wait-on": "9.0.1"
   }
 }
