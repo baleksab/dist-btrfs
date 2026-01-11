@@ -27,7 +27,9 @@ export const parseBtrfsDu = (stdout: string) => {
     .map((l) => l.trim())
     .find((l) => /^\d/.test(l));
 
-  if (!line) return undefined;
+  if (!line) {
+    return undefined;
+  }
 
   const parts = line.split(/\s+/);
 
@@ -39,8 +41,15 @@ export const parseBtrfsDu = (stdout: string) => {
 };
 
 export const computeAgeSeconds = (creation?: string) => {
-  if (!creation) return undefined;
+  if (!creation) {
+    return undefined;
+  }
+
   const t = new Date(creation).getTime();
-  if (isNaN(t)) return undefined;
+
+  if (isNaN(t)) {
+    return undefined;
+  }
+
   return Math.floor((Date.now() - t) / 1000);
 };

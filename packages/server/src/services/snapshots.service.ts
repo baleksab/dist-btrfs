@@ -77,9 +77,15 @@ export class SnapshotsService {
     }
 
     snapshots.sort((a, b) => {
-      if (!a.createdAt && !b.createdAt) return 0;
-      if (!a.createdAt) return 1;
-      if (!b.createdAt) return -1;
+      if (!a.createdAt && !b.createdAt) {
+        return 0;
+      }
+      if (!a.createdAt) {
+        return 1;
+      }
+      if (!b.createdAt) {
+        return -1;
+      }
 
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
@@ -209,7 +215,9 @@ export class SnapshotsService {
 
     for (const snap of snapshots) {
       const key = groupKeyFn(snap.date);
-      if (!groups[key]) groups[key] = [];
+      if (!groups[key]) {
+        groups[key] = [];
+      }
       groups[key].push(snap);
     }
 
