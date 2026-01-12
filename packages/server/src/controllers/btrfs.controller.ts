@@ -72,4 +72,13 @@ export class BtrfsController {
 
     return res.status(200).json(result);
   }
+
+  async getSubvolumeStorageMetrics(_dto: unknown, req: Request, res: Response) {
+    const { subvolume } = req.params;
+    const { serverUid } = req.query;
+
+    const result = await this.service.getSubvolumeDetailedMetrics(subvolume, serverUid as string);
+
+    return res.status(200).json(result);
+  }
 }

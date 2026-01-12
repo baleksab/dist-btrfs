@@ -112,3 +112,41 @@ export const btrfsStorageMetricsResponse = z
   .openapi("BtrfsStorageMetricsResponse");
 
 export type BtrfsStorageMetricsResponse = z.infer<typeof btrfsStorageMetricsResponse>;
+
+export const btrfsFileSystemMetrics = z.object({
+  totalBytes: z.number().nonnegative(),
+  usedBytes: z.number().nonnegative(),
+  freeBytes: z.number().nonnegative()
+});
+
+export type BtrfsFileSystemMetrics = z.infer<typeof btrfsFileSystemMetrics>;
+
+export const btrfsSnapshotMetrics = z.object({
+  path: z.string(),
+  name: z.string(),
+  timestamp: z.string().datetime().nullable(),
+  referencedBytes: z.number().nonnegative(),
+  exclusiveBytes: z.number().nonnegative(),
+  efficiency: z.number().min(0)
+});
+
+export type BtrfsSnapshotMetrics = z.infer<typeof btrfsSnapshotMetrics>;
+
+export const btrfsSubvolumeMetrics = z.object({
+  path: z.string(),
+  name: z.string(),
+  referencedBytes: z.number().nonnegative(),
+  exclusiveBytes: z.number().nonnegative(),
+  snapshotCount: z.number().int().nonnegative(),
+  totalSnapshotExclusiveBytes: z.number().nonnegative()
+});
+
+export type BtrfsSubvolumeMetrics = z.infer<typeof btrfsSubvolumeMetrics>;
+
+export const SubvolumeDetailedMetricsResponse = z
+  .object({
+    filesystem: btrfsFileSystemMetrics,
+    subvolume: btrfsSubvolumeMetrics.nullable(),
+    snapshots: z.array(btrfsSnapshotMetrics)
+  })
+  .openapi("SubvolumeDetailedMetricsResponse");

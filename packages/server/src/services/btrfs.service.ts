@@ -1,5 +1,6 @@
 import { BtrfsSubvolumeSetConfigRequest, BtrfsSubvolumeSetRetentionConfigRequest } from "../dtos";
 import { BtrfsRepository } from "../repositories";
+import { parseBytes } from "../utils";
 import { RemoteServerService } from "./remoteServer.service";
 import { schedulerService } from "./scheduler.service";
 import { SshService } from "./ssh.service";
@@ -185,22 +186,6 @@ export class BtrfsService {
       console.warn("btrfs filesystem usage stderr:", stderr);
     }
 
-    const parseBytes = (value: number, unit: string) => {
-      switch (unit) {
-        case "TiB":
-          return value * 1024 ** 4;
-        case "GiB":
-          return value * 1024 ** 3;
-        case "MiB":
-          return value * 1024 ** 2;
-        case "KiB":
-          return value * 1024;
-        case "B":
-        default:
-          return value;
-      }
-    };
-
     const getOverallValue = (label: string) => {
       const regex = new RegExp(`${label}:\\s*(\\d+(?:\\.\\d+)?)\\s*(TiB|GiB|MiB|KiB|B)`);
       const match = stdout.match(regex);
@@ -250,6 +235,90 @@ export class BtrfsService {
         { name: "System", value: system.used, color: "red" },
         { name: "Free", value: freeBytes, color: "green" }
       ]
+    };
+  }
+
+  async getSubvolumeDetailedMetrics(subvolumePath: string, serverUid?: string) {
+    const server = serverUid
+      ? await this.remoteServerService.getServerUnsanitized(serverUid)
+      : await this.remoteServerService.getPrimaryServerUnsanitized();
+
+    const fs = await this.getStorageMetrics(serverUid);
+
+    const qCmd = "sudo btrfs qgroup show -reF /";
+    const { stdout } = await this.sshService.execCommand(server, qCmd);
+
+    const lines = stdout
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .slice(1);
+
+    const entries = lines.map((line) => {
+      const parts = line.split(/\s+/);
+      const referenced = Number(parts[1]);
+      const exclusive = Number(parts[2]);
+      const path = parts.slice(3).join(" ");
+      return { path, referenced, exclusive };
+    });
+
+    const extractName = (path: string) => path.split("/").pop() || path;
+
+    const extractTimestamp = (name: string) => {
+      const match = name.match(/\d{4}-\d{2}-\d{2}[T_]\d{2}:\d{2}:\d{2}/);
+      return match ? new Date(match[0].replace("_", "T")).toISOString() : null;
+    };
+
+    const subvol = entries.find((e) => e.path === subvolumePath);
+
+    if (!subvol) {
+      return {
+        filesystem: {
+          totalBytes: fs.totalBytes,
+          usedBytes: fs.usedBytes,
+          freeBytes: fs.freeBytes
+        },
+        subvolume: null,
+        snapshots: []
+      };
+    }
+
+    const snapshotEntries = entries.filter(
+      (e) => e.path.startsWith(`${subvolumePath}/`) && e.path.includes(".snapshots")
+    );
+
+    const snapshots = snapshotEntries.map((snap) => {
+      const name = extractName(snap.path);
+
+      return {
+        path: snap.path,
+        name,
+        timestamp: extractTimestamp(name),
+        referencedBytes: snap.referenced,
+        exclusiveBytes: snap.exclusive,
+        efficiency: snap.referenced > 0 ? Number((snap.exclusive / snap.referenced).toFixed(6)) : 0
+      };
+    });
+
+    return {
+      filesystem: {
+        totalBytes: fs.totalBytes,
+        usedBytes: fs.usedBytes,
+        freeBytes: fs.freeBytes
+      },
+      subvolume: {
+        path: subvol.path,
+        name: extractName(subvol.path),
+        referencedBytes: subvol.referenced,
+        exclusiveBytes: subvol.exclusive,
+        snapshotCount: snapshots.length,
+        totalSnapshotExclusiveBytes: snapshots.reduce((sum, s) => sum + s.exclusiveBytes, 0)
+      },
+      snapshots: snapshots.sort(
+        (a, b) =>
+          (a.timestamp ? new Date(a.timestamp).getTime() : 0) -
+          (b.timestamp ? new Date(b.timestamp).getTime() : 0)
+      )
     };
   }
 }

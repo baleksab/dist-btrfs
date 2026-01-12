@@ -111,3 +111,16 @@ createRoute({
   }),
   tags: ["Btrfs"]
 });
+
+createRoute({
+  method: "get",
+  path: "/btrfs/subvolumes/:subvolume/storageMetrics",
+  handler: controller.getSubvolumeStorageMetrics.bind(controller),
+  query: z.object({
+    serverUid: z.string().optional()
+  }),
+  params: z.object({
+    subvolume: z.string()
+  }),
+  tags: ["Btrfs"]
+});
