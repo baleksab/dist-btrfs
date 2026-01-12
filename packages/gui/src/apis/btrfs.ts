@@ -75,3 +75,12 @@ export const getStorageMetrics = async (serverUid?: string) => {
 
   return data;
 };
+
+export const getSubvolumeStorageMetrics = async (subvolume: string, serverUid?: string) => {
+  const { data } = await btrfsApi.apiBtrfsSubvolumesSubvolumeStorageMetricsGet(
+    subvolume,
+    serverUid
+  );
+
+  return data;
+};

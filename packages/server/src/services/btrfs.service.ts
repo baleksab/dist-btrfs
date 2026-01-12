@@ -243,53 +243,90 @@ export class BtrfsService {
       ? await this.remoteServerService.getServerUnsanitized(serverUid)
       : await this.remoteServerService.getPrimaryServerUnsanitized();
 
+    await this.ensureQgroupsEnabled(server);
+
     const fs = await this.getStorageMetrics(serverUid);
 
-    const qCmd = "sudo btrfs qgroup show -reF /";
-    const { stdout } = await this.sshService.execCommand(server, qCmd);
+    const qCmd = "sudo btrfs qgroup show /";
+    const { stdout, stderr } = await this.sshService.execCommand(server, qCmd);
+
+    if (stderr && stderr.trim()) {
+      console.warn("qgroup stderr:", stderr);
+    }
+
+    const parseSize = (raw: string): number => {
+      const match = raw.match(/^([\d.]+)(KiB|MiB|GiB|TiB|B)$/);
+      if (!match) {
+        return 0;
+      }
+      const value = Number(match[1]);
+      const unit = match[2];
+      switch (unit) {
+        case "TiB":
+          return value * 1024 ** 4;
+        case "GiB":
+          return value * 1024 ** 3;
+        case "MiB":
+          return value * 1024 ** 2;
+        case "KiB":
+          return value * 1024;
+        case "B":
+        default:
+          return value;
+      }
+    };
+
+    const normalizePath = (p: string) => {
+      if (p === "<toplevel>") {
+        return "/";
+      }
+      if (p === "root") {
+        return "/";
+      }
+      if (p.startsWith("root/")) {
+        return "/" + p.slice("root/".length);
+      }
+      return "/" + p;
+    };
+
+    const extractName = (path: string) => path.split("/").pop() || path;
+
+    const extractTimestamp = (name: string) => {
+      const match = name.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/);
+      return match ? new Date(match[0]).toISOString() : null;
+    };
 
     const lines = stdout
       .split("\n")
       .map((l) => l.trim())
       .filter(Boolean)
-      .slice(1);
+      .slice(2);
 
     const entries = lines.map((line) => {
       const parts = line.split(/\s+/);
-      const referenced = Number(parts[1]);
-      const exclusive = Number(parts[2]);
-      const path = parts.slice(3).join(" ");
+      const referenced = parseSize(parts[1]);
+      const exclusive = parseSize(parts[2]);
+      const rawPath = parts.slice(3).join(" ");
+      const path = normalizePath(rawPath);
       return { path, referenced, exclusive };
     });
 
-    const extractName = (path: string) => path.split("/").pop() || path;
+    const normalizedSubvol = normalizePath(
+      subvolumePath.startsWith("/") ? subvolumePath.slice(1) : subvolumePath
+    );
 
-    const extractTimestamp = (name: string) => {
-      const match = name.match(/\d{4}-\d{2}-\d{2}[T_]\d{2}:\d{2}:\d{2}/);
-      return match ? new Date(match[0].replace("_", "T")).toISOString() : null;
-    };
+    const subvol = entries.find((e) => e.path === normalizedSubvol);
 
-    const subvol = entries.find((e) => e.path === subvolumePath);
-
-    if (!subvol) {
-      return {
-        filesystem: {
-          totalBytes: fs.totalBytes,
-          usedBytes: fs.usedBytes,
-          freeBytes: fs.freeBytes
-        },
-        subvolume: null,
-        snapshots: []
-      };
-    }
+    const snapshotPrefix = `/.snapshots${normalizedSubvol}/`;
 
     const snapshotEntries = entries.filter(
-      (e) => e.path.startsWith(`${subvolumePath}/`) && e.path.includes(".snapshots")
+      (e) =>
+        e.path.startsWith(snapshotPrefix) &&
+        /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(e.path)
     );
 
     const snapshots = snapshotEntries.map((snap) => {
       const name = extractName(snap.path);
-
       return {
         path: snap.path,
         name,
@@ -299,6 +336,18 @@ export class BtrfsService {
         efficiency: snap.referenced > 0 ? Number((snap.exclusive / snap.referenced).toFixed(6)) : 0
       };
     });
+
+    if (!subvol) {
+      return {
+        filesystem: {
+          totalBytes: fs.totalBytes,
+          usedBytes: fs.usedBytes,
+          freeBytes: fs.freeBytes
+        },
+        subvolume: null,
+        snapshots
+      };
+    }
 
     return {
       filesystem: {
@@ -320,5 +369,19 @@ export class BtrfsService {
           (b.timestamp ? new Date(b.timestamp).getTime() : 0)
       )
     };
+  }
+
+  private async ensureQgroupsEnabled(server: any) {
+    const checkCmd = "sudo btrfs qgroup show /";
+    const { stdout, stderr } = await this.sshService.execCommand(server, checkCmd);
+
+    if (stderr?.includes("quotas not enabled") || stdout.includes("quotas not enabled")) {
+      console.warn("Qgroups disabled, enabling quotas...");
+
+      const enableCmd = "sudo btrfs quota enable /";
+      await this.sshService.execCommand(server, enableCmd);
+
+      await new Promise((r) => setTimeout(r, 500));
+    }
   }
 }
