@@ -4,17 +4,20 @@ import { translations } from "./translations";
 import { useState, type ReactNode } from "react";
 import { SecondaryServerSelector, SubvolumeSelector } from "../../../../components";
 import { useSubvolumeStorageMetrics } from "../../../../hooks";
+import { formatBytes } from "../../../../utils";
 
 const MetricsPanel = ({
   title,
   loading,
   selector,
-  metrics
+  metrics,
+  subvolume
 }: {
   title: string;
   loading: boolean;
   selector: ReactNode;
   metrics: any;
+  subvolume?: string;
 }) => {
   const { formatMessage } = useIntl();
 
@@ -38,25 +41,24 @@ const MetricsPanel = ({
           <Stack gap="md">
             <Group justify="space-between">
               <Text size="sm">
-                {formatMessage(translations.subvolume)}: <strong>{metrics.subvolume?.name}</strong>
+                <strong>{formatMessage(translations.subvolume)}</strong>:&nbsp;
+                {metrics.subvolume?.path || subvolume}
               </Text>
               <Text size="sm">
-                {formatMessage(translations.snapshots)}:&nbsp;
-                <strong>{metrics.subvolume?.snapshotCount}</strong>
+                <strong>{formatMessage(translations.snapshots)}:</strong>&nbsp;
+                {metrics.subvolume?.snapshotCount || 0}
               </Text>
             </Group>
-
             <Group justify="space-between">
               <Text size="sm">
-                {formatMessage(translations.exclusive)}:&nbsp;
-                <strong>{metrics.subvolume?.exclusiveBytes}</strong>
+                <strong>{formatMessage(translations.exclusive)}</strong>:&nbsp;
+                {formatBytes(metrics.subvolume?.exclusiveBytes || 0)}
               </Text>
               <Text size="sm">
-                {formatMessage(translations.snapshotOverhead)}:&nbsp;
-                <strong>{metrics.subvolume?.totalSnapshotExclusiveBytes}</strong>
+                <strong>{formatMessage(translations.snapshotOverhead)}:</strong>&nbsp;
+                {formatBytes(metrics.subvolume?.totalSnapshotExclusiveBytes || 0)}
               </Text>
             </Group>
-
             <Card withBorder p="sm" bg="gray.0">
               <Text size="xs" c="dimmed">
                 {formatMessage(translations.chartPlaceholder)}
@@ -103,6 +105,7 @@ export const SubvolumeStorageMetrics = () => {
           title={formatMessage(translations.primary)}
           loading={isLoadingPrimaryMetrics}
           metrics={primaryMetrics}
+          subvolume={selectedPrimarySubvolume || ""}
           selector={
             <SubvolumeSelector
               value={selectedPrimarySubvolume}
@@ -115,6 +118,7 @@ export const SubvolumeStorageMetrics = () => {
           title={formatMessage(translations.secondary)}
           loading={isLoadingSecondaryMetrics}
           metrics={secondaryMetrics}
+          subvolume={selectedSecondarySubvolume || ""}
           selector={
             <Stack>
               <SecondaryServerSelector
