@@ -143,10 +143,14 @@ export const btrfsSubvolumeMetrics = z.object({
 
 export type BtrfsSubvolumeMetrics = z.infer<typeof btrfsSubvolumeMetrics>;
 
-export const SubvolumeDetailedMetricsResponse = z
+export const btrfsSubvolumeDetailedMetricsResponse = z
   .object({
     filesystem: btrfsFileSystemMetrics,
     subvolume: btrfsSubvolumeMetrics.nullable(),
     snapshots: z.array(btrfsSnapshotMetrics)
   })
-  .openapi("SubvolumeDetailedMetricsResponse");
+  .openapi("BtrfsSubvolumeDetailedMetricsResponse");
+
+export type BtrfsSubvolumeDetailedMetricsResponse = z.infer<
+  typeof btrfsSubvolumeDetailedMetricsResponse
+>;

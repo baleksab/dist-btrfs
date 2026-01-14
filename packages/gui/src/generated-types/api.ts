@@ -174,6 +174,32 @@ export interface BtrfsSubvolumeConfigResponse {
     'isEnabled'?: boolean;
     'exists'?: boolean;
 }
+export interface BtrfsSubvolumeDetailedMetricsResponse {
+    'filesystem': BtrfsSubvolumeDetailedMetricsResponseFilesystem;
+    'subvolume': BtrfsSubvolumeDetailedMetricsResponseSubvolume | null;
+    'snapshots': Array<BtrfsSubvolumeDetailedMetricsResponseSnapshotsInner>;
+}
+export interface BtrfsSubvolumeDetailedMetricsResponseFilesystem {
+    'totalBytes': number;
+    'usedBytes': number;
+    'freeBytes': number;
+}
+export interface BtrfsSubvolumeDetailedMetricsResponseSnapshotsInner {
+    'path': string;
+    'name': string;
+    'timestamp': string | null;
+    'referencedBytes': number;
+    'exclusiveBytes': number;
+    'efficiency': number;
+}
+export interface BtrfsSubvolumeDetailedMetricsResponseSubvolume {
+    'path': string;
+    'name': string;
+    'referencedBytes': number;
+    'exclusiveBytes': number;
+    'snapshotCount': number;
+    'totalSnapshotExclusiveBytes': number;
+}
 export interface BtrfsSubvolumeRetentionConfigResponse {
     'id': string;
     'serverUid': string;
@@ -750,7 +776,7 @@ export const BtrfsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BtrfsSubvolumeDetailedMetricsResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume, serverUid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BtrfsApi.apiBtrfsSubvolumesSubvolumeStorageMetricsGet']?.[localVarOperationServerIndex]?.url;
@@ -864,7 +890,7 @@ export const BtrfsApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume: string, serverUid?: string, options?: RawAxiosRequestConfig): AxiosPromise<BtrfsSubvolumeDetailedMetricsResponse> {
             return localVarFp.apiBtrfsSubvolumesSubvolumeStorageMetricsGet(subvolume, serverUid, options).then((request) => request(axios, basePath));
         },
     };

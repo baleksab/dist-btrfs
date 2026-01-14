@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 import { SecondaryServerSelector, SubvolumeSelector } from "../../../../components";
 import { useSubvolumeStorageMetrics } from "../../../../hooks";
 import { formatBytes } from "../../../../utils";
+import type { BtrfsSubvolumeDetailedMetricsResponse } from "../../../../generated-types";
 
 const MetricsPanel = ({
   title,
@@ -16,7 +17,7 @@ const MetricsPanel = ({
   title: string;
   loading: boolean;
   selector: ReactNode;
-  metrics: any;
+  metrics?: BtrfsSubvolumeDetailedMetricsResponse;
   subvolume?: string;
 }) => {
   const { formatMessage } = useIntl();

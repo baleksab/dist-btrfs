@@ -4,6 +4,7 @@ import {
   btrfsStorageMetricsResponse,
   btrfsSubvolumeConfigAllResponse,
   btrfsSubvolumeConfigResponse,
+  btrfsSubvolumeDetailedMetricsResponse,
   btrfsSubvolumeRetentionConfigAllResponse,
   btrfsSubvolumeRetentionConfigResponse,
   btrfsSubvolumeSetConfigRequest,
@@ -122,5 +123,6 @@ createRoute({
   params: z.object({
     subvolume: z.string()
   }),
+  response: btrfsSubvolumeDetailedMetricsResponse,
   tags: ["Btrfs"]
 });
