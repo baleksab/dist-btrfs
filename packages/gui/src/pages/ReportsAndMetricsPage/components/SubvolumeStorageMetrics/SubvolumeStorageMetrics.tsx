@@ -80,10 +80,11 @@ const MetricsPanel = ({
               <Text size="sm">
                 <strong>{formatMessage(translations.efficiency)}:</strong>&nbsp;
                 {metrics.subvolume?.referencedBytes
-                  ? `${Math.round(
-                      (1 - metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes) *
-                        100
-                    )}%`
+                  ? `${
+                      Math.round(
+                        metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes
+                      ) * 100
+                    }%`
                   : "/"}
               </Text>
             </Group>
