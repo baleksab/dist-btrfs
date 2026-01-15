@@ -181,7 +181,7 @@ export const SubvolumeStorageMetrics = () => {
   const [selectedPrimarySubvolume, setSelectedPrimarySubvolume] = useState<string | null>();
   const [selectedSecondaryServer, setSelectedSecondaryServer] = useState<string | null>();
   const [selectedSecondarySubvolume, setSelectedSecondarySubvolume] = useState<string | null>();
-  console.log(selectedPrimarySubvolume);
+
   const {
     subvolumeStorageMetrics: primaryMetrics,
     isLoadingSubvolumeStorageMetrics: isLoadingPrimaryMetrics

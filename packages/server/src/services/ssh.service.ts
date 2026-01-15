@@ -95,7 +95,9 @@ export class SshService {
       const log = (...args: any[]) => console.log("[SSH-PIPE]", ...args);
 
       const finish = (err?: any) => {
-        if (finished) return;
+        if (finished) {
+          return;
+        }
         finished = true;
 
         clearTimeout(handshakeTimer);
@@ -112,8 +114,11 @@ export class SshService {
           /* empty */
         }
 
-        if (err) reject(err);
-        else resolve({ stderrFrom, stderrTo });
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ stderrFrom, stderrTo });
+        }
       };
 
       handshakeTimer = setTimeout(() => finish(new Error("ssh handshake timeout")), 30000);
@@ -139,10 +144,14 @@ export class SshService {
           );
 
           connFrom.exec(cmdFrom, (err, streamFrom) => {
-            if (err) return finish(err);
+            if (err) {
+              return finish(err);
+            }
 
             connTo.exec(cmdTo, {}, (err2, streamTo) => {
-              if (err2) return finish(err2);
+              if (err2) {
+                return finish(err2);
+              }
 
               streamFrom.stderr.on("data", (d) => (stderrFrom += d.toString()));
               streamTo.stderr.on("data", (d) => (stderrTo += d.toString()));
