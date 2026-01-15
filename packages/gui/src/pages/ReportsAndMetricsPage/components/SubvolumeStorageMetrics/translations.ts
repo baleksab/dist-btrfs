@@ -53,5 +53,30 @@ export const translations = defineMessages({
   snapshot: {
     id: "pages.reportsAndMetricsPage.components.subvolumeStorageMetrics.snapshot",
     defaultMessage: "Snapshot"
+  },
+  subvolumeHelp: {
+    id: "pages.reports.subvolume.help",
+    defaultMessage: "The selected BTRFS subvolume."
+  },
+  snapshotsHelp: {
+    id: "pages.reports.snapshots.help",
+    defaultMessage: "Number of snapshots created from this subvolume."
+  },
+  exclusiveHelp: {
+    id: "pages.reports.exclusive.help",
+    defaultMessage: "Actual disk space used only by this subvolume (not shared with snapshots)."
+  },
+  referencedHelp: {
+    id: "pages.reports.referenced.help",
+    defaultMessage: "Logical size of all data visible inside the subvolume."
+  },
+  snapshotOverheadHelp: {
+    id: "pages.reports.snapshotOverhead.help",
+    defaultMessage: "Total additional disk space consumed by all snapshots of this subvolume."
+  },
+  efficiencyHelp: {
+    id: "pages.reports.efficiency.help",
+    defaultMessage:
+      "How efficiently Copy-on-Write saves space. Higher percentage means better efficiency."
   }
 });

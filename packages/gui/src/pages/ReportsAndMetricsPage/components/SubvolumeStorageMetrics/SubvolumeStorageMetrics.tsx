@@ -7,7 +7,8 @@ import {
   Group,
   Loader,
   Divider,
-  Table
+  Table,
+  Tooltip
 } from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
@@ -17,6 +18,23 @@ import { useSubvolumeStorageMetrics } from "../../../../hooks";
 import { formatBytes } from "../../../../utils";
 import type { BtrfsSubvolumeDetailedMetricsResponse } from "../../../../generated-types";
 import { BarChart } from "@mantine/charts";
+
+const MetricLine = ({
+  label,
+  tooltip,
+  value
+}: {
+  label: string;
+  tooltip: string;
+  value: ReactNode;
+}) => (
+  <Tooltip label={tooltip} withArrow>
+    <Text size="sm" style={{ cursor: "help" }}>
+      <strong>{label}:</strong>&nbsp;
+      {value}
+    </Text>
+  </Tooltip>
+);
 
 const MetricsPanel = ({
   title,
@@ -52,41 +70,47 @@ const MetricsPanel = ({
         {!loading && metrics && (
           <Stack gap="md">
             <Group justify="space-between">
-              <Text size="sm">
-                <strong>{formatMessage(translations.subvolume)}</strong>:&nbsp;
-                {metrics.subvolume?.path || subvolume}
-              </Text>
-              <Text size="sm">
-                <strong>{formatMessage(translations.snapshots)}:</strong>&nbsp;
-                {metrics.subvolume?.snapshotCount || 0}
-              </Text>
+              <MetricLine
+                label={formatMessage(translations.subvolume)}
+                tooltip={formatMessage(translations.subvolumeHelp)}
+                value={metrics.subvolume?.path || subvolume}
+              />
+              <MetricLine
+                label={formatMessage(translations.snapshots)}
+                tooltip={formatMessage(translations.snapshotsHelp)}
+                value={metrics.subvolume?.snapshotCount || 0}
+              />
             </Group>
             <Group justify="space-between">
-              <Text size="sm">
-                <strong>{formatMessage(translations.exclusive)}</strong>:&nbsp;
-                {formatBytes(metrics.subvolume?.exclusiveBytes || 0)}
-              </Text>
-              <Text size="sm">
-                <strong>{formatMessage(translations.referenced)}:</strong>&nbsp;
-                {formatBytes(metrics.subvolume?.referencedBytes || 0)}
-              </Text>
+              <MetricLine
+                label={formatMessage(translations.exclusive)}
+                tooltip={formatMessage(translations.exclusiveHelp)}
+                value={formatBytes(metrics.subvolume?.exclusiveBytes || 0)}
+              />
+              <MetricLine
+                label={formatMessage(translations.referenced)}
+                tooltip={formatMessage(translations.referencedHelp)}
+                value={formatBytes(metrics.subvolume?.referencedBytes || 0)}
+              />
             </Group>
             <Group justify="space-between">
-              <Text size="sm">
-                <strong>{formatMessage(translations.snapshotOverhead)}:</strong>&nbsp;
-                {formatBytes(metrics.subvolume?.totalSnapshotExclusiveBytes || 0)}
-              </Text>
-
-              <Text size="sm">
-                <strong>{formatMessage(translations.efficiency)}:</strong>&nbsp;
-                {metrics.subvolume?.referencedBytes
-                  ? `${
-                      Math.round(
-                        metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes
-                      ) * 100
-                    }%`
-                  : "/"}
-              </Text>
+              <MetricLine
+                label={formatMessage(translations.snapshotOverhead)}
+                tooltip={formatMessage(translations.snapshotOverheadHelp)}
+                value={formatBytes(metrics.subvolume?.totalSnapshotExclusiveBytes || 0)}
+              />
+              <MetricLine
+                label={formatMessage(translations.efficiency)}
+                tooltip={formatMessage(translations.efficiencyHelp)}
+                value={
+                  metrics.subvolume?.referencedBytes
+                    ? `${Math.round(
+                        (1 - metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes) *
+                          100
+                      )}%`
+                    : "/"
+                }
+              />
             </Group>
             {metrics.snapshots.length > 0 && (
               <>
