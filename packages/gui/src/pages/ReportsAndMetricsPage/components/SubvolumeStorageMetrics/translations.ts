@@ -41,5 +41,17 @@ export const translations = defineMessages({
   tablePlaceholder: {
     id: "pages.reportsAndMetricsPage.components.subvolumeStorageMetrics.tablePlaceholder",
     defaultMessage: "Table placeholder"
+  },
+  efficiency: {
+    id: "pages.reportsAndMetricsPage.components.subvolumeStorageMetrics.efficiency",
+    defaultMessage: "Efficiency (%)"
+  },
+  referenced: {
+    id: "pages.reportsAndMetricsPage.components.subvolumeStorageMetrics.referenced",
+    defaultMessage: "Referenced"
+  },
+  snapshot: {
+    id: "pages.reportsAndMetricsPage.components.subvolumeStorageMetrics.snapshot",
+    defaultMessage: "Snapshot"
   }
 });

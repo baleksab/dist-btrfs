@@ -6,6 +6,7 @@ import type {
   BtrfsSnapshotReplicationHealthResponseOverallEnum,
   BtrfsSnapshotReplicationHealthResponseReplicasInnerStatusEnum
 } from "../../generated-types";
+import { formatBytes } from "../../utils";
 
 const statusColor = (
   status:
@@ -42,7 +43,9 @@ const formatSize = (size?: { total?: string; exclusive?: string }) => {
     return "";
   }
 
-  return size.exclusive ? `${size.total} (exclusive: ${size.exclusive})` : size.total;
+  return size.exclusive
+    ? `${formatBytes(Number(size.total) || 0)} (exclusive: ${formatBytes(Number(size.exclusive) || 0)})`
+    : formatBytes(Number(size.total) || 0);
 };
 
 type SnapshotsHealthReportProps = {

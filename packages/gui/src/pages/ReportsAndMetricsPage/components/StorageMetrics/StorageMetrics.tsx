@@ -88,11 +88,13 @@ const MetricsCard = ({
           </Badge>
         </Group>
         <PieChart
-          data={metrics.chart}
+          style={{ alignSelf: "center" }}
+          data={metrics.chart.filter((c) => c.name !== "Free")}
           withLabels
           labelsPosition="outside"
           labelsType="percent"
           withTooltip
+          valueFormatter={(v) => formatBytes(Number(v))}
         />
         <SimpleGrid cols={2} spacing="xs">
           <LegendItem

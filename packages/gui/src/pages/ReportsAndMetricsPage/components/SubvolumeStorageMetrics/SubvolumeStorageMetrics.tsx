@@ -1,4 +1,14 @@
-import { Fieldset, Stack, SimpleGrid, Card, Text, Group, Loader, Divider } from "@mantine/core";
+import {
+  Fieldset,
+  Stack,
+  SimpleGrid,
+  Card,
+  Text,
+  Group,
+  Loader,
+  Divider,
+  Table
+} from "@mantine/core";
 import { useIntl } from "react-intl";
 import { translations } from "./translations";
 import { useState, type ReactNode } from "react";
@@ -6,6 +16,7 @@ import { SecondaryServerSelector, SubvolumeSelector } from "../../../../componen
 import { useSubvolumeStorageMetrics } from "../../../../hooks";
 import { formatBytes } from "../../../../utils";
 import type { BtrfsSubvolumeDetailedMetricsResponse } from "../../../../generated-types";
+import { BarChart } from "@mantine/charts";
 
 const MetricsPanel = ({
   title,
@@ -56,21 +67,82 @@ const MetricsPanel = ({
                 {formatBytes(metrics.subvolume?.exclusiveBytes || 0)}
               </Text>
               <Text size="sm">
+                <strong>{formatMessage(translations.referenced)}:</strong>&nbsp;
+                {formatBytes(metrics.subvolume?.referencedBytes || 0)}
+              </Text>
+            </Group>
+            <Group justify="space-between">
+              <Text size="sm">
                 <strong>{formatMessage(translations.snapshotOverhead)}:</strong>&nbsp;
                 {formatBytes(metrics.subvolume?.totalSnapshotExclusiveBytes || 0)}
               </Text>
-            </Group>
-            <Card withBorder p="sm" bg="gray.0">
-              <Text size="xs" c="dimmed">
-                {formatMessage(translations.chartPlaceholder)}
-              </Text>
-            </Card>
 
-            <Card withBorder p="sm" bg="gray.0">
-              <Text size="xs" c="dimmed">
-                {formatMessage(translations.tablePlaceholder)}
+              <Text size="sm">
+                <strong>{formatMessage(translations.efficiency)}:</strong>&nbsp;
+                {metrics.subvolume?.referencedBytes
+                  ? `${Math.round(
+                      (1 - metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes) *
+                        100
+                    )}%`
+                  : "/"}
               </Text>
-            </Card>
+            </Group>
+            {metrics.snapshots.length > 0 && (
+              <>
+                <Card withBorder p="sm">
+                  <BarChart
+                    h={280}
+                    data={metrics.snapshots.map((s) => ({
+                      name: s.name.slice(0, 19),
+                      exclusive: s.exclusiveBytes,
+                      referenced: s.referencedBytes
+                    }))}
+                    dataKey="name"
+                    series={[
+                      {
+                        name: "exclusive",
+                        label: formatMessage(translations.exclusive),
+                        color: "red"
+                      },
+                      {
+                        name: "referenced",
+                        label: formatMessage(translations.referenced),
+                        color: "green"
+                      }
+                    ]}
+                    withLegend
+                    withTooltip
+                    valueFormatter={(v) => formatBytes(v)}
+                    tooltipProps={{
+                      formatter: (value, name) => [
+                        formatBytes(Number(value)),
+                        formatMessage(translations[name as keyof typeof translations])
+                      ]
+                    }}
+                  />
+                </Card>
+                <Table striped highlightOnHover withTableBorder>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>{formatMessage(translations.snapshot)}</Table.Th>
+                      <Table.Th>{formatMessage(translations.referenced)}</Table.Th>
+                      <Table.Th>{formatMessage(translations.exclusive)}</Table.Th>
+                      <Table.Th>{formatMessage(translations.efficiency)}</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {metrics.snapshots.map((s) => (
+                      <Table.Tr key={s.path}>
+                        <Table.Td>{s.name}</Table.Td>
+                        <Table.Td>{formatBytes(s.referencedBytes)}</Table.Td>
+                        <Table.Td>{formatBytes(s.exclusiveBytes)}</Table.Td>
+                        <Table.Td>{Math.round(s.efficiency * 100)}%</Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table.Tbody>
+                </Table>
+              </>
+            )}
           </Stack>
         )}
       </Stack>
