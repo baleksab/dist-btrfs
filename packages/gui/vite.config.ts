@@ -14,5 +14,9 @@ export default defineConfig({
         plugins: ["babel-plugin-react-compiler"]
       }
     })
-  ]
+  ],
+  build: {
+    outDir: "dist"
+  },
+  base: "./"
 });

@@ -20,8 +20,12 @@ const createWindow = () => {
     win.loadURL("http://localhost:5173");
     installExtension(REACT_DEVELOPER_TOOLS);
   } else {
-    const indexPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "index.html");
-    win.loadFile(indexPath);
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const indexPath = path.join(__dirname, "index.html");
+
+    win.loadFile(indexPath).catch((err) => {
+      console.error("Failed to load index.html:", err);
+    });
   }
 };
 

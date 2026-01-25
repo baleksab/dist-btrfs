@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "src/electron.ts",
+  "main": "dist/electron.js",
   "scripts": {
     "dev": "vite",
     "dev:electron": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && pnpm exec electron .\"",
@@ -12,7 +12,27 @@
     "start:electron": "cross-env NODE_ENV=production pnpm exec electron dist/electron.js",
     "type-check": "tsc --project tsconfig.json --noEmit && :",
     "generate:types": "tsx scripts/generateTypes",
-    "generate:translations": "tsx scripts/extractTranslations"
+    "generate:translations": "tsx scripts/extractTranslations",
+    "dist": "pnpm build:electron && electron-builder"
+  },
+  "build": {
+    "appId": "com.dist-btrfs.gui",
+    "productName": "DistBtrfsGUI",
+    "files": [
+      "dist/**"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "dependencies": {
     "@formatjs/intl-durationformat": "0.9.0",
@@ -51,6 +71,7 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.45.0",
     "vite": "7.1.7",
-    "wait-on": "9.0.1"
+    "wait-on": "9.0.1",
+    "electron-builder": "26.4.0"
   }
 }

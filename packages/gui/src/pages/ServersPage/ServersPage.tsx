@@ -64,7 +64,6 @@ export const ServersPage = () => {
             ))}
         </Stack>
       )}
-
       <AddServerModal
         key={isAddServerModalOpen ? "open" : "closed"}
         opened={isAddServerModalOpen}

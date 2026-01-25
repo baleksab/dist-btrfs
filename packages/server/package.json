@@ -9,10 +9,11 @@
     "dev": "pnpm preflight && pnpm serve",
     "type-check": "tsc --project tsconfig.json --noEmit && :",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
-  },
+    "db:migrate": "drizzle-kit migrate",
+    "dist": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --external:better-sqlite3 --external:ssh2 --external:cpu-features --external:dockerode --external:swagger-ui-express --external:node:* && cp -r data dist/"
+  }, 
   "dependencies": {
-    "better-sqlite3": "12.4.6",
+    "better-sqlite3": "12.4.6",    
     "dockerode": "4.0.9",
     "drizzle-orm": "0.44.7",
     "express": "5.1.0",
@@ -33,6 +34,7 @@
     "drizzle-kit": "0.31.7",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
-    "@types/cors": "2.8.19"
+    "@types/cors": "2.8.19",
+    "esbuild": "0.27.2"
   }
 }
