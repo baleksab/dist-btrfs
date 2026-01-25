@@ -12,7 +12,9 @@
     "build:gui": "pnpm --filter @dist-btrfs/gui dist",
     "build:server": "pnpm --filter @dist-btrfs/server dist",
     "type-check": "pnpm -r run type-check",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "generate:docs": "pnpm --filter @dist-btrfs/server generate:swagger ../../docs/source/api-spec.json",
+    "build:docs": "pnpm generate:docs && cd docs && make html"
   },
   "lint-staged": {
     "*.(ts|tsx)": [

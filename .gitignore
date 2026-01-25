@@ -17,6 +17,10 @@ dist-*/
 build/
 out/
 coverage/
+_build/
+_static/
+_templates/
+source/
 
 # For Electron
 release/

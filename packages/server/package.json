@@ -10,6 +10,7 @@
     "type-check": "tsc --project tsconfig.json --noEmit && :",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "generate:swagger": "tsx scripts/exportSwagger.ts",
     "dist": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --external:better-sqlite3 --external:ssh2 --external:cpu-features --external:dockerode --external:swagger-ui-express --external:node:* && cp -r data dist/"
   }, 
   "dependencies": {
