@@ -1,14 +1,14 @@
 # Requirements
 
-node >= v24
-pnpm >= v10
-platforms: win32, darwin, linux
+- node >= v24
+- pnpm >= v10
+- platforms: win32, darwin, linux
 
 **Make sure that on these commands are added to visudo on your servers:**
 
-username ALL=(root) NOPASSWD:/usr/bin/btrfs
-username ALL=(root) NOPASSWD:/usr/bin/mkdir
-username ALL=(root) NOPASSWD:/usr/bin/mv
+- username ALL=(root) NOPASSWD:/usr/bin/btrfs
+- username ALL=(root) NOPASSWD:/usr/bin/mkdir
+- username ALL=(root) NOPASSWD:/usr/bin/mv
 
 
 # How to run the project locally
@@ -47,3 +47,9 @@ Run `pnpm install`
 
 1. Run `pnpm build:gui`
 2. Executable/dmg/appimage should be available in the `packages/gui/dist` folder
+
+# Building the docs
+
+1. Make sure that the server is turned on, run `pnpm dev:server`
+2. Export the openapi schema `pnpm generate:docs`
+3. Build the docs `pnpm build:docs`
