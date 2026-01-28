@@ -14,6 +14,7 @@ type CreateRouteOptions = {
   response?: z.ZodTypeAny;
   handler: any;
   summary?: string;
+  description?: string;
   tags?: string[];
   params?: z.ZodObject<Record<string, z.ZodTypeAny>>;
   query?: z.ZodObject<Record<string, z.ZodTypeAny>>;
@@ -26,6 +27,7 @@ export const createRoute = ({
   handler,
   response,
   summary = "",
+  description = "",
   tags = [],
   params,
   query
@@ -36,6 +38,7 @@ export const createRoute = ({
     method,
     path: `/api${openApiPath}`,
     summary,
+    description,
     tags,
     request: {
       params: params ? params : undefined,
