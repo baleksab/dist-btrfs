@@ -4,6 +4,13 @@ node >= v24
 pnpm >= v10
 platforms: win32, darwin, linux
 
+**Make sure that on these commands are added to visudo on your servers:**
+
+username ALL=(root) NOPASSWD:/usr/bin/btrfs
+username ALL=(root) NOPASSWD:/usr/bin/mkdir
+username ALL=(root) NOPASSWD:/usr/bin/mv
+
+
 # How to run the project locally
 
 Run `pnpm install`
