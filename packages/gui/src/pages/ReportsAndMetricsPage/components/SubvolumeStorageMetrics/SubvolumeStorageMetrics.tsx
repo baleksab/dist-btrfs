@@ -105,8 +105,7 @@ const MetricsPanel = ({
                 value={
                   metrics.subvolume?.referencedBytes
                     ? `${Math.round(
-                        (1 - metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes) *
-                          100
+                        (metrics.subvolume.exclusiveBytes / metrics.subvolume.referencedBytes) * 100
                       )}%`
                     : "/"
                 }

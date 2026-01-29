@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { BtrfsSnapshotFullReplicationRequest } from "../generated-types";
-import { fullReplication } from "../apis";
+import { fullReplication, snapshotsKeys } from "../apis";
 import { useEffect, useRef } from "react";
 
 export const useFullReplication = (subvolume: string, snapshot: string) => {
   const abortRef = useRef<AbortController | null>(null);
+  const queryClient = useQueryClient();
 
   const {
     data: fullReplicationResults,
@@ -19,6 +20,9 @@ export const useFullReplication = (subvolume: string, snapshot: string) => {
       return fullReplication(subvolume, snapshot, request, {
         signal: abortRef.current.signal
       });
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: snapshotsKeys.all.queryKey });
     }
   });
 

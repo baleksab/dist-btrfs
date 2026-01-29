@@ -27,9 +27,7 @@ export const SnapshotSelector = ({
   const { snapshots, isLoadingSnapshots } = useSnapshots(subvolume || "", serverUid);
 
   const snapshotOptions = snapshots
-    ?.filter(
-      (snapshot) => !dateFilter || (snapshot.createdAt && new Date(snapshot.createdAt) > dateFilter)
-    )
+    ?.filter((snapshot) => !dateFilter || (snapshot.name && new Date(snapshot.name) > dateFilter))
     ?.map((snapshot) => ({
       value: snapshot.path,
       label: snapshot.name

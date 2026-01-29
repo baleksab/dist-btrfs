@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createSnapshot, snapshotsKeys } from "../apis";
 
-export const useCreateSnapshot = (subvolume: string) => {
+export const useCreateSnapshot = () => {
   const queryClient = useQueryClient();
 
   const {
@@ -11,7 +11,7 @@ export const useCreateSnapshot = (subvolume: string) => {
   } = useMutation({
     mutationFn: createSnapshot,
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: snapshotsKeys.list(subvolume).queryKey });
+      queryClient.refetchQueries({ queryKey: snapshotsKeys.all.queryKey });
     }
   });
 
