@@ -14,7 +14,9 @@
     "type-check": "pnpm -r run type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate:docs": "pnpm --filter @dist-btrfs/server generate:swagger ../../docs/source/api-spec.json",
-    "build:docs": "rm -rf docs/_build && pnpm generate:docs && cd docs && make html"
+    "build:docs": "rm -rf docs/_build && pnpm generate:docs && cd docs && make html",
+    "docs:serve": "cd docs/_build/html && python3 -m http.server 8001",
+    "docs:clean": "rm -rf docs/_build"
   },
   "lint-staged": {
     "*.(ts|tsx)": [
@@ -37,5 +39,8 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.6",
     "prettier": "3.7.3"
+  },
+  "dependencies": {
+    "widdershins": "4.0.1"
   }
 }

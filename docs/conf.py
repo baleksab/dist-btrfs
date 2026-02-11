@@ -1,31 +1,37 @@
-# -- General configuration ---------------------------------------------------
+# -- Project information -----------------------------------------------------
+
+project = 'dist-btrfs'
+author = 'Aleksa Bozinovic'
+version = '1.0.0'
+release = '1.0.0'
+language = 'en'
 
 extensions = [
-    'sphinx_rtd_theme',
-    'sphinxcontrib.redoc',
+  'sphinx_rtd_theme',
+  'myst_parser'
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-# -- Options for HTML output -------------------------------------------------
-
 html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'titles_only': False
+  'collapse_navigation': False,
+  'sticky_navigation': True,
+  'navigation_depth': 4,
+  'titles_only': False,
+  'prev_next_buttons_location': 'bottom',
+  'style_external_links': True,
+  'vcs_pageview_mode': '',
+  'style_nav_header_background': '#2c3e50',
 }
 
-redoc = [
-    {
-        'name': 'DistBtrfs API',
-        'page': 'api-reference',
-        'spec': 'source/api-spec.json', 
-        'embed': True,
-    }
-]
+html_title = 'dist-btrfs'
+html_short_title = 'dist-btrfs'
+html_show_sphinx = False
+html_show_copyright = True
 
-redoc_uri = 'https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js'
+# Static files
+html_static_path = ['_static']
+html_css_files = ['custom.css']
