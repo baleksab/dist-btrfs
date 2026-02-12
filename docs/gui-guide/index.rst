@@ -24,15 +24,15 @@ Both the locale and theme selector can be found in the bottom left corner inside
 
 **Light theme**
 
-.. image:: ../_static/gui-guide/pic1.png
+.. image:: /_static/gui-guide/pic1.png
 
 **Dark theme**
 
-.. image:: ../_static/gui-guide/pic2.png
+.. image:: /_static/gui-guide/pic2.png
 
 **Chinese localization**
 
-.. image:: ../_static/gui-guide/pic3.png
+.. image:: /_static/gui-guide/pic3.png
 
 
 Pages
