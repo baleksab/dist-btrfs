@@ -84,7 +84,7 @@ export class BtrfsService {
 
   async findSubvolumeConfigAll() {
     const server = await this.remoteServerService.getPrimaryServer();
-    const configs = await this.btrfsRepository.findAllConfigs(server.uid);
+    const configs = await this.btrfsRepository.findAllConfigs(server?.uid);
 
     return configs;
   }
@@ -142,7 +142,7 @@ export class BtrfsService {
 
   async findSubvolumeRetentionConfigall() {
     const server = await this.remoteServerService.getPrimaryServer();
-    const configs = await this.btrfsRepository.findAllRetentionConfigs(server.uid);
+    const configs = await this.btrfsRepository.findAllRetentionConfigs(server?.uid);
 
     return configs;
   }

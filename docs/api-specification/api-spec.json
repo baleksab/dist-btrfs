@@ -1,0 +1,2033 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Btrfs Backup System API",
+    "version": "1.0.0",
+    "description": "API documentation"
+  },
+  "components": {
+    "schemas": {
+      "CreateNewServerResponse": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "Unique identifier assigned to the created server"
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "IP address or hostname of the created server"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "default": 22,
+            "description": "SSH port for the created server"
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this server is primary"
+          }
+        },
+        "required": [
+          "uid",
+          "ipAddress"
+        ],
+        "description": "Response returned after creating a new remote server."
+      },
+      "CreateNewServerRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human-readable server name"
+          },
+          "ipAddress": {
+            "type": "string",
+            "minLength": 3,
+            "description": "IP address or hostname of the remote server"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "default": 22,
+            "description": "SSH port on the remote server"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Username used for SSH authentication"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Password used for SSH authentication"
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this server is the primary/preferred target"
+          }
+        },
+        "required": [
+          "name",
+          "ipAddress",
+          "username",
+          "password"
+        ],
+        "description": "Payload to create and register a new remote server configuration."
+      },
+      "GetAllServersResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "description": "Server unique identifier"
+            },
+            "name": {
+              "type": "string",
+              "description": "Server display name"
+            },
+            "ipAddress": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Server IP or hostname"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535,
+              "default": 22,
+              "description": "SSH port"
+            },
+            "isPrimary": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether this server is primary"
+            }
+          },
+          "required": [
+            "uid",
+            "name",
+            "ipAddress"
+          ],
+          "description": "Remote server information object"
+        },
+        "description": "List of configured remote servers and their connection metadata."
+      },
+      "UpdateServerRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human-readable server name"
+          },
+          "ipAddress": {
+            "type": "string",
+            "minLength": 3,
+            "description": "IP address or hostname of the remote server"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "default": 22,
+            "description": "SSH port on the remote server"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Username used for SSH authentication"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Password used for SSH authentication"
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this server is the primary/preferred target"
+          }
+        },
+        "description": "Payload to update an existing server; all fields are optional."
+      },
+      "HealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "Server unique identifier"
+          },
+          "online": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the server is currently reachable/online"
+          }
+        },
+        "required": [
+          "uid"
+        ],
+        "description": "Health/check status result for a server."
+      },
+      "HealthCheckAllResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/HealthCheckResponse"
+        },
+        "description": "Array of health check results for all configured servers."
+      },
+      "HealthCheckRequest": {
+        "type": "object",
+        "properties": {
+          "ipAddress": {
+            "type": "string",
+            "minLength": 3,
+            "description": "IP address or hostname to validate"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "default": 22,
+            "description": "SSH port to validate"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Username for validation attempt"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Password for validation attempt"
+          }
+        },
+        "required": [
+          "ipAddress",
+          "username",
+          "password"
+        ],
+        "description": "Request payload to validate server connection details without persisting them."
+      },
+      "BtrfsSubvolumesResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Numeric identifier for the subvolume record"
+            },
+            "gen": {
+              "type": "string",
+              "description": "Filesystem generation identifier for this subvolume"
+            },
+            "topLevel": {
+              "type": "string",
+              "description": "Top-level identifier for the subvolume"
+            },
+            "path": {
+              "type": "string",
+              "description": "Filesystem path where the subvolume is mounted or located"
+            }
+          },
+          "required": [
+            "id",
+            "gen",
+            "topLevel",
+            "path"
+          ],
+          "description": "Information about a single Btrfs subvolume"
+        },
+        "description": "Array of Btrfs subvolumes returned by listing endpoints"
+      },
+      "BtrfsSubvolumeConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the stored subvolume configuration"
+          },
+          "serverUid": {
+            "type": "string",
+            "description": "UID of the server where the subvolume resides"
+          },
+          "subvolPath": {
+            "type": "string",
+            "description": "Path of the subvolume on the server"
+          },
+          "snapshotIntervalSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "Configured snapshot interval in seconds"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether automatic snapshotting/replication is enabled"
+          },
+          "exists": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the subvolume currently exists on the target server"
+          }
+        },
+        "required": [
+          "id",
+          "serverUid",
+          "subvolPath",
+          "snapshotIntervalSeconds"
+        ],
+        "description": "Persisted configuration for a single subvolume"
+      },
+      "BtrfsSubvolumeConfigAllResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BtrfsSubvolumeConfigResponse"
+        },
+        "description": "List of persisted subvolume configurations"
+      },
+      "BtrfsSubvolumeRetentionConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifier for the retention policy record"
+          },
+          "serverUid": {
+            "type": "string",
+            "description": "UID of the server the policy applies to"
+          },
+          "subvolPath": {
+            "type": "string",
+            "description": "Subvolume path the retention policy targets"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "description": "Retention policy cadence/type"
+          },
+          "keep": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Number of snapshots to keep according to the policy"
+          },
+          "retentionIntervalSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "Interval in seconds between retention applications"
+          },
+          "exists": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates if the target subvolume currently exists"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the retention policy is active"
+          }
+        },
+        "required": [
+          "id",
+          "serverUid",
+          "subvolPath",
+          "type",
+          "keep",
+          "retentionIntervalSeconds"
+        ],
+        "description": "Persisted retention configuration for a subvolume"
+      },
+      "BtrfsSubvolumeRetentionConfigAllResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BtrfsSubvolumeRetentionConfigResponse"
+        },
+        "description": "List of retention policies for all subvolumes"
+      },
+      "BtrfsSubvolumeSetConfigRequest": {
+        "type": "object",
+        "properties": {
+          "snapshotIntervalSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "Configured snapshot interval in seconds"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether automatic snapshotting/replication is enabled"
+          }
+        },
+        "required": [
+          "snapshotIntervalSeconds"
+        ],
+        "description": "Request payload to create or update a subvolume's configurable fields"
+      },
+      "BtrfsSubvolumeSetRetentionConfigRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "description": "Retention policy cadence/type"
+          },
+          "keep": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Number of snapshots to keep according to the policy"
+          },
+          "retentionIntervalSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "Interval in seconds between retention applications"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the retention policy is active"
+          }
+        },
+        "required": [
+          "type",
+          "keep",
+          "retentionIntervalSeconds"
+        ],
+        "description": "Request payload to create or update a subvolume's retention policy fields"
+      },
+      "BtrfsStorageMetricsResponse": {
+        "type": "object",
+        "properties": {
+          "totalBytes": {
+            "type": "number",
+            "description": "Total filesystem capacity in bytes"
+          },
+          "usedBytes": {
+            "type": "number",
+            "description": "Total used bytes across the filesystem"
+          },
+          "freeBytes": {
+            "type": "number",
+            "description": "Free bytes available in the filesystem"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Data subvolume total bytes"
+              },
+              "used": {
+                "type": "number",
+                "description": "Data subvolume used bytes"
+              }
+            },
+            "required": [
+              "total",
+              "used"
+            ],
+            "description": "Data space metrics"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Metadata space total bytes"
+              },
+              "used": {
+                "type": "number",
+                "description": "Metadata space used bytes"
+              }
+            },
+            "required": [
+              "total",
+              "used"
+            ],
+            "description": "Metadata space metrics"
+          },
+          "system": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "System space total bytes"
+              },
+              "used": {
+                "type": "number",
+                "description": "System space used bytes"
+              }
+            },
+            "required": [
+              "total",
+              "used"
+            ],
+            "description": "System space metrics"
+          },
+          "chart": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Label for chart item"
+                },
+                "value": {
+                  "type": "number",
+                  "description": "Numeric value for chart item"
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Hex or named color for chart item"
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "color"
+              ],
+              "description": "Single chart data point"
+            },
+            "description": "Optional chart-friendly breakdown of metrics"
+          }
+        },
+        "required": [
+          "totalBytes",
+          "usedBytes",
+          "freeBytes",
+          "data",
+          "metadata",
+          "system",
+          "chart"
+        ],
+        "description": "Aggregated storage metrics for a Btrfs filesystem"
+      },
+      "BtrfsSubvolumeDetailedMetricsResponse": {
+        "type": "object",
+        "properties": {
+          "filesystem": {
+            "type": "object",
+            "properties": {
+              "totalBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Filesystem total bytes"
+              },
+              "usedBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Filesystem used bytes"
+              },
+              "freeBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Filesystem free bytes"
+              }
+            },
+            "required": [
+              "totalBytes",
+              "usedBytes",
+              "freeBytes"
+            ],
+            "description": "Filesystem-level metrics for the subvolume's filesystem"
+          },
+          "subvolume": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Filesystem path of the subvolume"
+              },
+              "name": {
+                "type": "string",
+                "description": "Subvolume name"
+              },
+              "referencedBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Bytes referenced by the subvolume"
+              },
+              "exclusiveBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Bytes exclusive to the subvolume"
+              },
+              "snapshotCount": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of snapshots associated with the subvolume"
+              },
+              "totalSnapshotExclusiveBytes": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Total exclusive bytes across all snapshots"
+              }
+            },
+            "required": [
+              "path",
+              "name",
+              "referencedBytes",
+              "exclusiveBytes",
+              "snapshotCount",
+              "totalSnapshotExclusiveBytes"
+            ],
+            "description": "Metrics for the specific subvolume, or null if not found"
+          },
+          "snapshots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Filesystem path of the snapshot"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Snapshot name"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "date-time",
+                  "description": "ISO timestamp when snapshot was taken, or null"
+                },
+                "referencedBytes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Bytes referenced by the snapshot"
+                },
+                "exclusiveBytes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Bytes exclusive to this snapshot"
+                },
+                "efficiency": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Snapshot space-efficiency metric (ratio or score)"
+                }
+              },
+              "required": [
+                "path",
+                "name",
+                "timestamp",
+                "referencedBytes",
+                "exclusiveBytes",
+                "efficiency"
+              ]
+            },
+            "description": "Array of snapshot metrics for the subvolume"
+          }
+        },
+        "required": [
+          "filesystem",
+          "subvolume",
+          "snapshots"
+        ],
+        "description": "Detailed storage metrics for a single subvolume, including snapshots and filesystem totals"
+      },
+      "BtrfsSnapshotResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Snapshot name or identifier"
+          },
+          "path": {
+            "type": "string",
+            "description": "Filesystem path of the snapshot"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when the snapshot was created, if available"
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "Size of the snapshot in bytes, if available"
+          }
+        },
+        "required": [
+          "name",
+          "path"
+        ],
+        "description": "Metadata describing a single Btrfs snapshot."
+      },
+      "BtrfsSnapshotsResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BtrfsSnapshotResponse"
+        },
+        "description": "Array of snapshot metadata objects for a subvolume."
+      },
+      "BtrfsSnapshotCleanupResponse": {
+        "type": "object",
+        "properties": {
+          "cleaned": {
+            "type": "boolean",
+            "description": "Whether any snapshots were cleaned/deleted"
+          },
+          "kept": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of snapshot identifiers that were kept"
+          },
+          "deletedSnapshots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of snapshot identifiers that were deleted"
+          },
+          "totalBefore": {
+            "type": "number",
+            "description": "Total number of snapshots before cleanup"
+          },
+          "totalAfter": {
+            "type": "number",
+            "description": "Total number of snapshots after cleanup"
+          }
+        },
+        "required": [
+          "cleaned",
+          "kept",
+          "deletedSnapshots",
+          "totalBefore",
+          "totalAfter"
+        ],
+        "description": "Result of running snapshot cleanup according to provided rules."
+      },
+      "BtrfsSnapshotCleanupRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "description": "Cleanup cadence to apply"
+          },
+          "keep": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Number of snapshots to retain for the given cadence"
+          }
+        },
+        "required": [
+          "type",
+          "keep"
+        ],
+        "description": "Request payload describing snapshot cleanup rules to apply to a subvolume."
+      },
+      "BtrfsSnapshotDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path of the snapshot that was requested for deletion"
+          },
+          "deleted": {
+            "type": "boolean",
+            "description": "Whether the snapshot was deleted successfully"
+          },
+          "message": {
+            "type": "string",
+            "description": "Optional message describing the result of the delete operation"
+          }
+        },
+        "required": [
+          "path",
+          "deleted",
+          "message"
+        ],
+        "description": "Result of a snapshot deletion request."
+      },
+      "BtrfsSnapshotRestoreResponse": {
+        "type": "object",
+        "properties": {
+          "restored": {
+            "type": "string",
+            "description": "Identifier or path of the restored entity"
+          },
+          "snapshotUsed": {
+            "type": "string",
+            "description": "Snapshot identifier that was used for the restore"
+          },
+          "newSubvolume": {
+            "type": "string",
+            "description": "Path of the newly created/restored subvolume, if applicable"
+          }
+        },
+        "required": [
+          "restored",
+          "snapshotUsed",
+          "newSubvolume"
+        ],
+        "description": "Response returned after attempting to restore a snapshot."
+      },
+      "BtrfsSnapshotFullReplicationResponse": {
+        "type": "object",
+        "properties": {
+          "snapshotPath": {
+            "type": "string",
+            "description": "Path of the snapshot that was replicated"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "serverUid": {
+                  "type": "string",
+                  "description": "UID of the target server for replication"
+                },
+                "address": {
+                  "type": "string",
+                  "description": "Address of the target server"
+                },
+                "port": {
+                  "type": "number",
+                  "default": 22,
+                  "description": "Port used for replication/connection"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "failed"
+                  ],
+                  "description": "Replication result status for this server"
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Optional error message when status is failed"
+                }
+              },
+              "required": [
+                "serverUid",
+                "address",
+                "status"
+              ]
+            },
+            "description": "Array of replication results per target server"
+          }
+        },
+        "required": [
+          "snapshotPath",
+          "results"
+        ],
+        "description": "Results from a full replication operation for a snapshot."
+      },
+      "BtrfsSnapshotFullReplicationRequest": {
+        "type": "object",
+        "properties": {
+          "secondaryServers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of server UIDs to which the snapshot should be fully replicated"
+          }
+        },
+        "required": [
+          "secondaryServers"
+        ],
+        "description": "Request to start a full replication of a snapshot to one or more secondary servers."
+      },
+      "BtrfsSnapshotIncrementalReplicationRequest": {
+        "type": "object",
+        "properties": {
+          "secondaryServer": {
+            "type": "string",
+            "description": "UID of the secondary server to replicate to"
+          },
+          "secondaryServersSnapshot": {
+            "type": "string",
+            "description": "Identifier or path of the snapshot on the secondary server to use as base for incremental replication"
+          }
+        },
+        "required": [
+          "secondaryServer",
+          "secondaryServersSnapshot"
+        ],
+        "description": "Request to perform an incremental replication using a base snapshot on the secondary server."
+      },
+      "BtrfsSnapshotReplicationHealthResponse": {
+        "type": "object",
+        "properties": {
+          "snapshotPath": {
+            "type": "string",
+            "description": "Path of the snapshot being checked"
+          },
+          "primary": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ok",
+                  "missing",
+                  "error"
+                ],
+                "description": "Primary snapshot status"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Snapshot name, if present"
+                  },
+                  "uuid": {
+                    "type": "string",
+                    "description": "Snapshot UUID"
+                  },
+                  "receivedUuid": {
+                    "type": "string",
+                    "description": "Received UUID for transferred snapshots"
+                  },
+                  "parentUuid": {
+                    "type": "string",
+                    "description": "Parent snapshot UUID, if any"
+                  },
+                  "creationTime": {
+                    "type": "string",
+                    "description": "Raw creation timestamp"
+                  },
+                  "generation": {
+                    "type": "string",
+                    "description": "Filesystem generation string"
+                  },
+                  "subvolumeId": {
+                    "type": "string",
+                    "description": "Subvolume identifier"
+                  },
+                  "flags": {
+                    "type": "string",
+                    "description": "Filesystem flags associated with snapshot"
+                  },
+                  "size": {
+                    "type": "object",
+                    "properties": {
+                      "total": {
+                        "type": "string",
+                        "description": "Total size representation (human or bytes)"
+                      },
+                      "exclusive": {
+                        "type": "string",
+                        "description": "Exclusive size representation"
+                      },
+                      "shared": {
+                        "type": "string",
+                        "description": "Shared size representation"
+                      }
+                    },
+                    "description": "Size breakdown for the snapshot"
+                  },
+                  "ageSeconds": {
+                    "type": "number",
+                    "description": "Age of the snapshot in seconds"
+                  },
+                  "lagSeconds": {
+                    "type": "number",
+                    "description": "Replication lag in seconds, if applicable"
+                  }
+                },
+                "description": "Optional metadata for the primary snapshot"
+              }
+            },
+            "required": [
+              "status"
+            ],
+            "description": "Primary snapshot health information"
+          },
+          "replicas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "serverUid": {
+                  "type": "string",
+                  "description": "UID of the replica server"
+                },
+                "address": {
+                  "type": "string",
+                  "description": "Address of the replica server"
+                },
+                "port": {
+                  "type": "number",
+                  "default": 22,
+                  "description": "Port used to reach the replica server"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "missing",
+                    "error"
+                  ],
+                  "description": "Replica health status"
+                },
+                "foundPath": {
+                  "type": "string",
+                  "description": "Path where the snapshot was found on the replica, if any"
+                },
+                "meta": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Snapshot name, if present"
+                    },
+                    "uuid": {
+                      "type": "string",
+                      "description": "Snapshot UUID"
+                    },
+                    "receivedUuid": {
+                      "type": "string",
+                      "description": "Received UUID for transferred snapshots"
+                    },
+                    "parentUuid": {
+                      "type": "string",
+                      "description": "Parent snapshot UUID, if any"
+                    },
+                    "creationTime": {
+                      "type": "string",
+                      "description": "Raw creation timestamp"
+                    },
+                    "generation": {
+                      "type": "string",
+                      "description": "Filesystem generation string"
+                    },
+                    "subvolumeId": {
+                      "type": "string",
+                      "description": "Subvolume identifier"
+                    },
+                    "flags": {
+                      "type": "string",
+                      "description": "Filesystem flags associated with snapshot"
+                    },
+                    "size": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "string",
+                          "description": "Total size representation (human or bytes)"
+                        },
+                        "exclusive": {
+                          "type": "string",
+                          "description": "Exclusive size representation"
+                        },
+                        "shared": {
+                          "type": "string",
+                          "description": "Shared size representation"
+                        }
+                      },
+                      "description": "Size breakdown for the snapshot"
+                    },
+                    "ageSeconds": {
+                      "type": "number",
+                      "description": "Age of the snapshot in seconds"
+                    },
+                    "lagSeconds": {
+                      "type": "number",
+                      "description": "Replication lag in seconds, if applicable"
+                    }
+                  },
+                  "description": "Optional metadata about the replica snapshot"
+                }
+              },
+              "required": [
+                "serverUid",
+                "address",
+                "status"
+              ]
+            },
+            "description": "Array of replica health entries"
+          },
+          "overall": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded",
+              "failed"
+            ],
+            "description": "Overall replication health summary"
+          }
+        },
+        "required": [
+          "snapshotPath",
+          "primary",
+          "replicas",
+          "overall"
+        ],
+        "description": "Health and replication status information for a snapshot across primary and replica servers."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/api/servers": {
+      "post": {
+        "summary": "",
+        "description": "Add a new remote server configuration. Request body must conform to the server creation schema; returns the created server object on success.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewServerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNewServerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "",
+        "description": "Return a list of configured remote servers and their connection metadata.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllServersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/servers/{uid}": {
+      "delete": {
+        "summary": "",
+        "description": "Remove the remote server identified by `uid` from the system and delete its stored configuration.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "uid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "",
+        "description": "Update the configuration of an existing remote server identified by `uid`. Request body must match the update schema.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "uid",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateServerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/servers/healthCheck": {
+      "get": {
+        "summary": "",
+        "description": "Run health checks for all configured remote servers and return their current connectivity/status results.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckAllResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/servers/validate": {
+      "post": {
+        "summary": "",
+        "description": "Validate provided server connection details without persisting them; returns a health check result describing whether the connection succeeded.",
+        "tags": [
+          "RemoteServers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealthCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes": {
+      "get": {
+        "summary": "",
+        "description": "List all Btrfs subvolumes. Optionally filter by `serverUid` to return subvolumes from a specific server.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "serverUid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/config": {
+      "get": {
+        "summary": "",
+        "description": "Retrieve configuration for all known subvolumes.",
+        "tags": [
+          "Btrfs"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeConfigAllResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/retention/config": {
+      "get": {
+        "summary": "",
+        "description": "Retrieve retention configuration for all subvolumes.",
+        "tags": [
+          "Btrfs"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeRetentionConfigAllResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/{subvolume}/config": {
+      "get": {
+        "summary": "",
+        "description": "Get configuration for a specific subvolume identified by the `subvolume` path parameter.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "",
+        "description": "Set or update configuration for the specified subvolume. Request body must match the subvolume config schema.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BtrfsSubvolumeSetConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/{subvolume}/retention/config": {
+      "get": {
+        "summary": "",
+        "description": "Get retention configuration for the specified subvolume.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeRetentionConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "",
+        "description": "Create or update retention configuration for the specified subvolume. Request body must match the retention config schema.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BtrfsSubvolumeSetRetentionConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeRetentionConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/{subvolume}/health": {
+      "get": {
+        "summary": "",
+        "description": "Check whether the specified subvolume exists on the target server. Returns `true` if present, `false` otherwise. Optionally specify `serverUid`.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "serverUid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/storageMetrics": {
+      "get": {
+        "summary": "",
+        "description": "Retrieve aggregated storage metrics for Btrfs filesystems. Optionally filter metrics by `serverUid`.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "serverUid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsStorageMetricsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/btrfs/subvolumes/{subvolume}/storageMetrics": {
+      "get": {
+        "summary": "",
+        "description": "Retrieve detailed storage metrics for the specified subvolume. Optionally provide `serverUid` to query a remote server.",
+        "tags": [
+          "Btrfs"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "serverUid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSubvolumeDetailedMetricsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}": {
+      "get": {
+        "summary": "",
+        "description": "List snapshots for the specified subvolume. Optionally include `serverUid` to list snapshots from a specific remote server.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "serverUid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "",
+        "description": "Create a new snapshot for the specified subvolume and return its metadata.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "",
+        "description": "Clean up snapshots for the specified subvolume according to the provided cleanup rules; returns the cleanup result.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BtrfsSnapshotCleanupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotCleanupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}/{snapshot}": {
+      "delete": {
+        "summary": "",
+        "description": "Delete a single snapshot identified by the `snapshot` path parameter from the given subvolume.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "snapshot",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}/{snapshot}/restore": {
+      "post": {
+        "summary": "",
+        "description": "Restore the specified snapshot into its subvolume. Returns the result of the restore operation.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "snapshot",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotRestoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}/{snapshot}/replication/full": {
+      "post": {
+        "summary": "",
+        "description": "Start a full replication of the specified snapshot to a configured remote target. Request body specifies replication options.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "snapshot",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BtrfsSnapshotFullReplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotFullReplicationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}/{snapshot}/replication/incremental": {
+      "post": {
+        "summary": "",
+        "description": "Start an incremental replication for the specified snapshot. Request body contains incremental replication parameters.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "snapshot",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BtrfsSnapshotIncrementalReplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotFullReplicationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/snapshots/{subvolume}/{snapshot}/health": {
+      "get": {
+        "summary": "",
+        "description": "Return replication health and status information for the specified snapshot.",
+        "tags": [
+          "Snapshots"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "subvolume",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "snapshot",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BtrfsSnapshotReplicationHealthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  }
+}

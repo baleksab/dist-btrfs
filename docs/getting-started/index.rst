@@ -8,3 +8,4 @@ In this section you will find out how to get started with dist-btrfs. Please mak
 
   requirements
   installation-steps
+  building-the-apps

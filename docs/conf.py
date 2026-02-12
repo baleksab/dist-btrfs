@@ -8,7 +8,7 @@ language = 'en'
 
 extensions = [
   'sphinx_rtd_theme',
-  'myst_parser'
+  'sphinxcontrib.openapi'
 ]
 
 templates_path = ['_templates']

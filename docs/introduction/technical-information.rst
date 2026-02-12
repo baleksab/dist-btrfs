@@ -115,7 +115,19 @@ The API design follows REST principles:
 - Resources are identified by URIs
 - Standard HTTP status codes indicate success or failure
 - JSON is used for request and response bodies
-  
+ 
+**Express API server**
+
+The API server is implemented with Express and exposes a JSON REST API. Key implementation details:
+
+- **Router mounting**: all routes are registered via a shared `router` and mounted under the `/api` prefix.
+- **Middleware**: the server enables `express.json()` for JSON body parsing and `cors()` for cross-origin requests.
+- **Validation & OpenAPI**: routes are defined with Zod schemas using a `createRoute()` utility; the same schemas are used to generate an OpenAPI document with `zod-to-openapi`.
+- **Swagger UI**: the generated OpenAPI spec is served with `swagger-ui-express` at `/swagger` and the raw JSON at `/specifications`.
+- **Health & diagnostics**: a simple health endpoint is exposed at `/health`.
+- **Startup flow**: on startup the server runs `preflight` platform checks, restores scheduled snapshot/retention jobs via the scheduler service, then listens on the configured port.
+- **Configuration & scripts**: runtime options (port, env, encryption key) are read from `.env.local` or environment variables. Useful scripts in `packages/server/package.json` include `preflight`, `serve` and `dev` for local development.
+
 **Persistence**
 
 The API server uses SQlite for persistance of configuration data of the remote servers:

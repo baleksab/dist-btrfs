@@ -41,7 +41,7 @@ export const AddServerModal = ({ opened, onClose, server }: AddServerModalProps)
 
   const form = useForm({
     defaultValues: {
-      ...(server ? server : { port: 22, isPrimary: false })
+      ...(server ? server : { port: 22, isPrimary: false, ipAddress: "localhost" })
     } as CreateNewServerRequest | UpdateServerRequest,
     onSubmit: async ({ value }) => {
       if (server) {

@@ -13,7 +13,7 @@
     "build:server": "pnpm --filter @dist-btrfs/server dist",
     "type-check": "pnpm -r run type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "generate:docs": "pnpm --filter @dist-btrfs/server generate:swagger ../../docs/source/api-spec.json",
+    "generate:docs": "pnpm --filter @dist-btrfs/server generate:swagger ../../docs/api-specification/api-spec.json",
     "build:docs": "rm -rf docs/_build && pnpm generate:docs && cd docs && make html",
     "docs:serve": "cd docs/_build/html && python3 -m http.server 8001",
     "docs:clean": "rm -rf docs/_build"
