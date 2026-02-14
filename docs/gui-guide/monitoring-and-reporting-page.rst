@@ -36,17 +36,17 @@ Allows us to select a subvolume from the subvolume selector and one of its snaps
 
 In case snapshot does not exist we get greeted by this screen:
 
-.. image:: /_static/gui-guide/pic41.png
+.. image:: ./images/pic41.png
 
 If we select a subvolume with snapshots, and one of the snapshots, we can see the overall status and the status of the snapshot on each server.
 
-.. image:: /_static/gui-guide/pic42.png
+.. image:: ./images/pic42.png
 
 The overall status displays as OK only when the snapshot exists on each added remote server.
 
 If we click on one of the accordions, we can see some data:
 
-.. image:: /_static/gui-guide/pic43.png
+.. image:: ./images/pic43.png
 
 System-wide storage metrics
 ----------------------------------------------------------------
@@ -55,7 +55,7 @@ On the system wide storage metrics, we see the metrics represented in a pie-char
 
 We can also optionally select one secondary server and see the metrics for that secondary server as well.
 
-.. image:: /_static/gui-guide/pic44.png
+.. image:: ./images/pic44.png
 
 Subvolume specific storage metrics
 ----------------------------------------------------------------
@@ -64,7 +64,7 @@ On the subvolume specific storage metrics, we can see the metrics represented in
 
 We can also optionally select one of the secondary servers and see the metrics for one of its subvolumes as well.
 
-.. image:: /_static/gui-guide/pic45.png
+.. image:: ./images/pic45.png
 
 Overview
 ----------------------------------------------------------------

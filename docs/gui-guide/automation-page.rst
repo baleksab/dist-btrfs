@@ -15,7 +15,7 @@ The look of the snapshots tab
 
 This is how the snapshots tab would look like when it is empty.
 
-.. image:: /_static/gui-guide/pic19.png
+.. image:: ./images/pic19.png
 
 You can see here that the tab is split into two parts. The first part shows the automatic snapshot policy section, where you can choose a subvolume from the primary server and set the snapshot interval and whether the policy should be enabled or not.
 
@@ -28,7 +28,7 @@ We just need to select a subvolume from the subvolume selector, then we need to 
 
 The policy does not need to be enabled in order to get added.
 
-.. image:: /_static/gui-guide/pic20.png
+.. image:: ./images/pic20.png
 
 We will click save.
 
@@ -37,7 +37,7 @@ Viewing your snapshot policies
 
 All of the listed snapshot policies should appear in the table at the bottom of the page.
 
-.. image:: /_static/gui-guide/pic21.png
+.. image:: ./images/pic21.png
 
 As you can see, there can only be one snapshot policy per subvolume.
 
@@ -46,7 +46,7 @@ The look of the retention tab
 
 This is how the retention tab looks like when it is empty.
 
-.. image:: /_static/gui-guide/pic22.png
+.. image:: ./images/pic22.png
 
 The layout of the retention tab is pretty much the same as of the snapshots tab.
 
@@ -67,7 +67,7 @@ We just need to select a subvolume from the subvolume selector, then we need to 
 
 We do not need to turn on the retention policy instantly.
 
-.. image:: /_static/gui-guide/pic23.png
+.. image:: ./images/pic23.png
 
 We will click save.
 
@@ -76,7 +76,7 @@ Viewing your retention policies
 
 All of the listed retention policies should appear in the table at the bottom of the page.
 
-.. image:: /_static/gui-guide/pic24.png
+.. image:: ./images/pic24.png
 
 As you can see, there can only be one retention policy per subvolume.
 

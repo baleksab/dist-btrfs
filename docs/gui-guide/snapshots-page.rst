@@ -12,7 +12,7 @@ The look of the page
 
 This is how the page would look like when the primary server is added.
 
-.. image:: /_static/gui-guide/pic10.png
+.. image:: ./images/pic10.png
 
 As you can see, there is a select where u are able to choose one of the subvolumes, and list all snapshots that are created for that subvolume.
 
@@ -21,11 +21,11 @@ Subvolume selector
 
 By clicking on the select you will see all of the subvolumes.
 
-.. image:: /_static/gui-guide/pic11.png
+.. image:: ./images/pic11.png
 
 If we click on the ``/testdata3`` subvolume, we will see all of its snapshots listed.
 
-.. image:: /_static/gui-guide/pic13.png
+.. image:: ./images/pic13.png
 
 Please note that size is displaying as 0.00 MB is because the actual size of the snapshot is extremely small.
 
@@ -40,7 +40,7 @@ Creating a snapshot is really simple. All you need to is click on the create sna
 
 After clicking the create snapshot button, after it finishes loading you should see a snapshot in the table for that subvolume.
 
-.. image:: /_static/gui-guide/pic14.png
+.. image:: ./images/pic14.png
 
 As you can see above, after we created the snapshot we see it in the table.
 
@@ -49,14 +49,14 @@ Restoring to a certain snapshot
 
 All you need to do to restore to a snapshot on your primary server is to click on the restore button in the last column.
 
-.. image:: /_static/gui-guide/pic15.png
+.. image:: ./images/pic15.png
 
 Deleting a certain snapshot
 --------------------------------
 
 All you need to delete a certain snapshot is to click on the delete button in the last column.
 
-.. image:: /_static/gui-guide/pic16.png
+.. image:: ./images/pic16.png
 
 Cleanup
 --------------------------------
@@ -67,7 +67,7 @@ To clean them up, all you need to click on the cleanup button in the upper right
 
 After you click on it, a modal should appear.
 
-.. image:: /_static/gui-guide/pic17.png
+.. image:: ./images/pic17.png
 
 You can apply cleanup on daily, weekly and monthly level.
 
