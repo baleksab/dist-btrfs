@@ -43,3 +43,4 @@ Pages
 
   servers-page
   snapshots-page
+  automation-page
