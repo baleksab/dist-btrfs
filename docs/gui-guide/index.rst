@@ -44,3 +44,4 @@ Pages
   servers-page
   snapshots-page
   automation-page
+  remote-replication-page

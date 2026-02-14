@@ -11,7 +11,8 @@ const createWindow = () => {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
-    }
+    },
+    title: "dist-btrfs"
   });
 
   const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
