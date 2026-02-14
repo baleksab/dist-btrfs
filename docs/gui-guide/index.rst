@@ -45,3 +45,4 @@ Pages
   snapshots-page
   automation-page
   remote-replication-page
+  monitoring-and-reporting-page

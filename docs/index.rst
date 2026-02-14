@@ -45,21 +45,21 @@ Here is how to get started with dist-btrfs:
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Getting started
 
    introduction/index
    getting-started/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Guides
 
    gui-guide/index
    api-guide/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Technical documentation
 
    architecture/index
